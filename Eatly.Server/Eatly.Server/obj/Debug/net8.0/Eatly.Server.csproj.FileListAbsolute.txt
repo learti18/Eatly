@@ -1,0 +1,8 @@
+C:\web\Eatly\Eatly\Eatly.Server\Eatly.Server\obj\Debug\net8.0\Eatly.Server.csproj.AssemblyReference.cache
+C:\web\Eatly\Eatly\Eatly.Server\Eatly.Server\obj\Debug\net8.0\Eatly.Server.GeneratedMSBuildEditorConfig.editorconfig
+C:\web\Eatly\Eatly\Eatly.Server\Eatly.Server\obj\Debug\net8.0\Eatly.Server.AssemblyInfoInputs.cache
+C:\web\Eatly\Eatly\Eatly.Server\Eatly.Server\obj\Debug\net8.0\Eatly.Server.AssemblyInfo.cs
+C:\web\Eatly\Eatly\Eatly.Server\Eatly.Server\obj\Debug\net8.0\Eatly.Server.csproj.CoreCompileInputs.cache
+C:\web\Eatly\Eatly\Eatly.Server\Eatly.Server\obj\Debug\net8.0\Eatly.Server.MvcApplicationPartsAssemblyInfo.cs
+C:\web\Eatly\Eatly\Eatly.Server\Eatly.Server\obj\Debug\net8.0\Eatly.Server.MvcApplicationPartsAssemblyInfo.cache
+C:\web\Eatly\Eatly\Eatly.Server\Eatly.Server\obj\Debug\net8.0\Eatly.Server.sourcelink.json
