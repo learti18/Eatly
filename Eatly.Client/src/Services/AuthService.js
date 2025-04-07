@@ -3,14 +3,14 @@ import api from './Api';
 
 
 export const authenticateWithStoredCredentials =  async (username = null) => {
-    return await api.post('/auth/refresh-token', {
+    return await api.post('/account/refresh-token', {
         deviceId: getOrGenerateDeviceId(),
         accessToken: null 
       });
 }
 
 export const refreshAuthToken = async () => {
-    return await api.post('/auth/refresh-token', {
+    return await api.post('/account/refresh-token', {
         deviceId: getOrGenerateDeviceId()
     })
 }

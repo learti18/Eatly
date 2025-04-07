@@ -3,7 +3,7 @@ import { getAccessToken, isRefreshInProgress, onTokenRefreshed, resetTokenState,
 import { getOrGenerateDeviceId } from './../Utils/GenerateDeviceId';
 import { setCurrentUsername } from './../Utils/UserStore';
 
-const API_BASE_URL = "http://localhost:5160/api/";
+const API_BASE_URL = "http://localhost:5015/api/";
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -50,7 +50,7 @@ export const setupAuthInterceptors = (auth) => {
         try{
             const deviceId = getOrGenerateDeviceId()
 
-            const response = await api.post('/auth/refresh-token',{
+            const response = await api.post('/account/refresh-token',{
                 deviceId
             })
 
