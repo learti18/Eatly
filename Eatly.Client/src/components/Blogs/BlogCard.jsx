@@ -14,17 +14,17 @@ export default function BlogCard({ blogImage, blogTitle, user, date, userImg }) 
         <h2 className=" pt-4 pb-2 text-lg font-semibold text-gray-800">{blogTitle}</h2>
       
 
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col justify-center pt-2">
         <div className="flex items-center gap-3">
           <img
             src={userImg}
             alt={user}
             className=" w-10 h-10 rounded-full object-cover"
           />
-          <div className="flex flex-col flex-1">
-            <p className="text-xs text-gray-600 mb-1">written by</p>
+          <div className="flex flex-col flex-1 " >
+            <p className="text-xs text-gray-600 ">written by</p>
             <div className="flex justify-between w-full">
-              <p className="text-sm font-semibold text-black">{user}</p>
+              <p className="text-base font-semibold text-black">{user}</p>
               <span className="text-xs text-gray-400">{date}</span>
             </div>
           </div>

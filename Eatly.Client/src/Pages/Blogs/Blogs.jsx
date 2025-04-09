@@ -1,6 +1,7 @@
 import React from 'react';
 import BlogCard from '../../components/Blogs/BlogCard';
 import blogs from '../../blogs'; 
+import Accordion from '../../components/Accordion';
 
 export default function Blogs() {
   return (
@@ -10,7 +11,7 @@ export default function Blogs() {
         Latest <span className="text-purple-500">Articles</span>
       </h2>
 
-      <div className=" grid grid-cols-1  md:grid-cols-3  gap-x-12 gap-y-14 ">
+      <div className=" grid grid-cols-1  md:grid-cols-2  lg:grid-cols-3  gap-x-12 gap-y-14 md:gap-y-18 ">
         {blogs.map((blog) => (
           <BlogCard
             key={blog.id}
@@ -22,6 +23,7 @@ export default function Blogs() {
           />
         ))}
       </div>
+      <Accordion />
     </div>
     </div>
   );

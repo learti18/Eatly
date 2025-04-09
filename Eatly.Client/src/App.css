@@ -1,2 +1,26 @@
 @import "tailwindcss";
 @plugin "daisyui";
+.custom-collapse .collapse-title::after {
+    background-color: #6c5fbc !important; 
+    color: #ffff !important; 
+    content: "+" !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+    border-radius: 50% !important;
+    width: 20px !important;
+    height: 20px !important;
+    line-height: 1 !important;
+    font-weight: normal !important;
+    padding-bottom: 4px !important;
+    padding-left: 1px !important;
+  }
+  
+  .custom-collapse input:checked ~ .collapse-title::after {
+    content: "-" !important;
+    font-weight: bold !important;
+    padding-bottom: 4px !important; 
+    line-height: 0.5 !important; 
+    padding-left: 1px !important;
+  }
