@@ -1,8 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-export default function BlogCard({ blogImage, blogTitle, user, date, userImg }) {
+export default function BlogCard({id, blogImage, blogTitle, user, date, userImg }) {
   return (
-    <div className="bg-white rounded-xl shadow-2xl  w-full max-w-xs pt-5 pb-7 pl-5 pr-5">
+    <Link 
+        to={`/blogs/${id}`}
+      className="bg-white rounded-xl shadow-2xl  w-full max-w-xs pt-5 pb-7 pl-5 pr-5" >
       <div className="overflow-hidden rounded-xl">
         <img
           src={blogImage}
@@ -11,7 +14,7 @@ export default function BlogCard({ blogImage, blogTitle, user, date, userImg }) 
       </div>
 
       
-        <h2 className=" pt-4 pb-2 text-lg font-semibold text-gray-800">{blogTitle}</h2>
+        <h2 className=" pt-4 pb-2 text-lg font-semibold text-text-darker">{blogTitle}</h2>
       
 
         <div className="flex flex-col justify-center pt-2">
@@ -32,6 +35,6 @@ export default function BlogCard({ blogImage, blogTitle, user, date, userImg }) 
       </div>
        
       
-    </div>
+    </Link>
   );
 }

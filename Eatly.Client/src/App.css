@@ -1,15 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
-@plugin "daisyui" {
-  themes: false;
-}
+@plugin "daisyui" ;
+
 @theme {
+  
   --font-sans: "Poppins", sans-serif;
 
   /* Brand Colors */
-  --color-primary: #6c5fbc;
-  --color-primary-light: #dbd9ee;
+  --color-purple: #6c5fbc;
+  --color-purple-light: #dbd9ee;
 
   /* Text Colors */
   --color-text-darker: #252525;
@@ -23,41 +23,37 @@
   --color-background-main: #f9f9f9;
   --color-background-footer: #eaeaea;
   --color-background-input: #f5f5f5;
+  
+}
+.custom-collapse .collapse-title::after {
+  background-color: #6c5fbc !important; 
+  color: #ffff !important; 
+  content: "+" !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  
+  border-radius: 50% !important;
+  width: 25px !important;
+  height: 25px !important;
+  line-height: 0.5 !important;
+  font-weight: normal !important;
+  padding-bottom: 1px !important; 
+  padding-left: 1px !important;
+  padding-top: 1px !important;
 }
 
-@plugin "daisyui/theme" {
-  name: "light";
-  default: false;
-  prefersdark: false;
-  color-scheme: "light";
-  --color-base-100: #f9f9f9;
-  --color-base-200: oklch(96% 0.003 264.542);
-  --color-base-300: #eaeaea;
-  --color-base-content: #323142;
-  --color-primary: #6c5fbc;
-  --color-primary-content: oklch(100% 0 0);
-  --color-secondary: #dbd9ee;
-  --color-secondary-content: #6c5fbc;
-  --color-accent: oklch(71% 0.202 349.761);
-  --color-accent-content: oklch(28% 0.109 3.907);
-  --color-neutral: #323142;
-  --color-neutral-content: oklch(100% 0 0);
-  --color-info: oklch(70% 0.165 254.624);
-  --color-info-content: oklch(28% 0.091 267.935);
-  --color-success: oklch(77% 0.152 181.912);
-  --color-success-content: oklch(27% 0.046 192.524);
-  --color-warning: oklch(75% 0.183 55.934);
-  --color-warning-content: oklch(26% 0.079 36.259);
-  --color-error: oklch(63% 0.237 25.331);
-  --color-error-content: oklch(100% 0 0);
-  --radius-selector: 0.25rem;
-  --radius-field: 0.5rem;
-  --radius-box: 1rem;
-  --size-selector: 0.21875rem;
-  --size-field: 0.25rem;
-  --border: 4px;
-  --depth: 0;
-  --noise: 0;
+.custom-collapse input:checked ~ .collapse-title::after {
+  content: "-" !important;
+  font-weight: normal !important;
+  padding-bottom: 3px !important; 
+  line-height: 0.5 !important; 
+  padding-left: 1px !important;
+  
 }
+
+
+
+
 
 
