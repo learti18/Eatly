@@ -24,14 +24,15 @@ export default function Signin() {
 
 
   return (
-    <div>
+    <div className='flex relative'>
+      <img src="Logo.svg" className='absolute top-7 left-10' />
       <SigninForm
         register={register}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
         errors={errors}
       />
-      <AuthHero/>
+        <AuthHero className="hidden md:block" />
     </div>
   )
 }
