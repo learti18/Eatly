@@ -5,6 +5,10 @@ import Home from './Pages/Home'
 import Blogs from './Pages/Blogs/Blogs';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Signin, Signup } from './Pages';
+import Layout from './components/Layouts/Layout';
+import Pricing from './Pages/Pricing/Pricing';
+import Menu from './Pages/Menu/Menu';
+import Contact from './Pages/Contact/Contact';
 
 const queryClient = new QueryClient()
 
@@ -15,10 +19,15 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Home/>}/>
-          <Route path='/blogs' element={<Blogs/>}/>
-          <Route path='/sign-in' element={<Signin/>}/>
-          <Route path='/sign-up' element={<Signup/>}/>
+          <Route element={<Layout/>}>
+            <Route path='/' element={<Home/>}/>
+            <Route path='/blogs' element={<Blogs/>}/>
+            <Route path='/pricing' element={<Pricing/>}/>
+            <Route path='/menu' element={<Menu/>}/>
+            <Route path='/contact' element={<Contact/>}/>
+            <Route path='/sign-in' element={<Signin/>}/>
+            <Route path='/sign-up' element={<Signup/>}/>
+          </Route>
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

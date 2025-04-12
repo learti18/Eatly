@@ -16,7 +16,7 @@ export default function Accordion() {
             <img className='absolute left-1/2 ml-40 top-9 ' src='icon.svg' />
       </div>
 
-      <div className="collapse collapse-plus  custom-collapse border border-b-gray-300 rounded-none">
+      <div className="collapse collapse-plus  custom-collapse border-b border-b-gray-300 rounded-none">
           <input type="radio" name="faq-accordion" className='text-pr' />
           <div className="collapse-title  font-bold text-text-dark text-base">
             How Does It Work ?
@@ -26,7 +26,7 @@ export default function Accordion() {
           </div>
         </div>
 
-        <div className="collapse collapse-plus  custom-collapse border border-b-gray-300  rounded-none">
+        <div className="collapse collapse-plus  custom-collapse border-b border-b-gray-300  rounded-none">
           <input type="radio" name="faq-accordion" className='text-pr' />
           <div className="collapse-title  font-bold text-text-dark text-base">
             How Does It Work ?
@@ -36,7 +36,7 @@ export default function Accordion() {
           </div>
         </div>
 
-        <div className="collapse collapse-plus  custom-collapse border border-b-gray-300  rounded-none">
+        <div className="collapse collapse-plus  custom-collapse border-b border-b-gray-300  rounded-none">
           <input type="radio" name="faq-accordion" />
           <div className="collapse-title  font-bold  text-text-dark text-base">
             How does your food delivery service work?
@@ -46,7 +46,7 @@ export default function Accordion() {
           </div>
         </div>
 
-        <div className="collapse collapse-plus  custom-collapse border border-b-gray-300  rounded-none">
+        <div className="collapse collapse-plus  custom-collapse border-b border-b-gray-300  rounded-none">
           <input type="radio" name="faq-accordion" />
           <div className="collapse-title  font-bold text-gray-800 text-base">
             What payment options do you accept?
@@ -56,7 +56,7 @@ export default function Accordion() {
           </div>
         </div>
 
-        <div className="collapse collapse-plus  custom-collapse border border-b-gray-300  rounded-none">
+        <div className="collapse collapse-plus  custom-collapse border-b border-b-gray-300  rounded-none">
           <input type="radio" name="faq-accordion" />
           <div className="collapse-title  font-bold text-gray-800 text-base">
             Do you offer discounts or promotions?
