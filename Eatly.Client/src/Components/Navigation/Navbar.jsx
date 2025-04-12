@@ -89,6 +89,8 @@ export default function Navbar() {
           <div className="flex flex-col px-6 py-6 text-text-medium font-medium divide-y divide-gray-100">
             {links.map((link) => (
               <Link
+                key={link.name}
+                to={link.path}
                 className={`py-3 ${
                   activeLink === link.name
                     ? "text-purple"
