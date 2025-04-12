@@ -32,7 +32,7 @@ export default function Navbar() {
   }, [location]);
 
   return (
-    <div className="bg-background-main">
+    <div className="bg-background-main sticky top-0 z-[1000]">
       <div className="max-w-7xl mx-auto px-5 relative">
         <div className="flex items-center py-4 border-b-2 border-b-gray-200">
           <Logo />

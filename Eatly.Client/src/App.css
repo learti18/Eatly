@@ -60,6 +60,7 @@
 
   /* gray colors */
   --color-gray-light: #cbcbcb;
+  --color-gray-lighter: #818181;
 }
 .custom-collapse .collapse-title::after {
   background-color: #6c5fbc !important;
@@ -82,7 +83,6 @@
 .custom-collapse input:checked ~ .collapse-title::after {
   content: "-" !important;
   font-weight: normal !important;
-  padding-bottom: 3px !important;
   line-height: 0.5 !important;
-  padding-left: 1px !important;
+  padding-top: 2px !important;
 }

@@ -12,7 +12,7 @@ export default function BlogCard({
   return (
     <Link
       to={`/blogs/${id}`}
-      className="bg-white rounded-xl shadow-2xl  w-full max-w-xs pt-5 pb-7 pl-5 pr-5"
+      className="bg-white rounded-xl [box-shadow:0_25px_50px_-12px_rgba(0,0,0,0.35)]  w-full max-w-xs pt-5 pb-7 pl-5 pr-5 transition-shadow duration-300 hover:[box-shadow:0_35px_60px_-15px_rgba(0,0,0,0.5)]"
     >
       <div className="overflow-hidden rounded-xl">
         <img src={blogImage} className="w-full h-60 object-cover rounded-lg" />
