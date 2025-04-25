@@ -5,7 +5,7 @@ import PasswordInput from '../Inputs/PasswordInput'
 
 export default function SigninForm({register, handleSubmit, onSubmit, errors}) {
     return (
-      <div className='w-3/6 mx-auto mt-30 p-6 bg-white items-center'>
+      <div className='w-full md:w-3/6 mx-auto mt-30 p-6 bg-white items-center'>
         <div className="max-w-md mx-auto ">
             <h2 className="text-2xl font-bold mb-6 text-center text-[#323142]">Sign In</h2>
             <div className='flex flex-row w-full gap-10'>
@@ -29,7 +29,7 @@ export default function SigninForm({register, handleSubmit, onSubmit, errors}) {
                 />
 
                 <div className='text-right'>
-                  <p className='text-[#6C5FBC]'> <Link to="#"> Forget Password?</Link></p>
+                  <p className='text-[#6C5FBC]'> <Link to="/forget-password"> Forget Password?</Link></p>
                 </div>
                 
                 <button 
@@ -40,15 +40,15 @@ export default function SigninForm({register, handleSubmit, onSubmit, errors}) {
                 </button>
                 
                 <div className="text-sm text-center text-[#606060]">
-                    <p>Don't have an account? <Link to="/sign-up" className="text-[#6c5fbc] font-medium hover:underline">Sign up</Link></p>
+                    <p>Don't have An Account? <Link to="/sign-up" className="text-[#6c5fbc] font-medium hover:underline">Sign up</Link></p>
                 </div>
             </form>
             
         </div>
-        <div className='flex justify-between'>
-          <p className='text-[#718096] pt-8'>Privacy Police</p>
-          <p className='text-[#718096] pt-8'>Copyright 20025</p>
-        </div>
+        <div className='flex justify-between text-sm text-[#718096] pt-6'>
+        <p>Privacy Policy</p>
+        <p>Copyright 2025</p>
+      </div>
       </div>
     )
 }
