@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Home from './Pages/Home'
 import Blogs from './Pages/Blogs/Blogs';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { Signin, Signup } from './Pages';
+import { Signin, Signup, ForgetPassword } from './Pages';
 import Layout from './components/Layouts/Layout';
 import Pricing from './Pages/Pricing/Pricing';
 import Menu from './Pages/Menu/Menu';
@@ -28,6 +28,7 @@ function App() {
             <Route path='/sign-in' element={<Signin/>}/>
             <Route path='/sign-up' element={<Signup/>}/>
           </Route>
+          <Route path='/forget-password' element={<ForgetPassword/>}/>
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
