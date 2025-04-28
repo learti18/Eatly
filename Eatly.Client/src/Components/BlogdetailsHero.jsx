@@ -20,7 +20,7 @@ export default function BlogdetailsHero({ blogImage, blogTitle, user, date, user
             </div>
           </div>
     
-          <div className="hidden overflow-hidden rounded-xl shadow-lg sm:block">
+          <div className="hidden overflow-hidden  shadow-lg sm:block">
             <img
               src={blogImage}
               alt="Blog visual"
