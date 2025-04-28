@@ -32,9 +32,9 @@ export default function Navbar() {
   }, [location]);
 
   return (
-    <div className="bg-background-main sticky top-0 z-[1000]">
+    <div className="bg-background-main top-0 z-[1000] fixed top-0 w-full">
       <div className="max-w-7xl mx-auto px-5 relative">
-        <div className="flex items-center py-4 border-b-2 border-b-gray-200">
+        <div className="flex items-center py-4 border-b-2 border-b-gray-200 drop-shadow-md">
           <Logo />
           <div className="ml-20 flex hidden md:flex">
             <div className="flex gap-8 text-text-medium font-medium">
@@ -80,7 +80,7 @@ export default function Navbar() {
 
         {/* mobile menu dropdown */}
         <div
-          className={`md:hidden fixed top-[78px] bg-background-main shadow-lg z-[1000] w-full left-0 border-b border-gray-light transition-all duration-300 ease-in-out overflow-auto max-h-[calc(100vh-64px)] ${
+          className={`md:hidden fixed top-[73px] bg-background-main shadow-lg z-[1000] w-full left-0 border-b border-gray-light transition-all duration-300 ease-in-out overflow-auto max-h-[calc(100vh-64px)] ${
             mobileMenuOpen
               ? "opacity-100 translate-y-0"
               : "opacity-0 -translate-y-5 pointer-events-none"
@@ -122,7 +122,7 @@ export default function Navbar() {
         {/* backdrop - fixed position with proper styling */}
         {mobileMenuOpen && (
           <div
-            className="fixed inset-0 bg-black/30 z-[999] md:hidden top-[78px]"
+            className="fixed inset-0 bg-black/30 z-[999] md:hidden top-[73px]"
             onClick={() => setMobileMenuOpen(false)}
           />
         )}

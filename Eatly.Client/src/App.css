@@ -43,7 +43,11 @@
 
   /* Brand Colors */
   --color-purple: #6c5fbc;
+
+  --color-purple-dark: #5a4db6;
+  --color-purple-darker: #5c4eae;
   --color-purple-light: #dbd9ee;
+  --color-purple-lighter: #c5bfed;
 
   /* Text Colors */
   --color-text-darker: #252525;
@@ -86,4 +90,17 @@
   font-weight: normal !important;
   line-height: 0.5 !important;
   padding-top: 2px !important;
+}
+
+.responsive-text {
+  font-size: clamp(3rem, 2.5vw + 1rem, 5rem);
+}
+
+.button-pill {
+  border-radius: 15px;
+}
+.section {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
