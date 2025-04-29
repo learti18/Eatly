@@ -24,7 +24,11 @@ export default function Layout() {
       <div className={`${isAuthPage ? "block md:hidden" : "block"}`}>
         <Navbar />
       </div>
-      <main className="min-h-screen z-10">
+      <main
+        className={`min-h-screen z-10 ${
+          isAuthPage ? "pt-10 md:pt-0" : "pt-20"
+        } bg-white`}
+      >
         <Outlet />
       </main>
       <div className={`${isAuthPage ? "block md:hidden" : ""}`}>

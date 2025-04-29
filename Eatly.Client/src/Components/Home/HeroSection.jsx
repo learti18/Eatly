@@ -2,7 +2,7 @@ import React from "react";
 
 function HeroSection() {
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8  w-full min-h-screen flex items-center pt-32 lg:pt-28 pb-12 px-5">
+    <section className="max-w-7xl mx-auto px-8 lg:px-5  w-full min-h-screen flex items-center pt-14 lg:pt-0 pb-12 px-5">
       <div className="flex gap-5 flex-col lg:flex-row">
         <div className="w-6/12 max-lg:w-full">
           <div className="flex flex-col items-center lg:items-start w-full font-semibold">
@@ -29,7 +29,7 @@ function HeroSection() {
                 Go Pro
               </button>
             </div>
-            <div className="flex items-center gap-2 self-start mt-10">
+            <div className="flex justify-center lg:justify-start items-center gap-2 mt-10">
               <svg
                 width="30"
                 height="30"
@@ -67,7 +67,7 @@ function HeroSection() {
             </div>
           </div>
         </div>
-        <div className="w-6/12 max-md:w-full mx-auto flex justify-center items-center">
+        <div className="w-6/12 max-md:w-full mx-auto max-md:mt-5 flex justify-center items-center">
           <img
             src="https://cdn.builder.io/api/v1/image/assets/TEMP/0e391dfa01b0f36caf2e66d2955f3c66977c2832?placeholderIfAbsent=true&apiKey=baf565fee1004f918dca5daeff0cfdf4"
             alt="Hero illustration"
