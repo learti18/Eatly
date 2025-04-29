@@ -4,10 +4,11 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { SignInSchema } from "../../Schemas/SignInSchema"
 import useLogin from './../../Queries/useLogin';
 import { getCurrentUserName } from "../../Utils/UserStore"
-import SigninForm from '../../Components/Auth/SigninForm';
-import AuthHero from '../../Components/Auth/AuthHero';
 
-export default function Signin() {
+import AuthHero from '../../Components/Auth/AuthHero';
+import ForgetPasswordForm from '../../Components/Auth/ForgetPasswordForm';
+
+export default function ForgetPassword() {
   const { register, handleSubmit, formState:{errors} } = useForm({
     resolver: yupResolver(SignInSchema),
     defaultValues:{
@@ -26,7 +27,7 @@ export default function Signin() {
   return (
     <div className='flex relative min-h-screen'>
       <img src="Logo.svg" className='absolute top-7 left-10' />
-      <SigninForm
+      <ForgetPasswordForm
         register={register}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}

@@ -21,14 +21,15 @@ export default function Signup() {
     await registerMutation.mutateAsync(data)
   }
   return (
-    <div>
+    <div className='flex relative h-screen'>
+      <img src="Logo.svg" className='absolute top-7 left-10' />
       <SignupForm
          register={register}
          handleSubmit={handleSubmit}
          onSubmit={onSubmit}
          errors={errors}
       />
-      <AuthHero/>
+      <AuthHero className="hidden lg:block" />
     </div>
   )
 }
