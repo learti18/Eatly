@@ -44,6 +44,8 @@
   /* Brand Colors */
   --color-purple: #6c5fbc;
   --color-purple-light: #dbd9ee;
+  /* LINE color*/
+  --color-line-dark: #9b9b9b;
 
   /* Text Colors */
   --color-text-darker: #252525;
@@ -57,6 +59,7 @@
   --color-background-main: #f9f9f9;
   --color-background-footer: #eaeaea;
   --color-background-input: #f5f5f5;
+  --color-background-link: #6c5fbc;
 
   /* gray colors */
   --color-gray-light: #cbcbcb;
