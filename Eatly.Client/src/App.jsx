@@ -29,9 +29,9 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/sign-in" element={<Signin />} />
               <Route path="/sign-up" element={<Signup />} />
+              <Route path="/forget-password" element={<ForgetPassword />} />
+              <Route path="blogs/:id" element={<Blogdetails />} />
             </Route>
-            <Route path="/forget-password" element={<ForgetPassword />} />
-            <Route path="blogs/:id" element={<Blogdetails />} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>
