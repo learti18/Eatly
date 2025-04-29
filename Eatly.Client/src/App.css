@@ -26,6 +26,8 @@
   --color-background-main: #f9f9f9;
   --color-background-footer: #eaeaea;
   --color-background-input: #f5f5f5;
+  --color-background-link: #6C5FBC;
+
   
 }
 .custom-collapse .collapse-title::after {

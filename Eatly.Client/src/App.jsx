@@ -6,6 +6,7 @@ import Blogs from './Pages/Blogs/Blogs';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Signin, Signup } from './Pages';
 import Blogdetails from './Pages/Blogs/Blogdetails';
+import ScrollToTop from './Hooks/ScrollToTop';
 
 const queryClient = new QueryClient()
 
@@ -15,6 +16,7 @@ function App() {
     <>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <ScrollToTop/>
         <Routes>
           <Route path='/' element={<Home/>}/>
           <Route path='/blogs' element={<Blogs/>}/>

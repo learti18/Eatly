@@ -19,8 +19,7 @@ export default function Blogdetails() {
           <div className="flex-grow pr-8">
             <BlogdetailsContent />
           </div>
-          
-         
+
           <div className="hidden  md:flex flex-col min-w-[300px] border-l-2 border-gray-300 pl-8">
             <h2 className="text-2xl font-bold text-text-darker mb-10">
               Top Articles
