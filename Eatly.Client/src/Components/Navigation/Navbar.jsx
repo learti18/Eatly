@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "../Shared/Logo";
 import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const links = [
   { name: "Menu", path: "/menu" },
@@ -68,14 +69,47 @@ export default function Navbar() {
           </div>
 
           {/* mobile menu button */}
-          <div className="ml-auto md:hidden">
+          <motion.div className="ml-auto md:hidden" whileTap={{ scale: 0.95 }}>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 focus:outline-none cursor-pointer"
+              className="inline-flex items-center justify-center p-2 cursor-pointer rounded-md text-text-medium hover:text-purple focus:outline-none"
+              aria-expanded={mobileMenuOpen}
             >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={30} />}
+              <span className="sr-only">Open main menu</span>
+              <motion.svg
+                className={`${mobileMenuOpen ? "hidden" : "block"} h-8 w-8`}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                initial={false}
+                animate={mobileMenuOpen ? { rotate: 180 } : { rotate: 0 }}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </motion.svg>
+              <motion.svg
+                className={`${mobileMenuOpen ? "block" : "hidden"} h-8 w-8`}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                initial={false}
+                animate={mobileMenuOpen ? { rotate: 180 } : { rotate: 0 }}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </motion.svg>
             </button>
-          </div>
+          </motion.div>
         </div>
 
         {/* mobile menu dropdown */}

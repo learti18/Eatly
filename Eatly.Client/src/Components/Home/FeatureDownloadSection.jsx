@@ -19,7 +19,7 @@ export default function FeatureDownloadSection() {
 
         {/* Text and Button */}
         <div className="min-md:w-1/2 flex flex-col items-center md:items-start justify-center relative">
-          <h2 className="text-center md:text-left text-4xl md:text-5xl font-bold text-center mb-4 max-w-md">
+          <h2 className="text-center md:text-left text-4xl md:text-5xl font-bold text-center text-gray-900 mb-4 max-w-md">
             Premium <span className="text-purple">Quality </span>
             For Your Health
           </h2>
