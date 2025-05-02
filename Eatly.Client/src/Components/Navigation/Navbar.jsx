@@ -33,8 +33,8 @@ export default function Navbar() {
   }, [location]);
 
   return (
-    <div className="bg-background-main top-0 z-[1000] fixed top-0 w-full">
-      <div className="max-w-7xl mx-auto px-5 relative">
+    <div className="bg-background-main top-0 z-[1000] px-5 fixed top-0 w-full">
+      <div className="max-w-7xl mx-auto relative">
         <div className="flex items-center py-4 border-b-2 border-b-gray-200 drop-shadow-md">
           <Logo />
           <div className="ml-16 flex hidden md:flex">

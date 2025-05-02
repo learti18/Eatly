@@ -4,7 +4,7 @@ import Badge from "../Badges/Badge";
 export default function RestaurantCard({ restaurant }) {
   return (
     <div
-      style={{ boxShadow: "0px 25px 30px rgba(0, 0, 0, 0.08)" }}
+      style={{ boxShadow: "0px 60px 35px rgba(0, 0, 0, 0.08)" }}
       className="bg-white rounded-3xl hover:drop-shadow-xl transition-all duration-300 ease-in-out cursor-pointer"
     >
       <img

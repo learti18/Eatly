@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 export default function FeatureDownloadSection() {
   return (
-    <div className="bg-background-main px-5 py-16">
+    <div className="bg-background-main px-6 py-16">
       <div className="max-w-7xl mx-auto flex items-center justify-center flex-col-reverse md:flex-row gap-10">
         {/* Phone Image */}
         <div className="min-md:w-1/2 flex justify-center max-md:max-w-[320px] ml-10">

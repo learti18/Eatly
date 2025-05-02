@@ -70,9 +70,9 @@ function HeroSection() {
           </div>
           <div className="w-6/12 max-md:w-full mx-auto max-md:mt-5 flex justify-center items-center">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/0e391dfa01b0f36caf2e66d2955f3c66977c2832?placeholderIfAbsent=true&apiKey=baf565fee1004f918dca5daeff0cfdf4"
+              src="Hero.png"
               alt="Hero illustration"
-              className="object-contain grow w-full rounded-none aspect-[1.11] max-w-[350px] md:max-w-lg lg:max-w-xl"
+              className="object-contain grow w-full drop-shadow-2xl rounded-none aspect-[1.11] max-w-[350px] md:max-w-lg lg:max-w-xl"
             />
           </div>
         </div>

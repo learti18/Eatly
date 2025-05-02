@@ -17,8 +17,8 @@ export default function FoodCard({ food }) {
   return (
     <Link
       to="/restaurants/1/dishes/1"
-      style={{ boxShadow: "0px 25px 30px rgba(0, 0, 0, 0.08)" }}
-      className="relative bg-white rounded-[34.58px] py-2 px-5"
+      style={{ boxShadow: "0px 60px 35px rgba(0, 0, 0, 0.08)" }}
+      className="relative bg-white rounded-[34.58px] py-2 px-5 hover:drop-shadow-xl transition-all duration-300 ease-in-out cursor-pointer"
     >
       <div
         className="absolute top-6 right-6 p-2.5 -m-2.5 hover:scale-110 transition-transform duration-300 ease-in-out cursor-pointer group"
@@ -42,7 +42,7 @@ export default function FoodCard({ food }) {
         </svg>
       </div>
       <div className="max-w-[250px] pt-8 flex justify-center items-center mx-auto">
-        <img src={food.image} alt="food" className="rounded-lg" />
+        <img src={food.image} alt="food" className="rounded-lg p-1" />
       </div>
       <Badge type={food.type} />
       <h1 className="font-semibold text-2xl pt-1 overflow-hidden text-ellipsis whitespace-nowrap">
@@ -53,7 +53,7 @@ export default function FoodCard({ food }) {
         <img src="star1.svg" alt="rating logo star" className="w-6" />
         <p>{food.rating}</p>
       </div>
-      <div className="flex items-center justify-between mt-4 pb-6">
+      <div className="flex items-center justify-between mt-3 pb-6">
         <p className="text-gray-900 text-2xl font-semibold pt-2">
           ${dollars}
           <span className="text-text-light text-lg">.{cents}</span>
