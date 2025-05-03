@@ -9,6 +9,8 @@ import Layout from "./components/Layouts/Layout";
 import Pricing from "./Pages/Pricing/Pricing";
 import Menu from "./Pages/Menu/Menu";
 import Contact from "./Pages/Contact/Contact";
+import Blogdetails from "./Pages/Blogs/Blogdetails";
+import ScrollToTop from "./Hooks/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +19,7 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
@@ -27,6 +30,7 @@ function App() {
               <Route path="/sign-in" element={<Signin />} />
               <Route path="/sign-up" element={<Signup />} />
               <Route path="/forget-password" element={<ForgetPassword />} />
+              <Route path="blogs/:id" element={<Blogdetails />} />
             </Route>
           </Routes>
         </BrowserRouter>

@@ -47,6 +47,8 @@
   --color-purple-dark: #5a4db6;
   --color-purple-darker: #5c4eae;
   --color-purple-light: #dbd9ee;
+  /* LINE color*/
+  --color-line-dark: #9b9b9b;
   --color-purple-lighter: #c5bfed;
 
   /* Text Colors */
@@ -61,6 +63,7 @@
   --color-background-main: #f9f9f9;
   --color-background-footer: #eaeaea;
   --color-background-input: #f5f5f5;
+  --color-background-link: #6c5fbc;
   --color-background-input-dark: #f1f1f1;
 
   /* gray colors */
