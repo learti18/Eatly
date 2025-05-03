@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "../Shared/Logo";
 import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const links = [
   { name: "Menu", path: "/menu" },
@@ -32,11 +33,11 @@ export default function Navbar() {
   }, [location]);
 
   return (
-    <div className="bg-background-main sticky top-0 z-[1000]">
-      <div className="max-w-7xl mx-auto px-5 relative">
-        <div className="flex items-center py-4 border-b-2 border-b-gray-200">
+    <div className="bg-background-main top-0 z-[1000] px-5 fixed top-0 w-full">
+      <div className="max-w-7xl mx-auto relative">
+        <div className="flex items-center py-4 border-b-2 border-b-gray-200 drop-shadow-md">
           <Logo />
-          <div className="ml-20 flex hidden md:flex">
+          <div className="ml-16 flex hidden md:flex">
             <div className="flex gap-8 text-text-medium font-medium">
               {links.map((link) => (
                 <Link
@@ -68,19 +69,52 @@ export default function Navbar() {
           </div>
 
           {/* mobile menu button */}
-          <div className="ml-auto md:hidden">
+          <motion.div className="ml-auto md:hidden" whileTap={{ scale: 0.95 }}>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 focus:outline-none cursor-pointer"
+              className="inline-flex items-center justify-center p-2 cursor-pointer rounded-md text-text-medium hover:text-purple focus:outline-none"
+              aria-expanded={mobileMenuOpen}
             >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={30} />}
+              <span className="sr-only">Open main menu</span>
+              <motion.svg
+                className={`${mobileMenuOpen ? "hidden" : "block"} h-8 w-8`}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                initial={false}
+                animate={mobileMenuOpen ? { rotate: 180 } : { rotate: 0 }}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </motion.svg>
+              <motion.svg
+                className={`${mobileMenuOpen ? "block" : "hidden"} h-8 w-8`}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                initial={false}
+                animate={mobileMenuOpen ? { rotate: 180 } : { rotate: 0 }}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </motion.svg>
             </button>
-          </div>
+          </motion.div>
         </div>
 
         {/* mobile menu dropdown */}
         <div
-          className={`md:hidden fixed top-[78px] bg-background-main shadow-lg z-[1000] w-full left-0 border-b border-gray-light transition-all duration-300 ease-in-out overflow-auto max-h-[calc(100vh-64px)] ${
+          className={`md:hidden fixed top-[73px] bg-background-main shadow-lg z-[1000] w-full left-0 border-b border-gray-light transition-all duration-300 ease-in-out overflow-auto max-h-[calc(100vh-64px)] ${
             mobileMenuOpen
               ? "opacity-100 translate-y-0"
               : "opacity-0 -translate-y-5 pointer-events-none"
@@ -122,7 +156,7 @@ export default function Navbar() {
         {/* backdrop - fixed position with proper styling */}
         {mobileMenuOpen && (
           <div
-            className="fixed inset-0 bg-black/30 z-[999] md:hidden top-[78px]"
+            className="fixed inset-0 bg-black/30 z-[999] md:hidden top-[73px]"
             onClick={() => setMobileMenuOpen(false)}
           />
         )}

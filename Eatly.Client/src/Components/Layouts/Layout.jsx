@@ -1,16 +1,39 @@
-import React from 'react'
-import Navbar from '../Navigation/Navbar'
-import { Outlet } from 'react-router-dom'
-import Footer from './Footer'
+import React, { useEffect, useState } from "react";
+import Navbar from "../Navigation/Navbar";
+import { Outlet, useLocation } from "react-router-dom";
+import Footer from "./Footer";
 
 export default function Layout() {
+  const location = useLocation().pathname;
+  const [isAuthPage, setIsAuthPage] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const isSignIn = location.includes("sign-in");
+    const isSignUp = location.includes("sign-up");
+    const isForgetPassword = location.includes("forget-password");
+
+    setIsAuthPage(isSignIn || isSignUp || isForgetPassword);
+    setMounted(true);
+  }, [location]);
+
+  if (!mounted) return null;
+
   return (
-    <div className="relative min-h-screen">
-      <Navbar/>  
-      <main className='max-w-7xl mx-auto min-h-screen bg-background-main relative z-10'>
-        <Outlet/>        
+    <div className="">
+      <div className={`${isAuthPage ? "block md:hidden" : "block"}`}>
+        <Navbar />
+      </div>
+      <main
+        className={`min-h-screen z-10 ${
+          isAuthPage ? "pt-10 md:pt-0" : "pt-20"
+        } bg-white`}
+      >
+        <Outlet />
       </main>
-      <Footer/>
+      <div className={`${isAuthPage ? "block md:hidden" : ""}`}>
+        <Footer />
+      </div>
     </div>
-  )
+  );
 }
