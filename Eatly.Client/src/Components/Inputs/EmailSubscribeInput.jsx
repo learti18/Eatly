@@ -3,7 +3,7 @@ import { useState } from "react";
 export const EmailSubscribeInput = ({
   onSubscribe = () => {},
   buttonText = "SUBSCRIBE",
-  placeholder = "Enter Your Email Address",
+  placeholder = "Enter Your Email",
   backgroundColor = "bg-purple",
   buttonTextColor = "text-purple-light",
   inputBackgroundColor = "bg-purple-light",
@@ -18,9 +18,9 @@ export const EmailSubscribeInput = ({
   };
 
   return (
-    <div className={`${backgroundColor}`}>
+    <div className={`${backgroundColor} `}>
       <div
-        className={`relative flex min-w-[430px] max-w-md rounded-2xl overflow-hidden`}
+        className={`relative flex min-w-[300px] max-w-sm rounded-2xl overflow-hidden`}
       >
         <input
           type="email"
