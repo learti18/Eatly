@@ -8,7 +8,7 @@ export default function Accordion() {
           Frequently Asked <br />
           <span className="text-purple">Questions</span>
         </h2>
-        <img className="absolute left-1/2 ml-40 top-9 " src="icon.svg" />
+        <img className="absolute left-1/2 ml-40 top-9 " src="/icon.svg" />
       </div>
 
       <div className="collapse collapse-plus  custom-collapse border-b border-b-gray-300 rounded-none">

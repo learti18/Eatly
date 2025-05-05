@@ -50,7 +50,7 @@ export default function FoodCard({ food }) {
       </h1>
       <div className="flex items-center gap-1.5 text-text-light">
         <p>{food.deliveryTime}min •</p>
-        <img src="star1.svg" alt="rating logo star" className="w-6" />
+        <img src="/star1.svg" alt="rating logo star" className="w-6" />
         <p>{food.rating}</p>
       </div>
       <div className="flex items-center justify-between mt-3 pb-6">

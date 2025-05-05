@@ -7,7 +7,7 @@ export default function Logo() {
       className="flex items-center gap-2 hover:scale-105 transition-transform duration-200"
       to="/"
     >
-      <img className="size-9 md:size-12" src="Logo.svg" alt="eatly's logo" />
+      <img className="size-9 md:size-12" src="/Logo.svg" alt="eatly's logo" />
       <h1 className="text-purple text-lg md:text-xl font-semibold">eatly</h1>
     </Link>
   );

@@ -2,7 +2,7 @@ import React from "react";
 import Badge from "../Badges/Badge";
 import { Link } from "react-router-dom";
 
-export default function RestaurantCard({ restaurant }) {
+export default function RestaurantHero({ restaurant }) {
   return (
     <Link
       style={{ boxShadow: "0px 60px 35px rgba(0, 0, 0, 0.08)" }}
@@ -14,19 +14,23 @@ export default function RestaurantCard({ restaurant }) {
         alt="restaurant banner image"
         className="max-h-[260px] aspect-[16/7] rounded-t-3xl object-cover w-full"
       />
-      <div className="px-5 py-3 bg-white  rounded-b-3xl object-cover ">
-        <Badge type={restaurant.type} />
+      <div className="px-5 py-3 pt-5 pb-5 bg-white  rounded-b-3xl object-cover md:flex items-center justify-between ">
+        <div className="md:hidden">
+          <Badge type={restaurant.type} />
+        </div>
+        <div className="md:flex items-center md:gap-80 ">
         <h1 className="font-semibold text-2xl pt-1">{restaurant.name}</h1>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between md:gap-120">
           <div className="flex items-center gap-1 text-text-light">
             <p>{restaurant.deliveryTime}min •</p>
             <img src="/star1.svg" alt="rating logo star" className="w-6" />
             <p>{restaurant.rating}</p>
           </div>
-          <div className="rounded-full px-[8px] py-[6px] bg-purple-light">
+          <div className="rounded-full px-[8px] py-[6px] bg-purple-light ">
             <img src="/BookMark.svg" alt="bookmark logo" className="w-3" />
           </div>
         </div>
+      </div>
       </div>
     </Link>
   );

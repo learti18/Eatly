@@ -2,7 +2,7 @@ export const foods = [
     {
         id: 1,
         name: "Chicken Hell",
-        image: "FoodImage1.svg",
+        image: "/FoodImage1.svg",
         deliveryTime: 30,
         rating: 4.5,
         type: "Healthy",
@@ -11,7 +11,7 @@ export const foods = [
     {
         id: 2,
         name: "Spicy Tuna Roll",
-        image: "FoodImage2.png",
+        image: "/FoodImage2.png",
         deliveryTime: 25,
         rating: 4.7,
         type: "Trending",
@@ -20,7 +20,7 @@ export const foods = [
     {
         id: 3,
         name: "Vegan Burger",
-        image: "FoodImage1.svg",
+        image: "/FoodImage1.svg",
         deliveryTime: 20,
         rating: 4.8,
         type: "Supreme",
@@ -29,7 +29,7 @@ export const foods = [
     {
         id: 4,
         name: "Margherita Pizza",
-        image: "FoodImage2.png",
+        image: "/FoodImage2.png",
         deliveryTime: 35,
         rating: 4.6,
         type: "Healthy",
@@ -38,7 +38,7 @@ export const foods = [
     {
         id: 5,
         name: "Caesar Salad",
-        image: "FoodImage1.svg",
+        image: "/FoodImage1.svg",
         deliveryTime: 15,
         rating: 4.4,
         type: "Trending",
@@ -47,7 +47,7 @@ export const foods = [
     {
         id: 6,
         name: "BBQ Ribs",
-        image: "FoodImage2.png",
+        image: "/FoodImage2.png",
         deliveryTime: 40,
         rating: 4.9,
         type: "Healthy",
@@ -56,7 +56,7 @@ export const foods = [
     {
         id: 7,
         name: "Pad Thai",
-        image: "FoodImage1.svg",
+        image: "/FoodImage1.svg",
         deliveryTime: 30,
         rating: 4.5,
         type: "Supreme",
@@ -65,7 +65,7 @@ export const foods = [
     {
         id: 8,
         name: "Cheeseburger",
-        image: "FoodImage2.png",
+        image: "/FoodImage2.png",
         deliveryTime: 25,
         rating: 4.7,
         type: "Trending",
