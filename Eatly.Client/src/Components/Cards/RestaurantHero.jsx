@@ -18,19 +18,25 @@ export default function RestaurantHero({ restaurant }) {
         <div className="md:hidden">
           <Badge type={restaurant.type} />
         </div>
-        <div className="md:flex items-center md:gap-80 ">
-        <h1 className="font-semibold text-2xl pt-1">{restaurant.name}</h1>
-        <div className="flex items-center justify-between md:gap-120">
+        <h1 className="font-semibold text-3xl pt-1">{restaurant.name}</h1>
+        <div className="hidden md:flex items-center gap-1 text-text-light">
+          <p>{restaurant.deliveryTime}min •</p>
+          <img src="/star1.svg" alt="rating logo star" className="w-6" />
+          <p>{restaurant.rating}</p>
+        </div>
+        <div className="hidden md:block bg-purple-light px-2.5 py-2 rounded-full">
+          <img src="/BookMark.svg" alt="bookmark logo" className="w-4" />
+        </div>
+        <div className="flex md:hidden items-center justify-between">
           <div className="flex items-center gap-1 text-text-light">
             <p>{restaurant.deliveryTime}min •</p>
             <img src="/star1.svg" alt="rating logo star" className="w-6" />
             <p>{restaurant.rating}</p>
           </div>
-          <div className="rounded-full px-[8px] py-[6px] bg-purple-light ">
+          <div className="rounded-full px-2.5 py-2 bg-purple-light">
             <img src="/BookMark.svg" alt="bookmark logo" className="w-3" />
           </div>
         </div>
-      </div>
       </div>
     </Link>
   );
