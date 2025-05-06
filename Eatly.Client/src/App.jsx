@@ -11,6 +11,7 @@ import Menu from "./Pages/Menu/Menu";
 import Contact from "./Pages/Contact/Contact";
 import Blogdetails from "./Pages/Blogs/Blogdetails";
 import ScrollToTop from "./Hooks/ScrollToTop";
+import Menudetails from "./Pages/Menu/Menudetails";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ function App() {
               <Route path="/sign-up" element={<Signup />} />
               <Route path="/forget-password" element={<ForgetPassword />} />
               <Route path="blogs/:id" element={<Blogdetails />} />
+              <Route path="menu/:id" element={<Menudetails />} />
             </Route>
           </Routes>
         </BrowserRouter>

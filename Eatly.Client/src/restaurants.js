@@ -3,7 +3,7 @@ export const restaurants = [
         id: 1,
         name: "The Chicken King",
         image:
-            "restaurant1.jpg",
+            "/restaurant1.jpg",
         rating: 4.5,
         deliveryTime: 24,
         type: "Healthy",
@@ -12,7 +12,7 @@ export const restaurants = [
         id: 2,
         name: "The Burger House",
         image:
-            "restaurant2.jpg",
+            "/restaurant2.jpg",
         rating: 4.2,
         deliveryTime: 30,
         type: "Trending",
@@ -21,7 +21,7 @@ export const restaurants = [
         id: 3,
         name: "Pizza Palace",
         image:
-            "restaurant4.jpg",
+            "/restaurant4.jpg",
         rating: 4.7,
         deliveryTime: 20,
         type: "Supreme",
@@ -30,7 +30,7 @@ export const restaurants = [
         id: 4,
         name: "Sushi World",
         image:
-            "restaurant3.jpg",
+            "/restaurant3.jpg",
         rating: 4.8,
         deliveryTime: 15,
         type: "Healthy",
@@ -39,7 +39,7 @@ export const restaurants = [
         id: 5,
         name: "Pasta Paradise",
         image:
-            "restaurant2.jpg",
+            "/restaurant2.jpg",
         rating: 4.6,
         deliveryTime: 25,
         type: "Trending",
