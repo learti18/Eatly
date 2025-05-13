@@ -11,7 +11,7 @@ export default function SignupForm({
   errors,
 }) {
   return (
-    <div className="w-full md:w-3/6 mx-auto mt-10 md:mt-20 p-6 bg-background-main items-center">
+    <div className="w-full md:w-3/6 mx-auto mt-10 md:mt-20 p-6 items-center">
       <div className="max-w-md mx-auto ">
         <h2 className="text-2xl font-bold mb-6 text-center text-[#323142]">
           Sign Up
