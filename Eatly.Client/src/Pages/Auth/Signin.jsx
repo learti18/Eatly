@@ -6,6 +6,7 @@ import useLogin from "./../../Queries/useLogin";
 import { getCurrentUserName } from "../../Utils/UserStore";
 import SigninForm from "../../Components/Auth/SigninForm";
 import AuthHero from "../../Components/Auth/AuthHero";
+import { Link } from "react-router-dom";
 
 export default function Signin() {
   const {
@@ -28,7 +29,9 @@ export default function Signin() {
 
   return (
     <div className="flex relative min-h-screen bg-background-main">
-      <img src="Logo.svg" className="absolute top-7 left-10 hidden md:block" />
+      <Link to={"/"}>
+        <img src="Logo.svg" className="absolute top-7 left-10 hidden md:block" />
+      </Link>
       <SigninForm
         register={register}
         handleSubmit={handleSubmit}
