@@ -1,7 +1,7 @@
 import axios from "axios"
 import { getAccessToken, isRefreshInProgress, onTokenRefreshed, resetTokenState, setAccessToken, setRefreshingStatus, subscribeToTokenRefresh } from '../Utils/TokenManager'
 import { getOrGenerateDeviceId } from './../Utils/GenerateDeviceId';
-import { setCurrentUsername } from './../Utils/UserStore';
+import { setCurrentEmail } from './../Utils/UserStore';
 
 const API_BASE_URL = "http://localhost:5015/api/";
 
@@ -50,16 +50,16 @@ export const setupAuthInterceptors = (auth) => {
         try{
             const deviceId = getOrGenerateDeviceId()
 
-            const response = await api.post('/account/refresh-token',{
+            const response = await api.post('/web/auth/refresh-token',{
                 deviceId
             })
 
-            const {token, userName: refreshedUserName, email, roles = [], expiresAt  } = response.data
+            const {token, email, roles = [], expiresAt  } = response.data
             
-            setCurrentUsername(refreshedUserName)
+            setCurrentEmail(email)
             setAccessToken(token)
 
-            const user = { userName: refreshedUserName, email, roles}
+            const user = { email, roles}
             auth.login(user, token, expiresAt)
 
             onTokenRefreshed(token)

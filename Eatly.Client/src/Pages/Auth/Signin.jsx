@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SignInSchema } from "../../Schemas/SignInSchema";
 import useLogin from "./../../Queries/useLogin";
-import { getCurrentUserName } from "../../Utils/UserStore";
 import SigninForm from "../../Components/Auth/SigninForm";
 import AuthHero from "../../Components/Auth/AuthHero";
 
@@ -15,7 +14,7 @@ export default function Signin() {
   } = useForm({
     resolver: yupResolver(SignInSchema),
     defaultValues: {
-      username: getCurrentUserName() || "",
+      email: "",
       password: "",
     },
   });

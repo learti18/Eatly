@@ -1,24 +1,25 @@
-import React from 'react'
-import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { useAuth } from '../Hooks/useAuth'
-import { STATUS } from '../Utils/AuthStatus'
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useAuth } from "../Hooks/useAuth";
+import { STATUS } from "../Utils/AuthStatus";
+import { useMemo } from "react";
 
 export default function GuestRoute() {
-    const { isAuthenticated, status } = useAuth()
-    const location = useLocation()
+  const { isAuthenticated, status } = useAuth();
+  const location = useLocation();
 
+  return useMemo(() => {
     if (status === STATUS.PENDING) {
-        return (
-            // <LoaderBarsSpinner fullscreen />
-            <div>
-                ...loading
-            </div>
-        )
+      return (
+        <div className="flex justify-center items-center h-screen">
+          <span className="loading loading-spinner loading-xl"></span>
+        </div>
+      );
     }
 
+    if (status === STATUS.SUCCESS) {
+      return <Navigate to={location.state?.from?.pathname || "/"} replace />;
+    }
 
-    return isAuthenticated ? 
-    <Navigate to={location.state?.from?.pathname || '/'} replace /> 
-    : 
-    <Outlet/>
+    return <Outlet />;
+  }, [isAuthenticated, status, location]);
 }

@@ -5,8 +5,9 @@ import { SignUpSchema } from "./../../Schemas/SignUpSchema";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useRegister from "./../../Queries/useRegister";
+import { Link } from "react-router-dom";
 
-export default function Signup() {
+export default function RestaurantSignup() {
   const {
     register,
     handleSubmit,
@@ -22,8 +23,9 @@ export default function Signup() {
   const registerMutation = useRegister();
 
   const onSubmit = async (data) => {
-    await registerMutation.mutateAsync(data);
+    await registerMutation.mutateAsync({ ...data, role: "Restaurant" });
   };
+
   return (
     <div className="flex relative h-screen">
       <img src="Logo.svg" className="absolute top-7 left-10 hidden md:block" />
@@ -32,7 +34,7 @@ export default function Signup() {
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
         errors={errors}
-        signupType="client"
+        signupType="restaurant"
       />
       <AuthHero className="hidden lg:block" />
     </div>

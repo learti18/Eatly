@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import UsernameInput from "../Inputs/UsernameInput";
 import PasswordInput from "../Inputs/PasswordInput";
+import EmailInput from "../Inputs/EmailInput";
 
 export default function SigninForm({
   register,
@@ -65,11 +66,7 @@ export default function SigninForm({
           </h3>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <UsernameInput
-            register={register}
-            error={errors.username}
-            name="username"
-          />
+          <EmailInput register={register} error={errors.email} name="email" />
 
           <PasswordInput
             register={register}
