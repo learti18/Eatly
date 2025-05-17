@@ -36,17 +36,11 @@ export default function RestaurantRoute() {
     return <Navigate to="/restaurant-profile" replace />;
   }
 
-  if (
-    !restaurant.isVerified &&
-    location.pathname === "/restaurant-verification"
-  ) {
-    return <Outlet />;
+  if (restaurant.isVerified && location.pathname === "/restaurant-verification") {
+    return <Navigate to="/restaurant-dashboard" replace />;
   }
 
-  if (
-    !restaurant.isVerified &&
-    location.pathname !== "/restaurant-verification"
-  ) {
+  if (!restaurant.isVerified && location.pathname !== "/restaurant-verification") {
     return <Navigate to="/restaurant-verification" replace />;
   }
 

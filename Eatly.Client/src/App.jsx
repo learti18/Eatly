@@ -13,7 +13,6 @@ import Blogdetails from "./Pages/Blogs/Blogdetails";
 import ScrollToTop from "./Hooks/ScrollToTop";
 import Menudetails from "./Pages/Menu/Menudetails";
 import Order from "./Order/Order";
-import ProtectedRoute from "./Routes/ProtectedRoute";
 import { AuthProvider } from "./Contexts/AuthContext";
 import RestaurantSignup from "./Pages/Auth/RestaurantSignup";
 import Unauthorized from "./Pages/Unauthorized";
@@ -22,9 +21,19 @@ import RestaurantRoute from "./Routes/RestaurantRoute";
 import VerifiedRestaurantRoute from "./Routes/VerifiedRestaurantRoute";
 import RestaurantProfile from "./Pages/RestaurantsDashbaord/RestaurantProfile";
 import RestaurantDashboard from "./Pages/RestaurantsDashbaord/RestaurantDashboard";
-import { RestaurantProvider } from "./Contexts/RestaurantContext";
 import GuestRoute from "./Routes/GuestRoute";
 import PublicRoute from "./Routes/PublicRoute";
+import AdminDashboardLayout from "./components/Layouts/AdminDashboardLayout";
+import Admin from "./Pages/AdminDashboard/Admin";
+import Users from "./Pages/AdminDashboard/Users";
+import DashboardRestaurants from "./Pages/AdminDashboard/DashboardRestaurants";
+import Orders from "./Pages/AdminDashboard/Orders";
+import AdminRoute from "./Routes/AdminRoute";
+import RestaurantDashboardLayout from "./components/Layouts/RestaurantDashboardLayout";
+import RestaurantAccount from "./Pages/RestaurantsDashbaord/RestaurantAccount";
+import DriversListing from "./Pages/RestaurantsDashbaord/DriversListing";
+import FoodsListing from "./Pages/RestaurantsDashbaord/FoodsListing";
+import { RestaurantProvider } from "./Contexts/RestaurantContext";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +55,8 @@ function App() {
                   <Route path="/pricing" element={<Pricing />} />
                   <Route path="/menu" element={<Menu />} />
                   <Route path="/contact" element={<Contact />} />
+
+                  {/* guest routes */}
                   <Route element={<GuestRoute />}>
                     <Route path="/sign-in" element={<Signin />} />
                     <Route path="/sign-up" element={<Signup />} />
@@ -58,10 +69,22 @@ function App() {
                       element={<ForgetPassword />}
                     />
                   </Route>
-
                   <Route path="blogs/:id" element={<Blogdetails />} />
                   <Route path="menu/:id" element={<Menudetails />} />
                   <Route path="/order" element={<Order />} />
+                </Route>
+              </Route>
+
+              {/* Admin routes with sidebarlayout */}
+              <Route element={<AdminRoute />}>
+                <Route path="/dashboard" element={<AdminDashboardLayout />}>
+                  <Route index element={<Admin />} />
+                  <Route path="users" element={<Users />} />
+                  <Route
+                    path="restaurants"
+                    element={<DashboardRestaurants />}
+                  />
+                  <Route path="orders" element={<Orders />} />
                 </Route>
               </Route>
 
@@ -76,10 +99,18 @@ function App() {
                   element={<RestaurantVerification />}
                 />
                 <Route element={<VerifiedRestaurantRoute />}>
-                  <Route
-                    path="/restaurant-dashboard"
-                    element={<RestaurantDashboard />}
-                  />
+                  <Route element={<RestaurantProvider />}>
+                    <Route
+                      path="/restaurant-dashboard"
+                      element={<RestaurantDashboardLayout />}
+                    >
+                      <Route index element={<RestaurantDashboard />} />
+                      <Route path="foods" element={<FoodsListing />} />
+                      <Route path="orders" element={<Orders />} />
+                      <Route path="account" element={<RestaurantAccount />} />
+                      <Route path="drivers" element={<DriversListing />} />
+                    </Route>
+                  </Route>
                 </Route>
               </Route>
             </Routes>

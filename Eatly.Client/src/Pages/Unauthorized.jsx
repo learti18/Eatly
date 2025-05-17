@@ -28,16 +28,10 @@ const Unauthorized = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/"
-              className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium transition duration-150 ease-in-out"
+              className="inline-flex items-center justify-center px-5 py-2.5 group rounded-lg bg-purple hover:bg-purple-dark text-white font-medium transition duration-150 ease-in-out"
             >
-              <ArrowLeft className="mr-2 h-4 w-4" />
+              <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1.5 transition-all duration-150 ease-in-out" />
               Back to Home
-            </Link>
-            <Link
-              to="/login"
-              className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg border border-green-600 text-green-600 hover:bg-green-50 font-medium transition duration-150 ease-in-out"
-            >
-              Sign In
             </Link>
           </div>
         </div>

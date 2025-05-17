@@ -16,7 +16,9 @@ export const RestaurantProvider = () => {
   }, [data]);
 
   return (
-    <RestaurantContext.Provider value={{ restaurant, isLoading, isError, error }}>
+    <RestaurantContext.Provider
+      value={{ restaurant, isLoading, isError, error }}
+    >
       <Outlet />
     </RestaurantContext.Provider>
   );

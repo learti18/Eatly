@@ -9,6 +9,7 @@ import DropdownSelect from "../../components/Inputs/DropdownSelect";
 import { useRestaurantCategories } from "../../Queries/Restaurants/useRestaurantCategories";
 import TextAreaInput from "../../components/Inputs/TextAreaInput";
 import { useAddRestaurant } from "../../Queries/Restaurants/useAddRestaurant";
+import useLogout from "../../Queries/useLogout";
 
 function RestaurantProfile() {
   const {
@@ -28,6 +29,10 @@ function RestaurantProfile() {
 
   const { data: categoryOptions, isLoading } = useRestaurantCategories();
   const { mutate: addRestaurant, isPending, isError } = useAddRestaurant();
+  const logoutMutation = useLogout();
+  const handleLogout = () => {
+    logoutMutation.mutateAsync();
+  };
 
   const onSubmit = async (data) => {
     try {
@@ -51,7 +56,6 @@ function RestaurantProfile() {
       <div className="flex justify-center mb-8">
         <Logo />
       </div>
-
       <div className="max-w-4xl mx-auto">
         <div className="mb-10 text-center">
           <h1 className="text-4xl font-extrabold text-gray-800 mb-2">
@@ -173,7 +177,7 @@ function RestaurantProfile() {
             </div>
 
             <div className="mt-10 pt-6 border-t border-gray-200">
-              <div className="flex flex-col justify-end gap-4 items-center">
+              <div className="flex flex-row justify-end gap-4 items-center">
                 <button
                   type="submit"
                   className="bg-purple hover:bg-purple-dark cursor-pointer text-white font-bold py-3 px-8 rounded-xl shadow-md transition duration-300 ease-in-out flex items-center gap-2 disabled:opacity-70"
@@ -183,6 +187,12 @@ function RestaurantProfile() {
                   ) : (
                     <span>Create Restaurant</span>
                   )}
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="bg-purple text-white rounded-xl px-8 text-lg py-2.5 cursor-pointer hover:bg-purple-dark mb-4"
+                >
+                  Logout
                 </button>
                 <div>
                   {isError && (
