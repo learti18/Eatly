@@ -37,6 +37,7 @@ import DriversListing from "./Pages/RestaurantsDashbaord/Drivers/DriversListing"
 import AddFood from "./Pages/RestaurantsDashbaord/Foods/AddFood";
 import { Toaster } from "sonner";
 import EditFood from "./Pages/RestaurantsDashbaord/Foods/EditFood";
+import FoodDetails from "./Pages/Menu/FoodDetails";
 
 const queryClient = new QueryClient();
 
@@ -118,6 +119,7 @@ function App() {
                     </Route>
                   </Route>
                 </Route>
+                <Route path="menu/:id/food/:id" element={<FoodDetails />} />
               </Route>
             </Routes>
           </BrowserRouter>

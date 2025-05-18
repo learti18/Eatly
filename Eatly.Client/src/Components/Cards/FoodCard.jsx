@@ -18,7 +18,7 @@ export default function FoodCard({ food }) {
 
   return (
     <Link
-      to="/restaurants/1/dishes/1"
+      to="/menu/1/food/1"
       style={{ boxShadow: "0px 60px 35px rgba(0, 0, 0, 0.08)" }}
       className="relative bg-white rounded-[34.58px] py-2 px-5 hover:drop-shadow-xl transition-all duration-300 ease-in-out cursor-pointer"
     >
