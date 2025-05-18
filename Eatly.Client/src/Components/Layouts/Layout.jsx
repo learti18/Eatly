@@ -10,7 +10,8 @@ export default function Layout() {
 
   useEffect(() => {
     const isSignIn = location.includes("sign-in");
-    const isSignUp = location.includes("sign-up");
+    const isSignUp =
+      location.includes("sign-up") || location.includes("restaurant-signup");
     const isForgetPassword = location.includes("forget-password");
 
     setIsAuthPage(isSignIn || isSignUp || isForgetPassword);

@@ -1,10 +1,12 @@
-import React from 'react'
+import React from "react";
 
-export default function CategoryButtons({icon, bgColor, textColor, title}) {
+export default function CategoryButtons({ icon, className, title }) {
   return (
-        <button className={`bg-[${bgColor}] flex flex-col justify-between rounded-xl p-3`}>
-            <img className='size-10 md:size-15' src={icon} />
-            <h3 className={`text-[${textColor}]`}>{title}</h3>
-        </button>
-  )
+    <button
+      className={`${className} flex flex-col justify-between items-center rounded-xl p-3`}
+    >
+      <img className="size-10 md:size-15" src={icon} />
+      <h3>{title}</h3>
+    </button>
+  );
 }

@@ -2,11 +2,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SignInSchema } from "../../Schemas/SignInSchema";
-import useLogin from "./../../Queries/useLogin";
-import { getCurrentUserName } from "../../Utils/UserStore";
 import SigninForm from "../../Components/Auth/SigninForm";
 import AuthHero from "../../Components/Auth/AuthHero";
 import { Link } from "react-router-dom";
+import useLogin from "../../Queries/Auth/useLogin";
 
 export default function Signin() {
   const {
@@ -16,7 +15,7 @@ export default function Signin() {
   } = useForm({
     resolver: yupResolver(SignInSchema),
     defaultValues: {
-      username: getCurrentUserName() || "",
+      email: "",
       password: "",
     },
   });
@@ -30,7 +29,10 @@ export default function Signin() {
   return (
     <div className="flex relative min-h-screen bg-background-main">
       <Link to={"/"}>
-        <img src="Logo.svg" className="absolute top-7 left-10 hidden md:block" />
+        <img
+          src="Logo.svg"
+          className="absolute top-7 left-10 hidden md:block"
+        />
       </Link>
       <SigninForm
         register={register}

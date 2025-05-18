@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import Badge from "../Badges/Badge";
 import { Link } from "react-router-dom";
 
 export default function FoodCard({ food }) {
   const [dollars, cents] = food.price.toFixed(2).split(".");
+  const [isFavorite, setIsFavorite] = useState(food.isFavorite);
 
   const handleFavoriteClick = (e) => {
     e.preventDefault();
+    setIsFavorite(!isFavorite);
     console.log("Added to favorites!");
   };
   const handleAddToCart = (e) => {
@@ -21,16 +23,16 @@ export default function FoodCard({ food }) {
       className="relative bg-white rounded-[34.58px] py-2 px-5 hover:drop-shadow-xl transition-all duration-300 ease-in-out cursor-pointer"
     >
       <div
-        className="absolute top-6 right-6 p-2.5 -m-2.5 hover:scale-110 transition-transform duration-300 ease-in-out cursor-pointer group"
         onClick={handleFavoriteClick}
+        className="absolute top-6 right-6 p-2.5 -m-2.5 hover:scale-110 transition-transform duration-300 ease-in-out cursor-pointer group"
       >
         <svg
           width="28"
           height="25"
           viewBox="0 0 23 19"
-          fill="none"
+          fill="#111827"
           xmlns="http://www.w3.org/2000/svg"
-          className="w-7"
+          className="w-7 "
         >
           <path
             fillRule="evenodd"
@@ -42,16 +44,16 @@ export default function FoodCard({ food }) {
         </svg>
       </div>
       <div className="max-w-[250px] pt-8 flex justify-center items-center mx-auto">
-        <img src={food.image} alt="food" className="rounded-lg p-1" />
+        <img src={food.imageUrl} alt="food" className="p-1" />
       </div>
       <Badge type={food.type} />
       <h1 className="font-semibold text-2xl pt-1 overflow-hidden text-ellipsis whitespace-nowrap">
         {food.name}
       </h1>
       <div className="flex items-center gap-1.5 text-text-light">
-        <p>{food.deliveryTime}min •</p>
+        <p>{food.averagePreparationTime}min •</p>
         <img src="/star1.svg" alt="rating logo star" className="w-6" />
-        <p>{food.rating}</p>
+        <p>4.5</p>
       </div>
       <div className="flex items-center justify-between mt-3 pb-6">
         <p className="text-gray-900 text-2xl font-semibold pt-2">

@@ -3,6 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import Logo from "../Shared/Logo";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "../../Hooks/useAuth";
+import useLogout from "../../Queries/Auth/useLogout";
 
 const links = [
   { name: "Menu", path: "/menu" },
@@ -15,6 +17,12 @@ export default function Navbar() {
   const location = useLocation();
   const [activeLink, setActiveLink] = useState();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isAuthneticated } = useAuth();
+  const logoutMutation = useLogout();
+
+  const handleLogout = () => {
+    logoutMutation.mutateAsync();
+  };
 
   useEffect(() => {
     const path = location.pathname;
@@ -54,18 +62,29 @@ export default function Navbar() {
           </div>
 
           <div className="ml-auto hidden md:flex items-center">
-            <Link
-              to="/sign-in"
-              className="font-medium text-text-medium hover:text-primary hover:-translate-y-0.5 transition-all px-8 py-2"
-            >
-              Sign In
-            </Link>
-            <Link
-              to="/sign-up"
-              className="font-medium bg-primary hover:bg-[#6453d0] transition-all duration-200 rounded-[12.68px] text-white px-6 py-2.5 ml-4 hover:shadow-lg hover:-translate-y-0.5"
-            >
-              Sign Up
-            </Link>
+            {isAuthneticated ? (
+              <>
+                <Link
+                  to="/sign-in"
+                  className="font-medium text-text-medium hover:text-primary hover:-translate-y-0.5 transition-all px-8 py-2"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/sign-up"
+                  className="font-medium bg-primary hover:bg-[#6453d0] transition-all duration-200 rounded-[12.68px] text-white px-6 py-2.5 ml-4 hover:shadow-lg hover:-translate-y-0.5"
+                >
+                  Sign Up
+                </Link>
+              </>
+            ) : (
+              <button
+                onClick={handleLogout}
+                className="font-medium bg-primary hover:bg-[#6453d0] cursor-pointer transition-all duration-200 rounded-[12.68px] text-white px-6 py-2.5 ml-4 hover:shadow-lg hover:-translate-y-0.5"
+              >
+                Logout
+              </button>
+            )}
           </div>
 
           {/* mobile menu button */}

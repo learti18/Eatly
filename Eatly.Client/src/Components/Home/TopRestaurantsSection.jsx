@@ -13,7 +13,7 @@ export default function TopRestaurantsSection() {
         </h1>
         <div className="grid grid-cols-1 max-md:max-w-2xl max-md:self-center md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 mt-20">
           {restaurants.slice(0, 3).map((restaurant) => (
-            <RestaurantCard restaurant={restaurant} />
+            <RestaurantCard key={restaurant.id} restaurant={restaurant} />
           ))}
         </div>
         <Link

@@ -15,8 +15,8 @@ export default function Signup() {
   } = useForm({
     resolver: yupResolver(SignUpSchema),
     defaultValues: {
-      username: "",
       email: "",
+      phone: "",
       password: "",
     },
   });
@@ -28,13 +28,17 @@ export default function Signup() {
   return (
     <div className="flex relative h-screen">
       <Link to={"/"}>
-        <img src="Logo.svg" className="absolute top-7 left-10 hidden md:block" />
+        <img
+          src="Logo.svg"
+          className="absolute top-7 left-10 hidden md:block"
+        />
       </Link>
       <SignupForm
         register={register}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
         errors={errors}
+        signupType="client"
       />
       <AuthHero className="hidden lg:block" />
     </div>
