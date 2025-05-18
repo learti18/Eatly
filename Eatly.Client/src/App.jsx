@@ -13,6 +13,7 @@ import Blogdetails from "./Pages/Blogs/Blogdetails";
 import ScrollToTop from "./Hooks/ScrollToTop";
 import Menudetails from "./Pages/Menu/Menudetails";
 import Order from "./Order/Order";
+import FoodDetails from "./Pages/Menu/FoodDetails";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ function App() {
               <Route path="blogs/:id" element={<Blogdetails />} />
               <Route path="menu/:id" element={<Menudetails />} />
               <Route path="/order" element={<Order />} />
+              <Route path="menu/:id/food/:id" element={<FoodDetails />} />
             </Route>
           </Routes>
         </BrowserRouter>
