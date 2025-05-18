@@ -7,6 +7,7 @@ import { getCurrentUserName } from "../../Utils/UserStore"
 
 import AuthHero from '../../Components/Auth/AuthHero';
 import ForgetPasswordForm from '../../Components/Auth/ForgetPasswordForm';
+import { Link } from 'react-router-dom';
 
 export default function ForgetPassword() {
   const { register, handleSubmit, formState:{errors} } = useForm({
@@ -26,7 +27,9 @@ export default function ForgetPassword() {
 
   return (
     <div className='flex relative min-h-screen'>
-      <img src="Logo.svg" className='absolute top-7 left-10' />
+      <Link to={"/"}>
+        <img src="Logo.svg" className='absolute top-7 left-10' />
+      </Link>
       <ForgetPasswordForm
         register={register}
         handleSubmit={handleSubmit}
