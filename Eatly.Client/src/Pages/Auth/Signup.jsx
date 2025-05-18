@@ -4,8 +4,8 @@ import AuthHero from "../../Components/Auth/AuthHero";
 import { SignUpSchema } from "./../../Schemas/SignUpSchema";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import useRegister from "./../../Queries/useRegister";
 import { Link } from "react-router-dom";
+import useRegister from "./../../Queries/Auth/useRegister";
 
 export default function Signup() {
   const {

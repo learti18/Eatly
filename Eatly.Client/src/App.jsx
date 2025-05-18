@@ -38,6 +38,7 @@ import AddFood from "./Pages/RestaurantsDashbaord/Foods/AddFood";
 import { Toaster } from "sonner";
 import EditFood from "./Pages/RestaurantsDashbaord/Foods/EditFood";
 import FoodDetails from "./Pages/Menu/FoodDetails";
+import RestaurantSetup from "./Pages/RestaurantsDashbaord/AccountSetup/RestaurantSetup";
 
 const queryClient = new QueryClient();
 
@@ -93,22 +94,15 @@ function App() {
                 </Route>
               </Route>
 
-              {/* Restaurant routes without Layout */}
-              <Route element={<RestaurantRoute />}>
-                <Route
-                  path="/restaurant-profile"
-                  element={<RestaurantProfile />}
-                />
-                <Route
-                  path="/restaurant-verification"
-                  element={<RestaurantVerification />}
-                />
-                <Route element={<VerifiedRestaurantRoute />}>
-                  <Route element={<RestaurantProvider />}>
-                    <Route
-                      path="/restaurant-dashboard"
-                      element={<RestaurantDashboardLayout />}
-                    >
+              {/* Restaurant routes */}
+              <Route element={<RestaurantProvider />}>
+                <Route element={<RestaurantRoute />}>
+                  {/* Initial setup routes */}
+                  <Route path="/restaurant-profile" element={<RestaurantSetup />} />
+                  
+                  {/* Dashboard routes - only accessible after verification */}
+                  <Route element={<VerifiedRestaurantRoute />}>
+                    <Route path="/restaurant-dashboard" element={<RestaurantDashboardLayout />}>
                       <Route index element={<RestaurantDashboard />} />
                       <Route path="foods" element={<FoodsListing />} />
                       <Route path="foods/add" element={<AddFood />} />
@@ -119,7 +113,6 @@ function App() {
                     </Route>
                   </Route>
                 </Route>
-                <Route path="menu/:id/food/:id" element={<FoodDetails />} />
               </Route>
             </Routes>
           </BrowserRouter>

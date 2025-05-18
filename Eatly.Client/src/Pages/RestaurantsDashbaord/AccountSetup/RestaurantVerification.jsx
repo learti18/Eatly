@@ -1,7 +1,13 @@
 import React from "react";
 import Logo from "../../../components/Shared/Logo";
+import useLogout from "../../../Queries/Auth/useLogout";
 
 function RestaurantVerification() {
+  const logoutMutation = useLogout();
+  const handleLogout = () => {
+    logoutMutation.mutateAsync();
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-purple-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="flex justify-center mb-8">
@@ -134,6 +140,12 @@ function RestaurantVerification() {
                   </li>
                 </ul>
               </div>
+              <button
+                onClick={handleLogout}
+                className="bg-purple text-white rounded-xl px-8 text-lg py-2.5 cursor-pointer hover:bg-purple-dark mb-4"
+              >
+                Logout
+              </button>
 
               <div className="text-sm text-gray-500">
                 <p>

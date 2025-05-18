@@ -11,18 +11,14 @@ const useLogin = () => {
    const navigate = useNavigate()
 
    return useMutation({
-        mutationFn: async({email, password}) => {
-            setAuthenticationStatus(STATUS.PENDING)
-            
-            const deviceId = getOrGenerateDeviceId()
-            console.log('About to send login request with:', {email: email, password: '***', deviceId});
-            const response = await api.post("/web/auth/login", {email, password, deviceId})
-            
-            if(!response?.data) {
-                throw new Error("Invalid response from server")
+        mutationFn: async (credentials) => {
+            const loginData = {
+                ...credentials,
+                deviceId: getOrGenerateDeviceId()
             }
 
-            return response.data
+            const { data } = await api.post("/web/auth/login", loginData)
+            return data
         },
         onSuccess: async ({ email, token, expiresAt, roles }) => {
             if(!token || !expiresAt){
@@ -34,20 +30,8 @@ const useLogin = () => {
             setAuthenticationStatus(STATUS.SUCCEEDED)
 
             if(roles?.includes("Restaurant")) {
-                try {
-                    const { data: restaurantData } = await api.get("/restaurants/me")
-                    
-                    if (!restaurantData) {
-                        navigate("/restaurant-profile", { replace: true })
-                    } else if (!restaurantData.isVerified) {
-                        navigate("/restaurant-verification", { replace: true })
-                    } else {
-                        navigate("/restaurant-dashboard", { replace: true })
-                    }
-                } catch (error) {
-                    console.error("Error fetching restaurant data:", error)
-                    navigate("/restaurant-profile", { replace: true })
-                }
+                // Always redirect to profile creation first
+                navigate("/restaurant-profile", { replace: true })
             } else if(roles?.includes("Admin")) {
                 navigate("/dashboard", { replace: true })
             } else {

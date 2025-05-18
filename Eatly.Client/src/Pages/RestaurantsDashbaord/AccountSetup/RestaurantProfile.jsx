@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useNavigate } from "react-router-dom"; // Add this import
 import DefaultInput from "../../../components/Inputs/DefaultInput";
 import { AddRestaurantProfileSchema } from "../../../Schemas/Restaurant/RestaurantProfileSchema";
 import Logo from "../../../components/Shared/Logo";
@@ -12,10 +13,12 @@ import { useAddRestaurant } from "../../../Queries/Restaurants/useAddRestaurant"
 import useLogout from "../../../Queries/Auth/useLogout";
 
 function RestaurantProfile() {
+  const navigate = useNavigate(); // Add this
   const {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm({
     resolver: yupResolver(AddRestaurantProfileSchema),
     defaultValues: {
@@ -43,7 +46,7 @@ function RestaurantProfile() {
       formData.append("description", data.description);
       formData.append("address", data.address);
       formData.append("imageFile", data.imageFile[0]);
-      formData.append("category_id", data.category);
+      formData.append("category", data.category);
 
       await addRestaurant(formData);
     } catch (error) {
@@ -56,6 +59,8 @@ function RestaurantProfile() {
       <div className="flex justify-center mb-8">
         <Logo />
       </div>
+
+      {/* Add debug statement to verify component is rendering */}
       <div className="max-w-4xl mx-auto">
         <div className="mb-10 text-center">
           <h1 className="text-4xl font-extrabold text-gray-800 mb-2">
@@ -67,6 +72,7 @@ function RestaurantProfile() {
           </p>
         </div>
 
+        {/* Ensure the content has proper styling and is visible */}
         <div className="bg-white shadow-xl rounded-2xl overflow-hidden">
           {/* Progress indicator */}
           <div className="bg-purple-light px-8 py-4">
@@ -121,7 +127,7 @@ function RestaurantProfile() {
 
                 <div>
                   <DropdownSelect
-                    register={register}
+                    control={control}
                     name="category"
                     label="Restaurant Category*"
                     options={categoryOptions || []}

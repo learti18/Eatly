@@ -26,16 +26,18 @@ const useRegister = () => {
             }
 
             setCurrentEmail(userName)
-
             login({ userName, email, roles: roles || [] }, token, expiresAt)
             setAuthenticationStatus(STATUS.SUCCEEDED)
 
             if(roles?.includes("Restaurant")) {
-                navigate("/restaurant-profile")
-            }else if(roles?.includes("Admin")) {
-                navigate("/dashboard")
-            }else{
-                navigate("/")
+                navigate("/restaurant-profile", { 
+                    replace: true,
+                    state: { from: "/restaurant-signup" }
+                })
+            } else if(roles?.includes("Admin")) {
+                navigate("/dashboard", { replace: true })
+            } else {
+                navigate("/", { replace: true })
             }
         },
         onError: (error) => {
