@@ -2,9 +2,11 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SignInSchema } from "../../Schemas/SignInSchema";
+import useLogin from "./../../Queries/useLogin";
+import { getCurrentUserName } from "../../Utils/UserStore";
 import AuthHero from "../../Components/Auth/AuthHero";
 import ForgetPasswordForm from "../../Components/Auth/ForgetPasswordForm";
-import useLogin from "./../../Queries/Auth/useLogin";
+import { Link } from "react-router-dom";
 
 export default function ForgetPassword() {
   const {
@@ -27,7 +29,9 @@ export default function ForgetPassword() {
 
   return (
     <div className="flex relative min-h-screen">
-      <img src="Logo.svg" className="absolute top-7 left-10" />
+      <Link to={"/"}>
+        <img src="Logo.svg" className="absolute top-7 left-10" />
+      </Link>
       <ForgetPasswordForm
         register={register}
         handleSubmit={handleSubmit}
