@@ -16,10 +16,10 @@ import Order from "./Order/Order";
 import { AuthProvider } from "./Contexts/AuthContext";
 import RestaurantSignup from "./Pages/Auth/RestaurantSignup";
 import Unauthorized from "./Pages/Unauthorized";
-import RestaurantVerification from "./Pages/RestaurantsDashbaord/RestaurantVerification";
+import RestaurantVerification from "./Pages/RestaurantsDashbaord/AccountSetup/RestaurantVerification";
 import RestaurantRoute from "./Routes/RestaurantRoute";
 import VerifiedRestaurantRoute from "./Routes/VerifiedRestaurantRoute";
-import RestaurantProfile from "./Pages/RestaurantsDashbaord/RestaurantProfile";
+import RestaurantProfile from "./Pages/RestaurantsDashbaord/AccountSetup/RestaurantProfile";
 import RestaurantDashboard from "./Pages/RestaurantsDashbaord/RestaurantDashboard";
 import GuestRoute from "./Routes/GuestRoute";
 import PublicRoute from "./Routes/PublicRoute";
@@ -30,10 +30,13 @@ import DashboardRestaurants from "./Pages/AdminDashboard/DashboardRestaurants";
 import Orders from "./Pages/AdminDashboard/Orders";
 import AdminRoute from "./Routes/AdminRoute";
 import RestaurantDashboardLayout from "./components/Layouts/RestaurantDashboardLayout";
-import RestaurantAccount from "./Pages/RestaurantsDashbaord/RestaurantAccount";
-import DriversListing from "./Pages/RestaurantsDashbaord/DriversListing";
-import FoodsListing from "./Pages/RestaurantsDashbaord/FoodsListing";
 import { RestaurantProvider } from "./Contexts/RestaurantContext";
+import FoodsListing from "./Pages/RestaurantsDashbaord/Foods/FoodsListing";
+import RestaurantAccount from "./Pages/RestaurantsDashbaord/Account/RestaurantAccount";
+import DriversListing from "./Pages/RestaurantsDashbaord/Drivers/DriversListing";
+import AddFood from "./Pages/RestaurantsDashbaord/Foods/AddFood";
+import { Toaster } from "sonner";
+import EditFood from "./Pages/RestaurantsDashbaord/Foods/EditFood";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +45,7 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
+          <Toaster richColors />
           <BrowserRouter>
             <ScrollToTop />
             <Routes>
@@ -106,6 +110,8 @@ function App() {
                     >
                       <Route index element={<RestaurantDashboard />} />
                       <Route path="foods" element={<FoodsListing />} />
+                      <Route path="foods/add" element={<AddFood />} />
+                      <Route path="foods/edit/:id" element={<EditFood />} />
                       <Route path="orders" element={<Orders />} />
                       <Route path="account" element={<RestaurantAccount />} />
                       <Route path="drivers" element={<DriversListing />} />

@@ -1,6 +1,7 @@
 import React from "react";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import Badge from "../Badges/Badge";
+import { Link } from "react-router-dom";
 
 export default function FoodTableRow({ food }) {
   const { id, name, price, imageUrl, averagePreparationTime, type } = food;
@@ -70,14 +71,14 @@ export default function FoodTableRow({ food }) {
             <span>View</span>
           </button>
 
-          <button
-            onClick={handleEdit}
+          <Link
+            to={`/restaurant-dashboard/foods/edit/${id}`}
             className="flex items-center justify-center cursor-pointer w-full gap-1 px-2 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-md text-sm font-medium transition-colors"
             title="Edit food"
           >
             <Pencil size={14} />
             <span>Edit</span>
-          </button>
+          </Link>
 
           <button
             onClick={handleDelete}

@@ -9,7 +9,6 @@ export const RestaurantProvider = () => {
   const [restaurant, setRestaurant] = useState(null);
 
   useEffect(() => {
-    console.log("Restaurant data in context:", data);
     if (data) {
       setRestaurant(data);
     }

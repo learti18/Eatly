@@ -2,9 +2,9 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SignInSchema } from "../../Schemas/SignInSchema";
-import useLogin from "./../../Queries/useLogin";
 import SigninForm from "../../Components/Auth/SigninForm";
 import AuthHero from "../../Components/Auth/AuthHero";
+import useLogin from "../../Queries/Auth/useLogin";
 
 export default function Signin() {
   const {

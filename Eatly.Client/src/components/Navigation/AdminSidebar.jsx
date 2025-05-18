@@ -14,7 +14,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import useLogout from "../../Queries/useLogout";
+import useLogout from "./../../Queries/Auth/useLogout";
 
 export default function Sidebar() {
   const [isToggledSidebar, setIsToggledSidebar] = useState(true);

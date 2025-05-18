@@ -19,5 +19,8 @@ export const useRestaurantByUserId = ({ enabled = true } = {}) => {
         onError: (error) => {
             console.error("Error fetching restaurant data:", error);
         },
+        enabled: enabled && isAuthenticated && status !== STATUS.PENDING && user?.roles?.includes("Restaurant"),
+        staleTime: 5 * 60 * 1000,
+        cacheTime: 10 * 60 * 1000,
     })
 }

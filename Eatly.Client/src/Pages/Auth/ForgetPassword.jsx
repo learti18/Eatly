@@ -2,10 +2,9 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SignInSchema } from "../../Schemas/SignInSchema";
-import useLogin from "./../../Queries/useLogin";
-
 import AuthHero from "../../Components/Auth/AuthHero";
 import ForgetPasswordForm from "../../Components/Auth/ForgetPasswordForm";
+import useLogin from "./../../Queries/Auth/useLogin";
 
 export default function ForgetPassword() {
   const {

@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "../../components/Shared/Logo";
+import Logo from "../../../components/Shared/Logo";
 
 function RestaurantVerification() {
   return (
@@ -14,7 +14,8 @@ function RestaurantVerification() {
             Verification in Progress
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            We're reviewing your restaurant details. This usually takes 24-48 hours.
+            We're reviewing your restaurant details. This usually takes 24-48
+            hours.
           </p>
         </div>
 
@@ -67,7 +68,8 @@ function RestaurantVerification() {
                   Your Restaurant Profile is Complete!
                 </h2>
                 <p className="text-gray-600">
-                  We've received your restaurant information and our team is reviewing it.
+                  We've received your restaurant information and our team is
+                  reviewing it.
                 </p>
               </div>
 

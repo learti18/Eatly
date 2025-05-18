@@ -1,17 +1,17 @@
 import { useQuery } from "@tanstack/react-query"
 import api from "../../Services/Api"
 
-export const useRestaurantCategories = () => {
+export const useFoodTypes = () => {
     return useQuery({
-        queryKey: ["restaurantCategories"],
+         queryKey: ["foodTypes"],
         queryFn: async () => {
-            const { data } = await api.get("/restaurants/categories")
+            const { data } = await api.get("/restaurants/foods/types")
             return data
         },
         select: (data) => {
-            return data.map((category) => ({
-                label: category.name,
-                value: category.id,
+            return data.map((type) => ({
+                label: type.name,
+                value: type.id,
             }))
         },
         refetchOnWindowFocus: false,

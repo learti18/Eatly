@@ -1,9 +1,9 @@
-import { useAuth } from "../Hooks/useAuth"
+import { useAuth } from "../../Hooks/useAuth"
 import { useNavigate } from "react-router-dom"
 import { useMutation } from "@tanstack/react-query"
-import { getOrGenerateDeviceId } from "../Utils/GenerateDeviceId"
-import api, { resetInterceptorStatus } from "../Services/Api"
-import { clearCurrentEmail, clearCurrentUser } from "../Utils/UserStore"
+import { getOrGenerateDeviceId } from "../../Utils/GenerateDeviceId"
+import api, { resetInterceptorStatus } from "../../Services/Api"
+import { clearCurrentEmail, clearCurrentUser } from "../../Utils/UserStore"
 
 const useLogout = () => {
     const { logout } = useAuth()

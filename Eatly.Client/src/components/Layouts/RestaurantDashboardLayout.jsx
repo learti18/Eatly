@@ -4,7 +4,7 @@ import RestaurantSidebar from "../Navigation/RestaurantSidebar";
 
 export default function RestaurantDashboardLayout() {
   return (
-    <div className="flex flex-row bg-white">
+    <div className="flex flex-row bg-background-main">
       <div>
         <RestaurantSidebar />
       </div>

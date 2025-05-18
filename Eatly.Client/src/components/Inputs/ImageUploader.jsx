@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-function ImageUploader({ register, name, label, error }) {
-  const [imagePreview, setImagePreview] = useState(null);
+function ImageUploader({ register, name, label, error, initialImage }) {
+  const [imagePreview, setImagePreview] = useState(initialImage || null);
+
+  useEffect(() => {
+    if (initialImage) {
+      setImagePreview(initialImage);
+    }
+  }, [initialImage]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -23,7 +29,9 @@ function ImageUploader({ register, name, label, error }) {
       )}
       <div
         className={`mt-1 flex flex-col justify-center items-center px-6 pt-5 pb-6 border-2 ${
-          imagePreview ? "border-purple border-solid" : "border-dashed border-gray-300"
+          imagePreview
+            ? "border-purple border-solid"
+            : "border-dashed border-gray-300"
         } rounded-md h-56 relative overflow-hidden`}
       >
         {imagePreview ? (
@@ -33,15 +41,19 @@ function ImageUploader({ register, name, label, error }) {
               alt="Image preview"
               className="object-contain max-h-36 max-w-full mb-2"
             />
-            <p className="text-sm text-gray-600 mt-2">Image selected</p>
+            <p className="text-sm text-gray-600 mt-2">
+              {initialImage && !imagePreview.startsWith("data:")
+                ? "Current image"
+                : "New image selected"}
+            </p>
             <button
               type="button"
               onClick={() => {
                 setImagePreview(null);
                 const input = document.getElementById(`file-upload-${name}`);
-                if (input) input.value = '';
+                if (input) input.value = "";
               }}
-              className="mt-2 text-xs text-purple hover:text-purple-dark underline"
+              className="mt-2 text-xs text-purple hover:text-purple-dark underline cursor-pointer"
             >
               Remove image
             </button>
@@ -72,8 +84,8 @@ function ImageUploader({ register, name, label, error }) {
                   type="file"
                   accept="image/*"
                   {...register(name, {
-                    required: "Image is required",
-                    onChange: handleImageChange
+                    required: initialImage ? false : "Image is required",
+                    onChange: handleImageChange,
                   })}
                   className="sr-only"
                 />

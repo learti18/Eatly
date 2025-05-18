@@ -4,7 +4,7 @@ import Logo from "../Shared/Logo";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../Hooks/useAuth";
-import useLogout from "./../../Queries/useLogout";
+import useLogout from "../../Queries/Auth/useLogout";
 
 const links = [
   { name: "Menu", path: "/menu" },

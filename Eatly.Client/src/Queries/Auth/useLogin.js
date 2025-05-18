@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
-import { useAuth } from '../Hooks/useAuth';
+import { useAuth } from '../../Hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import api from '../Services/Api';
-import { STATUS } from '../Utils/AuthStatus';
-import { getOrGenerateDeviceId } from '../Utils/GenerateDeviceId';
-import { setCurrentEmail } from '../Utils/UserStore';
+import api from '../../Services/Api';
+import { STATUS } from '../../Utils/AuthStatus';
+import { getOrGenerateDeviceId } from '../../Utils/GenerateDeviceId';
+import { setCurrentEmail } from '../../Utils/UserStore';
 
 const useLogin = () => {
    const { login, setAuthenticationStatus } = useAuth()

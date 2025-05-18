@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-const RestaurantProfileSchema = yup.object({
+export const AddRestaurantProfileSchema = yup.object({
   name: yup.string().required("Restaurant name is required"),
   description: yup.string().required("Description is required"),
   address: yup.string().required("Address is required"),
@@ -8,4 +8,10 @@ const RestaurantProfileSchema = yup.object({
   category: yup.number().required("Category is required").integer(),
 });
 
-export default RestaurantProfileSchema;
+export const EditRestaurantProfileSchema = yup.object({
+  name: yup.string().required("Restaurant name is required"),
+  description: yup.string().required("Description is required"),
+  address: yup.string().required("Address is required"),
+  imageFile: yup.mixed(),
+  category: yup.number().required("Category is required").integer(),
+});
