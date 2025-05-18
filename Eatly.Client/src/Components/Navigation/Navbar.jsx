@@ -17,7 +17,7 @@ export default function Navbar() {
   const location = useLocation();
   const [activeLink, setActiveLink] = useState();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isAuthneticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const logoutMutation = useLogout();
 
   const handleLogout = () => {
@@ -62,7 +62,14 @@ export default function Navbar() {
           </div>
 
           <div className="ml-auto hidden md:flex items-center">
-            {isAuthneticated ? (
+            {isAuthenticated ? (
+              <button
+                onClick={handleLogout}
+                className="font-medium bg-primary hover:bg-[#6453d0] cursor-pointer transition-all duration-200 rounded-[12.68px] text-white px-6 py-2.5 ml-4 hover:shadow-lg hover:-translate-y-0.5"
+              >
+                Logout
+              </button>
+            ) : (
               <>
                 <Link
                   to="/sign-in"
@@ -77,13 +84,6 @@ export default function Navbar() {
                   Sign Up
                 </Link>
               </>
-            ) : (
-              <button
-                onClick={handleLogout}
-                className="font-medium bg-primary hover:bg-[#6453d0] cursor-pointer transition-all duration-200 rounded-[12.68px] text-white px-6 py-2.5 ml-4 hover:shadow-lg hover:-translate-y-0.5"
-              >
-                Logout
-              </button>
             )}
           </div>
 
