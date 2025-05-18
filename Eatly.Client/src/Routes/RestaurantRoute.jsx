@@ -14,7 +14,6 @@ export default function RestaurantRoute() {
     }
   }, [status]);
 
-  // Show loading state while checking auth
   if (status === STATUS.PENDING || !authChecked) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -23,17 +22,13 @@ export default function RestaurantRoute() {
     );
   }
 
-  // Redirect to sign in if not authenticated
   if (!isAuthenticated) {
     return <Navigate to="/sign-in" state={{ from: location }} replace />;
   }
 
-  // Redirect to home if not a restaurant user
   if (!user?.roles?.includes("Restaurant")) {
     return <Navigate to="/" replace />;
   }
 
-  // Allow access to all restaurant routes
   return <Outlet />;
 }
-
