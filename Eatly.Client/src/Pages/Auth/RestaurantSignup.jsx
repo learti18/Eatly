@@ -28,7 +28,12 @@ export default function RestaurantSignup() {
 
   return (
     <div className="flex relative h-screen">
-      <img src="Logo.svg" className="absolute top-7 left-10 hidden md:block" />
+      <Link to={"/"}>
+        <img 
+          src="Logo.svg" 
+          className="absolute top-7 left-10 hidden md:block" 
+        />
+      </Link>
       <SignupForm
         register={register}
         handleSubmit={handleSubmit}

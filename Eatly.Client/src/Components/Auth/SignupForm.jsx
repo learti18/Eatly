@@ -40,11 +40,6 @@ export default function SignupForm({
             Restaurant
           </Link>
         </div>
-        <div className="">
-          <h3 className="flex justify-center mb-10 text-[#323142] opacity-30">
-            OR
-          </h3>
-        </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <EmailInput register={register} error={errors.email} name="email" />
           <PhoneInput register={register} error={errors.phone} name="phone" />
