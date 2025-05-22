@@ -2,9 +2,11 @@ import React from "react";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import Badge from "../Badges/Badge";
 import { Link } from "react-router-dom";
+import { useDeleteFood } from "../../Queries/Foods/useDeleteFood";
 
 export default function FoodTableRow({ food }) {
   const { id, name, price, imageUrl, averagePreparationTime, type } = food;
+  const { mutate: deleteFood } = useDeleteFood();
 
   const handleView = () => {
     // View food details logic
@@ -15,9 +17,8 @@ export default function FoodTableRow({ food }) {
   };
 
   const handleDelete = () => {
-    // Delete food logic
     if (confirm(`Are you sure you want to delete ${name}?`)) {
-      // Proceed with deletion
+      deleteFood(id);
     }
   };
 

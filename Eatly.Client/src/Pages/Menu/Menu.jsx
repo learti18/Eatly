@@ -6,8 +6,11 @@ import TopRestaurantsSection from "../../components/Home/TopRestaurantsSection";
 import RestaurantCard from "../../components/Cards/RestaurantCard";
 import { restaurants } from "../../restaurants";
 import { ArrowRight } from "lucide-react";
+import { useAllRestaurants } from "../../Queries/Restaurants/useAllRestaurants";
 
 export default function Menu() {
+  const { data: restaurants, isLoading, isError } = useAllRestaurants();
+
   return (
     <div className="bg-background-main">
       <div className="max-w-7xl mx-auto py-16 px-6">
@@ -20,9 +23,17 @@ export default function Menu() {
             Our Top <span className="text-purple">Restaurants</span>
           </h1>
           <div className="grid grid-cols-1 max-md:max-w-2xl max-md:self-center md:grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-12 mt-20">
-            {restaurants.map((restaurant) => (
-              <RestaurantCard restaurant={restaurant} />
-            ))}
+            {isLoading ? (
+              <div className="">
+                <span className="loading loading-spinner loading-xl"></span>
+              </div>
+            ) : isError ? (
+              <p>{isError?.message}</p>
+            ) : (
+              restaurants.map((restaurant) => (
+                <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+              ))
+            )}
           </div>
         </div>
         <div className="pt-32 border-b-2 border-b-gray-200 "></div>
