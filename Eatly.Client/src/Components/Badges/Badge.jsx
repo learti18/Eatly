@@ -10,7 +10,7 @@ export default function Badge({ type }) {
       backgroundColor: "#F7C5BA",
       color: "#FB471D",
     },
-    Supreme: {
+    Special: {
       backgroundColor: "#D6EEE0",
       color: "#309D5B",
     },

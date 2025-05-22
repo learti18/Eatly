@@ -7,7 +7,7 @@ export default function RestaurantCard({ restaurant }) {
     <Link
       style={{ boxShadow: "0px 60px 35px rgba(0, 0, 0, 0.08)" }}
       className="bg-white rounded-3xl hover:drop-shadow-xl transition-all duration-300 ease-in-out cursor-pointer"
-      to="/menu/1"
+      to={`/menu/${restaurant.id}`}
     >
       <img
         src={restaurant.imageUrl}

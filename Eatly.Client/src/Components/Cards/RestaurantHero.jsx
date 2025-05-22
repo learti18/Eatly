@@ -16,7 +16,7 @@ export default function RestaurantHero({ restaurant }) {
       />
       <div className="px-5 py-3 pt-5 pb-5 bg-white  rounded-b-3xl object-cover md:flex items-center justify-between ">
         <div className="md:hidden">
-          <Badge type={restaurant.type} />
+          <Badge type="Healthy" />
         </div>
         <h1 className="font-semibold text-3xl pt-1">{restaurant.name}</h1>
         <div className="hidden md:flex items-center gap-1 text-text-light">

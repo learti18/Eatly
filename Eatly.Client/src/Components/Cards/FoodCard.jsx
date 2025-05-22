@@ -18,7 +18,7 @@ export default function FoodCard({ food }) {
 
   return (
     <Link
-      to="/menu/1/food/1"
+      to={`food/${food.id}`}
       style={{ boxShadow: "0px 60px 35px rgba(0, 0, 0, 0.08)" }}
       className="relative bg-white rounded-[34.58px] py-2 px-5 hover:drop-shadow-xl transition-all duration-300 ease-in-out cursor-pointer"
     >
@@ -44,7 +44,11 @@ export default function FoodCard({ food }) {
         </svg>
       </div>
       <div className="max-w-[250px] pt-8 flex justify-center items-center mx-auto">
-        <img src={food.imageUrl} alt="food" className="p-1" />
+        <img
+          src={food.imageUrl}
+          alt="food"
+          className="p-1 w-40 h-40 rounded-full"
+        />
       </div>
       <Badge type={food.type} />
       <h1 className="font-semibold text-2xl pt-1 overflow-hidden text-ellipsis whitespace-nowrap">
