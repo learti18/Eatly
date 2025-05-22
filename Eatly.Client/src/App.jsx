@@ -78,6 +78,7 @@ function App() {
                   <Route path="blogs/:id" element={<Blogdetails />} />
                   <Route path="menu/:id" element={<Menudetails />} />
                   <Route path="/order" element={<Order />} />
+                  <Route path="menu/:id/food/:foodId" element={<FoodDetails/>}/>
                 </Route>
               </Route>
 
@@ -98,11 +99,17 @@ function App() {
               <Route element={<RestaurantProvider />}>
                 <Route element={<RestaurantRoute />}>
                   {/* Initial setup routes */}
-                  <Route path="/restaurant-profile" element={<RestaurantSetup />} />
-                  
+                  <Route
+                    path="/restaurant-profile"
+                    element={<RestaurantSetup />}
+                  />
+
                   {/* Dashboard routes - only accessible after verification */}
                   <Route element={<VerifiedRestaurantRoute />}>
-                    <Route path="/restaurant-dashboard" element={<RestaurantDashboardLayout />}>
+                    <Route
+                      path="/restaurant-dashboard"
+                      element={<RestaurantDashboardLayout />}
+                    >
                       <Route index element={<RestaurantDashboard />} />
                       <Route path="foods" element={<FoodsListing />} />
                       <Route path="foods/add" element={<AddFood />} />

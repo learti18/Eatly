@@ -4,10 +4,14 @@ import { orders } from "../../orders";
 import OrderCard from "../../components/Cards/OrderCard";
 import QuantityButton from "../../components/Buttons/QuantityButton";
 import IconButton from "../../components/Buttons/IconButton";
+import { useFoodByRestaurantId } from "../../Queries/Foods/useFoodByRestaurantId";
+import { useParams } from "react-router-dom";
 
 export default function FoodDetails() {
+  const {id, foodId} = useParams()
+  const { data: food, isLoading, isError } = useFoodByRestaurantId(foodId,id);
   const iconStyle = "w-full h-full";
-  const food = foods[0];
+  // const food = foods[0];
   const [quantity, setQuantity] = useState(1);
 
   const increment = () => {
@@ -16,6 +20,19 @@ export default function FoodDetails() {
   const decrement = () => {
     setQuantity((curr) => (curr > 1 ? curr - 1 : 1));
   };
+
+  if(isLoading){
+    return  (
+    <div className="flex justify-center items-center h-screen">
+        <span className="loading loading-spinner loading-xl"></span>
+    </div>
+    )
+  }
+  if(isError){
+    return (
+      <div className="flex justify-center items-center h-screen">{isError?.message}</div>
+    )
+  }
 
   return (
     <div className="bg-background-main">
@@ -30,7 +47,7 @@ export default function FoodDetails() {
               </p>
 
               <div className="flex space-x-2 font-medium text-gray-500 mt-3 justify-center lg:justify-start">
-                <span>{food.deliveryTime}min</span>
+                <span>{food.averagePreparationTime}min</span>
                 <span>•</span>
                 <span className="text-purple-600">★ {food.rating}</span>
                 <span>•</span>
@@ -46,7 +63,7 @@ export default function FoodDetails() {
 
             <div className="my-10 flex justify-center lg:justify-center">
               <img
-                src={food.image}
+                src={food.imageUrl}
                 alt={food.name}
                 className="rounded-full w-[320px] md:w-[400px] object-cover"
               />
