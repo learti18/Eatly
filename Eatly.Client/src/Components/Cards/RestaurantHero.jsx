@@ -10,7 +10,7 @@ export default function RestaurantHero({ restaurant }) {
       to="/menu/1"
     >
       <img
-        src={restaurant.image}
+        src={restaurant?.imageUrl}
         alt="restaurant banner image"
         className="max-h-[260px] aspect-[16/7] rounded-t-3xl object-cover w-full"
       />
@@ -20,18 +20,18 @@ export default function RestaurantHero({ restaurant }) {
         </div>
         <h1 className="font-semibold text-3xl pt-1">{restaurant.name}</h1>
         <div className="hidden md:flex items-center gap-1 text-text-light">
-          <p>{restaurant.deliveryTime}min •</p>
+          <p>25min •</p>
           <img src="/star1.svg" alt="rating logo star" className="w-6" />
-          <p>{restaurant.rating}</p>
+          <p>4.5</p>
         </div>
         <div className="hidden md:block bg-purple-light px-2.5 py-2 rounded-full">
           <img src="/BookMark.svg" alt="bookmark logo" className="w-4" />
         </div>
         <div className="flex md:hidden items-center justify-between">
           <div className="flex items-center gap-1 text-text-light">
-            <p>{restaurant.deliveryTime}min •</p>
+            <p>25min •</p>
             <img src="/star1.svg" alt="rating logo star" className="w-6" />
-            <p>{restaurant.rating}</p>
+            <p>4.5</p>
           </div>
           <div className="rounded-full px-2.5 py-2 bg-purple-light">
             <img src="/BookMark.svg" alt="bookmark logo" className="w-3" />
