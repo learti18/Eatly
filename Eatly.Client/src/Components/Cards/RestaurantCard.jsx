@@ -10,16 +10,16 @@ export default function RestaurantCard({ restaurant }) {
       to="/menu/1"
     >
       <img
-        src={restaurant.image}
+        src={restaurant.imageUrl}
         alt="restaurant banner image"
         className="max-h-[260px] aspect-[16/7] rounded-t-3xl object-cover w-full"
       />
       <div className="px-5 py-3 bg-white  rounded-b-3xl object-cover ">
-        <Badge type={restaurant.type} />
+        <Badge type="Healthy" />
         <h1 className="font-semibold text-2xl pt-1">{restaurant.name}</h1>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1 text-text-light">
-            <p>{restaurant.deliveryTime}min •</p>
+            <p>25min •</p>
             <img src="/star1.svg" alt="rating logo star" className="w-6" />
             <p>{restaurant.rating}</p>
           </div>
