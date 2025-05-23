@@ -6,12 +6,12 @@ import QuantityButton from "../../components/Buttons/QuantityButton";
 import IconButton from "../../components/Buttons/IconButton";
 import { useFoodByRestaurantId } from "../../Queries/Foods/useFoodByRestaurantId";
 import { useParams } from "react-router-dom";
+import { useAddToCart } from "../../Queries/Cart/useAddToCart";
 
 export default function FoodDetails() {
-  const {id, foodId} = useParams()
-  const { data: food, isLoading, isError } = useFoodByRestaurantId(foodId,id);
-  const iconStyle = "w-full h-full";
-  // const food = foods[0];
+  const { id, foodId } = useParams();
+  const { data: food, isLoading, isError } = useFoodByRestaurantId(foodId, id);
+  const { mutate: addToCart, isPending } = useAddToCart();
   const [quantity, setQuantity] = useState(1);
 
   const increment = () => {
@@ -20,25 +20,29 @@ export default function FoodDetails() {
   const decrement = () => {
     setQuantity((curr) => (curr > 1 ? curr - 1 : 1));
   };
+  const handleAddToCart = () => {
+    addToCart({ foodId, quantity });
+  };
 
-  if(isLoading){
-    return  (
-    <div className="flex justify-center items-center h-screen">
-        <span className="loading loading-spinner loading-xl"></span>
-    </div>
-    )
-  }
-  if(isError){
+  if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">{isError?.message}</div>
-    )
+      <div className="flex justify-center items-center h-screen">
+        <span className="loading loading-spinner loading-xl"></span>
+      </div>
+    );
+  }
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        {isError?.message}
+      </div>
+    );
   }
 
   return (
     <div className="bg-background-main">
       <div className="max-w-7xl mx-auto px-5 py-20">
         <div className="flex flex-col lg:flex-row justify-between gap-10">
-         
           <div className="flex-1">
             <div className="text-center lg:text-left">
               <h1 className="text-4xl font-bold text-text-dark">{food.name}</h1>
@@ -97,8 +101,15 @@ export default function FoodDetails() {
             </div>
 
             <div className="pt-10 flex flex-row lg:flex-row items-center justify-between gap-10 mt-6">
-              <button className="font-medium bg-primary hover:bg-[#6453d0] transition-all duration-200 rounded-[12.68px] text-white px-8 py-4 shadow-md hover:shadow-lg hover:-translate-y-0.5">
-                Add to Cart
+              <button
+                onClick={handleAddToCart}
+                className="font-medium bg-primary hover:bg-[#6453d0] cursor-pointer transition-all duration-200 rounded-[12.68px] text-white px-8 py-4 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+              >
+                {isPending ? (
+                  <span className="loading loading-spinner loading-sm px-5 py-1"></span>
+                ) : (
+                  "Add to Cart"
+                )}
               </button>
               <div className="text-4xl font-semibold text-text-dark">
                 $12<span className="text-sm align-top text-gray-400">.99</span>
@@ -106,7 +117,6 @@ export default function FoodDetails() {
             </div>
           </div>
 
-         
           <div className=" hidden lg:block  w-full lg:w-1/3">
             <div className="  rounded-lg">
               <h2 className="text-2xl  font-bold text-text-dark mb-4">

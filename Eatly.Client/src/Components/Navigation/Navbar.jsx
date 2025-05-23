@@ -5,12 +5,13 @@ import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../Hooks/useAuth";
 import useLogout from "../../Queries/Auth/useLogout";
+import { useFetchCart } from "../../Queries/Cart/useFetchCart";
 
 const links = [
   { name: "Menu", path: "/menu" },
   { name: "Blogs", path: "/blogs" },
   { name: "Pricing", path: "/pricing" },
-  { name: "Contact", path: "/contact" },
+  { name: "Cart", path: "/cart" },
 ];
 
 export default function Navbar() {
@@ -19,6 +20,9 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isAuthenticated } = useAuth();
   const logoutMutation = useLogout();
+  const { data: cart } = useFetchCart();
+
+  const cartItemCount = cart?.cartItems?.length || 0;
 
   const handleLogout = () => {
     logoutMutation.mutateAsync();
@@ -32,8 +36,8 @@ export default function Navbar() {
       setActiveLink("Blogs");
     } else if (path.includes("/pricing")) {
       setActiveLink("Pricing");
-    } else if (path.includes("/contact")) {
-      setActiveLink("Contact");
+    } else if (path.includes("/cart")) {
+      setActiveLink("Cart");
     } else {
       setActiveLink("");
     }
@@ -53,9 +57,14 @@ export default function Navbar() {
                   to={link.path}
                   className={`${
                     activeLink === link.name ? "text-purple font-semibold" : ""
-                  } hover:text-purple hover:-translate-y-0.5 transition-all`}
+                  } hover:text-purple hover:-translate-y-0.5 transition-all relative`}
                 >
                   {link.name}
+                  {link.name === "Cart" && cartItemCount > 0 && (
+                    <span className="absolute -top-2 -right-4 bg-purple text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                      {cartItemCount}
+                    </span>
+                  )}
                 </Link>
               ))}
             </div>
@@ -148,9 +157,14 @@ export default function Navbar() {
                   activeLink === link.name
                     ? "text-purple"
                     : "hover:text-purple transition-colors"
-                }`}
+                } relative flex items-center`}
               >
                 {link.name}
+                {link.name === "Cart" && cartItemCount > 0 && (
+                  <span className="ml-2 bg-purple text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                    {cartItemCount}
+                  </span>
+                )}
               </Link>
             ))}
           </div>
@@ -172,7 +186,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* backdrop - fixed position with proper styling */}
+        {/* backdrop for mobile menu */}
         {mobileMenuOpen && (
           <div
             className="fixed inset-0 bg-black/30 z-[999] md:hidden top-[73px]"
