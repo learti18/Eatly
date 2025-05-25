@@ -150,7 +150,10 @@ export default function OrderCard({
       )}
       <div className="md:w-full rounded-2xl border-white py-1 px-4 drop-shadow-xl bg-white flex items-center justify-between ">
         <div className="flex gap-5">
-          <img className="max-w-26 object-contain" src={foodImageUrl} />
+          <img
+            className="max-w-26 object-contain rounded-full"
+            src={foodImageUrl}
+          />
           <div className="flex flex-col justify-center">
             <h2 className="text-lg md:text-xl font-semibold">{foodName}</h2>
             <p className="text-sm md:text-lg font-semibold">

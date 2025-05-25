@@ -2,7 +2,7 @@ import React from "react";
 
 export default function TotalOrder({ price }) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col mt-15">
       <div className="flex justify-between">
         <h1 className="text-xl md:text-xl text-gray-400">Subtotal</h1>
         <p className="text-gray-400">{price}</p>

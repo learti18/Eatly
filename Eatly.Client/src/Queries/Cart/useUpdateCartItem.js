@@ -16,7 +16,6 @@ export const useUpdateCartItem = () => {
             await queryClient.cancelQueries(["cart"]);
             const previousCart = queryClient.getQueryData(["cart"]);
             
-            // Optimistically update the cart
             if (previousCart) {
                 queryClient.setQueryData(["cart"], oldData => {
                     const updatedCartItems = oldData.cartItems.map(item => {
@@ -59,7 +58,6 @@ export const useUpdateCartItem = () => {
             });
         },
         onSettled: (data, error, variables) => {
-            // Only invalidate if there was an error or the server response is significantly different
             if (error) {
                 queryClient.invalidateQueries(["cart"]);
             }

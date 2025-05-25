@@ -29,8 +29,8 @@ export const useRestaurantByUserId = ({ enabled = true } = {}) => {
             console.error("Error fetching restaurant data:", error);
         },
         refetchOnMount: true,
-        refetchOnWindowFocus: true,
-        staleTime: 0, // Always consider data stale
+        refetchOnWindowFocus: false,
+        staleTime: 1000,
         cacheTime: 5 * 60 * 1000,
     })
 }

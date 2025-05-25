@@ -15,16 +15,20 @@ export const useAddToCart = () => {
             return data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries(["cart"]);
+            // Only invalidate cart queries, not restaurant or food queries
+            queryClient.invalidateQueries({
+                queryKey: ["cart"],
+                refetchType: 'active' // Only refetch active queries
+            });
+            
             toast.success("Item added to cart", {
                 description: "Item has been successfully added to your cart.",
             });
         },
         onError: (error) => {
             toast.error("Failed to add item to cart", {
-                description: error?.response?.data?.message || "An error occurred while adding the item to your cart.",
+                description: error?.response?.data?.error || "An error occurred while adding the item to your cart.",
             });
         },
     })
-    
 }

@@ -39,6 +39,8 @@ import { Toaster } from "sonner";
 import EditFood from "./Pages/RestaurantsDashbaord/Foods/EditFood";
 import FoodDetails from "./Pages/Menu/FoodDetails";
 import RestaurantSetup from "./Pages/RestaurantsDashbaord/AccountSetup/RestaurantSetup";
+import ProtectedRoute from "./Routes/ProtectedRoute";
+import RestaurantsOrders from "./Pages/RestaurantsDashbaord/Orders/RestaurantsOrders";
 
 const queryClient = new QueryClient();
 
@@ -81,11 +83,16 @@ function App() {
                     path="menu/:id/food/:foodId"
                     element={<FoodDetails />}
                   />
-                  <Route path="/cart" element={<Order />} />
                   <Route
                     path="menu/:id/food/:foodId"
                     element={<FoodDetails />}
                   />
+                </Route>
+              </Route>
+
+              <Route element={<ProtectedRoute />}>
+                <Route element={<Layout />}>
+                  <Route path="/cart" element={<Order />} />
                 </Route>
               </Route>
 
@@ -121,7 +128,7 @@ function App() {
                       <Route path="foods" element={<FoodsListing />} />
                       <Route path="foods/add" element={<AddFood />} />
                       <Route path="foods/edit/:id" element={<EditFood />} />
-                      <Route path="orders" element={<Orders />} />
+                      <Route path="orders" element={<RestaurantsOrders />} />
                       <Route path="account" element={<RestaurantAccount />} />
                       <Route path="drivers" element={<DriversListing />} />
                     </Route>

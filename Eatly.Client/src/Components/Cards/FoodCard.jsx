@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Badge from "../Badges/Badge";
 import { Link } from "react-router-dom";
+import { useAddToCart } from "../../Queries/Cart/useAddToCart";
 
 export default function FoodCard({ food }) {
   const [dollars, cents] = food.price.toFixed(2).split(".");
   const [isFavorite, setIsFavorite] = useState(food.isFavorite);
+  const { mutate: addToCart, isPending } = useAddToCart();
 
   const handleFavoriteClick = (e) => {
     e.preventDefault();
@@ -13,7 +15,8 @@ export default function FoodCard({ food }) {
   };
   const handleAddToCart = (e) => {
     e.preventDefault();
-    console.log("Added to cart!");
+    const foodId = food.id;
+    addToCart({ foodId, quantity: 1 });
   };
 
   return (
