@@ -81,7 +81,7 @@ export default function EditFood() {
   }
 
   return (
-    <div className="py-10">
+    <div className="py-10 px-10">
       <div className="flex items-center gap-10">
         <button
           onClick={() => window.history.back()}

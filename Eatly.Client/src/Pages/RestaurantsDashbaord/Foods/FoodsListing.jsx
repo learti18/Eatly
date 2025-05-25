@@ -9,7 +9,7 @@ export default function FoodsListing() {
   const { data: foods, isLoading, isError } = useAllFoods();
 
   return (
-    <div className="py-12">
+    <div className="py-10 px-10">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold text-gray-800">Food Items</h1>
         <Link to="add">

@@ -5,6 +5,7 @@ import Accordion from "../../components/Accordion";
 import { useParams } from "react-router-dom";
 import { useRestaurantById } from "../../Queries/Restaurants/useRestaurantById";
 import { useAllFoodsById } from "../../Queries/Foods/useAllFoodsById";
+import FloatingChat from "../../components/Chat/FloatingChat";
 
 export default function Menudetails() {
   const { id } = useParams();
@@ -55,6 +56,7 @@ export default function Menudetails() {
         <div className="pb-20 ">
           <Accordion />
         </div>
+        <FloatingChat />
       </div>
     </div>
   );

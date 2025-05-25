@@ -10,7 +10,7 @@ export default function RestaurantDashboardLayout() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 py-8 px-8 md:px-10">
+      <div className="flex-1 ">
         <Outlet />
       </div>
     </div>

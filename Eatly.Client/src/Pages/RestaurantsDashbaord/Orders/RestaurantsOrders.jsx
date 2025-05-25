@@ -21,7 +21,7 @@ export default function RestaurantsOrders() {
       : orders?.filter((order) => order.status === statusFilter);
 
   return (
-    <div className="py-12">
+    <div className="py-10 px-10">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold text-gray-800">
           Customer Orders

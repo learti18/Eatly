@@ -13,6 +13,7 @@ import {
   Star,
   Car,
   LogOut,
+  MessageSquareText,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import useLogout from "./../../Queries/Auth/useLogout";
@@ -57,9 +58,9 @@ export default function RestaurantSidebar() {
       icon: <Star size={22} />,
     },
     {
-      name: "Finances",
-      to: "/restaurant-dashboard/finances",
-      icon: <Receipt size={20} />,
+      name: "Messages",
+      to: "/restaurant-dashboard/chat",
+      icon: <MessageSquareText size={20} />,
     },
     {
       name: "Account",

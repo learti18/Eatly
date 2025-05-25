@@ -76,7 +76,8 @@ export default function RestaurantAccount() {
   }
 
   return (
-    <div className="bg-white rounded-3xl shadow-lg overflow-hidden">
+    <div className="py-10 px-10">
+    <div className="bg-white rounded-3xl shadow-lg overflow-hidden ">
       {isEditing ? (
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Banner Image with ImageUploader */}
@@ -276,6 +277,7 @@ export default function RestaurantAccount() {
           </div>
         </>
       )}
+    </div>
     </div>
   );
 }
