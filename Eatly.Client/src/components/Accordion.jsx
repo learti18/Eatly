@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Accordion() {
   return (
-    <div className=" bg-transparent  w-full pt-25">
+    <div className=" bg-transparent  w-full pt-14 border-t-2 border-t-gray-200">
       <div className=" py-16 px-6 md:px-20 max-w-7xl mx-auto flex flex-col items-center relative">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-text-dark">
           Frequently Asked <br />

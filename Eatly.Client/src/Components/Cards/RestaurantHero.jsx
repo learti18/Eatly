@@ -5,9 +5,8 @@ import { Link } from "react-router-dom";
 export default function RestaurantHero({ restaurant }) {
   return (
     <Link
-      style={{ boxShadow: "0px 60px 35px rgba(0, 0, 0, 0.08)" }}
-      className="bg-white rounded-3xl hover:drop-shadow-xl transition-all duration-300 ease-in-out cursor-pointer"
-      to="/menu/1"
+      className="bg-white rounded-3xl drop-shadow-2xl hover:drop-shadow-xl transition-all duration-300 ease-in-out cursor-pointer"
+      to={`/menu/${restaurant.id}`}
     >
       <img
         src={restaurant?.imageUrl}

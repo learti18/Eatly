@@ -5,13 +5,16 @@ import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../Hooks/useAuth";
 import useLogout from "../../Queries/Auth/useLogout";
+import { useFetchCart } from "../../Queries/Cart/useFetchCart";
 
-const links = [
+// Separate links based on authentication requirements
+const publicLinks = [
   { name: "Menu", path: "/menu" },
   { name: "Blogs", path: "/blogs" },
   { name: "Pricing", path: "/pricing" },
-  { name: "Contact", path: "/contact" },
 ];
+
+const authenticatedLinks = [{ name: "Cart", path: "/cart" }];
 
 export default function Navbar() {
   const location = useLocation();
@@ -19,6 +22,13 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isAuthenticated } = useAuth();
   const logoutMutation = useLogout();
+
+  // Only fetch cart if authenticated
+  const { data: cart } = useFetchCart({
+    enabled: isAuthenticated,
+  });
+
+  const cartItemCount = isAuthenticated ? cart?.cartItems?.length || 0 : 0;
 
   const handleLogout = () => {
     logoutMutation.mutateAsync();
@@ -32,8 +42,8 @@ export default function Navbar() {
       setActiveLink("Blogs");
     } else if (path.includes("/pricing")) {
       setActiveLink("Pricing");
-    } else if (path.includes("/contact")) {
-      setActiveLink("Contact");
+    } else if (path.includes("/cart")) {
+      setActiveLink("Cart");
     } else {
       setActiveLink("");
     }
@@ -47,17 +57,39 @@ export default function Navbar() {
           <Logo />
           <div className="ml-16 flex hidden md:flex">
             <div className="flex gap-8 text-text-medium font-medium">
-              {links.map((link) => (
+              {/* Always show public links */}
+              {publicLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.path}
                   className={`${
                     activeLink === link.name ? "text-purple font-semibold" : ""
-                  } hover:text-purple hover:-translate-y-0.5 transition-all`}
+                  } hover:text-purple hover:-translate-y-0.5 transition-all relative`}
                 >
                   {link.name}
                 </Link>
               ))}
+
+              {/* Show cart only when authenticated */}
+              {isAuthenticated &&
+                authenticatedLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    to={link.path}
+                    className={`${
+                      activeLink === link.name
+                        ? "text-purple font-semibold"
+                        : ""
+                    } hover:text-purple hover:-translate-y-0.5 transition-all relative`}
+                  >
+                    {link.name}
+                    {link.name === "Cart" && cartItemCount > 0 && (
+                      <span className="absolute -top-2 -right-4 bg-purple text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                        {cartItemCount}
+                      </span>
+                    )}
+                  </Link>
+                ))}
             </div>
           </div>
 
@@ -140,7 +172,8 @@ export default function Navbar() {
           }`}
         >
           <div className="flex flex-col px-6 py-6 text-text-medium font-medium divide-y divide-gray-100">
-            {links.map((link) => (
+            {/* Public links for mobile */}
+            {publicLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
@@ -148,31 +181,70 @@ export default function Navbar() {
                   activeLink === link.name
                     ? "text-purple"
                     : "hover:text-purple transition-colors"
-                }`}
+                } relative flex items-center`}
+                onClick={() => setMobileMenuOpen(false)}
               >
                 {link.name}
               </Link>
             ))}
+
+            {/* Authenticated links for mobile */}
+            {isAuthenticated &&
+              authenticatedLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  className={`py-3 ${
+                    activeLink === link.name
+                      ? "text-purple"
+                      : "hover:text-purple transition-colors"
+                  } relative flex items-center`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.name}
+                  {link.name === "Cart" && cartItemCount > 0 && (
+                    <span className="ml-2 bg-purple text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                      {cartItemCount}
+                    </span>
+                  )}
+                </Link>
+              ))}
           </div>
+
+          {/* Authentication section for mobile menu */}
           <div className="flex flex-col gap-3 px-6 py-6 border-t border-gray-200 bg-gray-50">
-            <Link
-              to="/sign-in"
-              className="font-medium text-center text-text-medium py-3 border border-gray-200 rounded-xl hover:bg-gray-100 transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Sign In
-            </Link>
-            <Link
-              to="/sign-up"
-              className="font-medium bg-primary text-center rounded-xl text-white px-6 py-3 hover:bg-opacity-90 transition-colors shadow-sm"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Sign Up
-            </Link>
+            {isAuthenticated ? (
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setMobileMenuOpen(false);
+                }}
+                className="font-medium text-center bg-primary text-white py-3 rounded-xl hover:bg-[#6453d0] transition-colors"
+              >
+                Logout
+              </button>
+            ) : (
+              <>
+                <Link
+                  to="/sign-in"
+                  className="font-medium text-center text-text-medium py-3 border border-gray-200 rounded-xl hover:bg-gray-100 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/sign-up"
+                  className="font-medium bg-primary text-center rounded-xl text-white px-6 py-3 hover:bg-opacity-90 transition-colors shadow-sm"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
         </div>
 
-        {/* backdrop - fixed position with proper styling */}
+        {/* backdrop for mobile menu */}
         {mobileMenuOpen && (
           <div
             className="fixed inset-0 bg-black/30 z-[999] md:hidden top-[73px]"
