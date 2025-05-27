@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ApplyCouponInput from "../Components/Inputs/ApplyCouponInput";
 import TotalOrder from "./../Components/TotalOrder";
 import { useFetchCart } from "../Queries/Cart/useFetchCart";
 import OrderCard from "../components/OrderCard";
@@ -7,6 +6,8 @@ import { useClearCart } from "../Queries/Cart/useClearCart";
 import { toast } from "sonner";
 import { useAddOrder } from "../Queries/Order/useAddOrder";
 import { useNavigate } from "react-router-dom";
+import { loadStripe } from "@stripe/stripe-js";
+import api from "../Services/Api";
 
 export default function Order() {
   const navigate = useNavigate();
@@ -15,27 +16,53 @@ export default function Order() {
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
   const [localTotalPrice, setLocalTotalPrice] = useState(0);
   const [orderSuccess, setOrderSuccess] = useState(false);
+  const [isCreatingOrder, setIsCreatingOrder] = useState(false);
 
-  const {
-    mutate: createOrder,
-    isLoading: isCreatingOrder,
-    isError: isCreatingOrderError,
-    data: createdOrderData,
-  } = useAddOrder({
-    onSuccess: (data) => {
-      setOrderSuccess(true);
-      toast.success("Order placed successfully!");
+  const createOrder = async () => {
+    setIsCreatingOrder(true);
 
-      setTimeout(() => {
-        navigate(`/orders/${data.id}`);
-      }, 2000);
-    },
-    onError: (error) => {
-      toast.error(
-        "Failed to place order: " + (error.message || "Unknown error")
+    try {
+      const response = await api.post(
+        "/payments/create-checkout-session",
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
-    },
-  });
+      const { sessionId, publicKey, connectedAccountId } = response.data;
+
+      if (!sessionId) {
+        toast.error("Failed to create order. Please try again.");
+        console.error("No sessionId returned from server.");
+        return;
+      }
+      const stripePromise = loadStripe(publicKey, {
+        stripeAccount: connectedAccountId,
+      });
+
+      const stripe = await stripePromise;
+      if (!stripe) {
+        toast.error("Stripe failed to load. Please try again later.");
+        console.error("Stripe failed to load.");
+        return;
+      }
+
+      const result = await stripe.redirectToCheckout({
+        sessionId: sessionId,
+      });
+
+      if (result.error) {
+        toast.error(result.error.message);
+      }
+    } catch (error) {
+      console.error("Error creating order:", error);
+      toast.error("Failed to create order. Please try again.");
+    } finally {
+      setIsCreatingOrder(false);
+    }
+  };
 
   useEffect(() => {
     if (cart && cart.totalPrice) {
@@ -196,7 +223,7 @@ export default function Order() {
           <TotalOrder price={localTotalPrice} />
           <button
             disabled={isCreatingOrder || cart?.cartItems?.length === 0}
-            onClick={() => createOrder()}
+            onClick={createOrder}
             className="bg-purple hover:bg-purple-dark mt-5 transition-colors duration-200 cursor-pointer text-white md:w-full text-xl rounded-2xl py-4 font-semibold flex items-center justify-center"
           >
             {isCreatingOrder ? (

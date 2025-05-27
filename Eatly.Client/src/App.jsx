@@ -41,6 +41,10 @@ import FoodDetails from "./Pages/Menu/FoodDetails";
 import RestaurantSetup from "./Pages/RestaurantsDashbaord/AccountSetup/RestaurantSetup";
 import ProtectedRoute from "./Routes/ProtectedRoute";
 import RestaurantsOrders from "./Pages/RestaurantsDashbaord/Orders/RestaurantsOrders";
+import Refresh from "./Pages/StripeOnboarding/Refresh";
+import Return from "./Pages/StripeOnboarding/Return";
+import Checkout from "./Pages/Payment/Checkout";
+import OrderStatus from "./Pages/Payment/OrderStatus";
 
 const queryClient = new QueryClient();
 
@@ -93,6 +97,8 @@ function App() {
               <Route element={<ProtectedRoute />}>
                 <Route element={<Layout />}>
                   <Route path="/cart" element={<Order />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/checkout/success" element={<OrderStatus />} />
                 </Route>
               </Route>
 
@@ -125,6 +131,14 @@ function App() {
                       element={<RestaurantDashboardLayout />}
                     >
                       <Route index element={<RestaurantDashboard />} />
+                      <Route
+                        path="refresh/:connectedAccountId"
+                        element={<Refresh />}
+                      />
+                      <Route
+                        path="return/:connectedAccountId"
+                        element={<Return />}
+                      />
                       <Route path="foods" element={<FoodsListing />} />
                       <Route path="foods/add" element={<AddFood />} />
                       <Route path="foods/edit/:id" element={<EditFood />} />

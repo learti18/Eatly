@@ -10,6 +10,7 @@ import { useRestaurantByUserId } from "../../../Queries/Restaurants/useRestauran
 import { Check, Edit2 } from "lucide-react";
 import { EditRestaurantProfileSchema } from "./../../../Schemas/Restaurant/RestaurantProfileSchema";
 import { useEditRestaurant } from "../../../Queries/Restaurants/useEditRestaurant";
+import { ConnectAccountManagement } from "@stripe/react-connect-js";
 
 export default function RestaurantAccount() {
   const { data: restaurant, isLoading } = useRestaurantByUserId();
@@ -276,6 +277,7 @@ export default function RestaurantAccount() {
           </div>
         </>
       )}
+      <ConnectAccountManagement />
     </div>
   );
 }

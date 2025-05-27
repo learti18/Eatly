@@ -11,6 +11,10 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
+    "@stripe/connect-js": "^3.3.23",
+    "@stripe/react-connect-js": "^3.3.22",
+    "@stripe/react-stripe-js": "^3.7.0",
+    "@stripe/stripe-js": "^7.3.0",
     "@tailwindcss/vite": "^4.1.3",
     "@tanstack/react-query": "^5.72.0",
     "axios": "^1.8.4",
