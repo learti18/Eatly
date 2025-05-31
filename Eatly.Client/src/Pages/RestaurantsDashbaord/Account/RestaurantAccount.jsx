@@ -10,6 +10,7 @@ import { useRestaurantByUserId } from "../../../Queries/Restaurants/useRestauran
 import { Check, Edit2 } from "lucide-react";
 import { EditRestaurantProfileSchema } from "./../../../Schemas/Restaurant/RestaurantProfileSchema";
 import { useEditRestaurant } from "../../../Queries/Restaurants/useEditRestaurant";
+import { ConnectAccountManagement } from "@stripe/react-connect-js";
 
 export default function RestaurantAccount() {
   const { data: restaurant, isLoading } = useRestaurantByUserId();
@@ -80,7 +81,7 @@ export default function RestaurantAccount() {
       {isEditing ? (
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Banner Image with ImageUploader */}
-          <div className="relative h-64">
+          <div className="relative h-52">
             <ImageUploader
               register={register}
               name="bannerImage"
@@ -198,16 +199,16 @@ export default function RestaurantAccount() {
       ) : (
         <>
           {/* Banner Image - Read Only Mode */}
-          <div className="relative h-64">
+          <div className="relative h-52">
             <img
               src={restaurant?.imageUrl}
               alt="Restaurant banner"
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="p-6 sm:p-8">
+          <div className="p-5 sm:p-8">
             {/* Header Section */}
-            <div className="flex justify-between items-center mb-8">
+            <div className="flex justify-between items-center mb-6">
               <div>
                 <h1 className="text-2xl font-bold text-gray-800">
                   {restaurant?.name}
@@ -234,8 +235,8 @@ export default function RestaurantAccount() {
             </div>
 
             {/* Read-only View */}
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-lg font-medium text-gray-700 mb-1">
                     Restaurant Name
@@ -276,6 +277,14 @@ export default function RestaurantAccount() {
           </div>
         </>
       )}
+      <div className="p-6 sm:p-8 border-t border-gray-200">
+        <h2 className="mb-6">
+          <span className="text-2xl font-semibold text-gray-800">
+            Stripe Connect Account Management
+          </span>
+        </h2>
+        <ConnectAccountManagement />
+      </div>
     </div>
   );
 }

@@ -12,14 +12,11 @@ import Contact from "./Pages/Contact/Contact";
 import Blogdetails from "./Pages/Blogs/Blogdetails";
 import ScrollToTop from "./Hooks/ScrollToTop";
 import Menudetails from "./Pages/Menu/Menudetails";
-import Order from "./Order/Order";
 import { AuthProvider } from "./Contexts/AuthContext";
 import RestaurantSignup from "./Pages/Auth/RestaurantSignup";
 import Unauthorized from "./Pages/Unauthorized";
-import RestaurantVerification from "./Pages/RestaurantsDashbaord/AccountSetup/RestaurantVerification";
 import RestaurantRoute from "./Routes/RestaurantRoute";
 import VerifiedRestaurantRoute from "./Routes/VerifiedRestaurantRoute";
-import RestaurantProfile from "./Pages/RestaurantsDashbaord/AccountSetup/RestaurantProfile";
 import RestaurantDashboard from "./Pages/RestaurantsDashbaord/RestaurantDashboard";
 import GuestRoute from "./Routes/GuestRoute";
 import PublicRoute from "./Routes/PublicRoute";
@@ -41,6 +38,13 @@ import FoodDetails from "./Pages/Menu/FoodDetails";
 import RestaurantSetup from "./Pages/RestaurantsDashbaord/AccountSetup/RestaurantSetup";
 import ProtectedRoute from "./Routes/ProtectedRoute";
 import RestaurantsOrders from "./Pages/RestaurantsDashbaord/Orders/RestaurantsOrders";
+import Refresh from "./Pages/StripeOnboarding/Refresh";
+import Return from "./Pages/StripeOnboarding/Return";
+import Checkout from "./Pages/Payment/Checkout";
+import OrderStatus from "./Pages/Payment/OrderStatus";
+import Order from "./Pages/Order/Order";
+import Cart from "./Pages/Cart/Cart";
+import "leaflet/dist/leaflet.css";
 
 const queryClient = new QueryClient();
 
@@ -64,19 +68,13 @@ function App() {
                   <Route path="/menu" element={<Menu />} />
                   <Route path="/contact" element={<Contact />} />
 
-                  {/* guest routes */}
-                  <Route element={<GuestRoute />}>
-                    <Route path="/sign-in" element={<Signin />} />
-                    <Route path="/sign-up" element={<Signup />} />
-                    <Route
-                      path="/restaurant-signup"
-                      element={<RestaurantSignup />}
-                    />
-                    <Route
-                      path="/forget-password"
-                      element={<ForgetPassword />}
-                    />
-                  </Route>
+                  <Route path="/sign-in" element={<Signin />} />
+                  <Route path="/sign-up" element={<Signup />} />
+                  <Route
+                    path="/restaurant-signup"
+                    element={<RestaurantSignup />}
+                  />
+                  <Route path="/forget-password" element={<ForgetPassword />} />
                   <Route path="blogs/:id" element={<Blogdetails />} />
                   <Route path="menu/:id" element={<Menudetails />} />
                   <Route
@@ -92,7 +90,10 @@ function App() {
 
               <Route element={<ProtectedRoute />}>
                 <Route element={<Layout />}>
-                  <Route path="/cart" element={<Order />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/order" element={<Order />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/checkout/success" element={<OrderStatus />} />
                 </Route>
               </Route>
 
@@ -116,6 +117,14 @@ function App() {
                   <Route
                     path="/restaurant-profile"
                     element={<RestaurantSetup />}
+                  />
+                  <Route
+                    path="refresh/:connectedAccountId"
+                    element={<Refresh />}
+                  />
+                  <Route
+                    path="return/:connectedAccountId"
+                    element={<Return />}
                   />
 
                   {/* Dashboard routes - only accessible after verification */}
