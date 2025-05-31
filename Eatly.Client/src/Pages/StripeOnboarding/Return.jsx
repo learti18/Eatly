@@ -1,10 +1,166 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Logo from "../../components/Shared/Logo";
+import api from "../../Services/Api";
 
 export default function Return() {
   const { connectedAccountId } = useParams();
   const navigate = useNavigate();
+
+  const [isOnboarded, setIsOnboarded] = useState(false);
+  const [isOnboardedLoading, setIsOnboardedLoading] = useState(true);
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      try {
+        const response = await api.get("/account/onboarding-status");
+
+        if (response.status !== 200) {
+          throw new Error("Failed to fetch onboarding status");
+        }
+        const { isOnboarded } = response.data;
+        setIsOnboarded(isOnboarded);
+      } catch (error) {
+        setIsOnboarded(false);
+      } finally {
+        setIsOnboardedLoading(false);
+      }
+    };
+    checkOnboardingStatus();
+  }, []);
+
+  if (isOnboardedLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="w-12 h-12 border-4 border-purple border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-lg text-gray-600 font-medium">
+            Checking account status...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isOnboarded) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-white to-purple-50 py-12 px-4 flex items-center justify-center">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div className="bg-red-50 p-6 border-b border-red-100">
+            <div className="flex items-center space-x-3">
+              <div className="bg-red-100 p-2 rounded-full">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-red-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-xl font-bold text-red-700">
+                Account Setup Incomplete
+              </h2>
+            </div>
+          </div>
+
+          <div className="p-6">
+            <p className="text-gray-700 mb-6">
+              You haven't completed setting up your Stripe account. Additional
+              information is needed before you can start receiving payments.
+            </p>
+
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+              <h3 className="text-sm font-medium text-gray-700 mb-2">
+                What's missing?
+              </h3>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li className="flex items-center space-x-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-red-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                  <span>Identity verification</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-red-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                  <span>Banking information</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-red-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                  <span>Business details</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="flex justify-center">
+              <button
+                onClick={() => navigate("/restaurant-profile")}
+                className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-white bg-purple hover:bg-purple-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple transition-all duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+                Return to Onboarding
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-purple-50 py-12 px-4">

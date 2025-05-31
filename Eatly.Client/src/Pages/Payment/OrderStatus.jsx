@@ -5,7 +5,6 @@ import api from "../../Services/Api";
 export default function OrderStatus() {
   const [searchParams] = useSearchParams();
   const session_id = searchParams.get("session_id");
-  const account_id = searchParams.get("account_id");
   const [sessionData, setSessionData] = useState(null);
   const [error, setError] = useState(null);
 
@@ -13,7 +12,7 @@ export default function OrderStatus() {
     const fetchSessionData = async () => {
       try {
         const response = await api.get(
-          `/payments/session?sessionId=${session_id}&accountId=${account_id}`
+          `/payments/session?sessionId=${session_id}`
         );
 
         if (response.status !== 200) {
@@ -26,8 +25,8 @@ export default function OrderStatus() {
         setError("Failed to fetch order status. Please try again later.");
       }
     };
-    fetchSessionData();
-  }, [session_id, account_id]);
+    if (session_id) fetchSessionData();
+  }, [session_id]);
 
   if (error) return <div>Error: {error}</div>;
 

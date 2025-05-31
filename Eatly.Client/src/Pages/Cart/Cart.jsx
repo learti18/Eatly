@@ -1,67 +1,26 @@
 import React, { useState, useEffect } from "react";
-import TotalOrder from "./../Components/TotalOrder";
-import { useFetchCart } from "../Queries/Cart/useFetchCart";
-import OrderCard from "../components/OrderCard";
-import { useClearCart } from "../Queries/Cart/useClearCart";
+import TotalOrder from "../../Components/TotalOrder";
+import { useFetchCart } from "../../Queries/Cart/useFetchCart";
+import OrderCard from "../../components/OrderCard";
+import { useClearCart } from "../../Queries/Cart/useClearCart";
 import { toast } from "sonner";
-import { useAddOrder } from "../Queries/Order/useAddOrder";
 import { useNavigate } from "react-router-dom";
-import { loadStripe } from "@stripe/stripe-js";
-import api from "../Services/Api";
 
-export default function Order() {
+export default function Cart() {
   const navigate = useNavigate();
   const { data: cart, isLoading, isError } = useFetchCart();
   const { mutate: clearCart, isPending } = useClearCart();
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
   const [localTotalPrice, setLocalTotalPrice] = useState(0);
-  const [orderSuccess, setOrderSuccess] = useState(false);
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
 
-  const createOrder = async () => {
-    setIsCreatingOrder(true);
-
-    try {
-      const response = await api.post(
-        "/payments/create-checkout-session",
-        {},
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const { sessionId, publicKey, connectedAccountId } = response.data;
-
-      if (!sessionId) {
-        toast.error("Failed to create order. Please try again.");
-        console.error("No sessionId returned from server.");
-        return;
-      }
-      const stripePromise = loadStripe(publicKey, {
-        stripeAccount: connectedAccountId,
-      });
-
-      const stripe = await stripePromise;
-      if (!stripe) {
-        toast.error("Stripe failed to load. Please try again later.");
-        console.error("Stripe failed to load.");
-        return;
-      }
-
-      const result = await stripe.redirectToCheckout({
-        sessionId: sessionId,
-      });
-
-      if (result.error) {
-        toast.error(result.error.message);
-      }
-    } catch (error) {
-      console.error("Error creating order:", error);
-      toast.error("Failed to create order. Please try again.");
-    } finally {
-      setIsCreatingOrder(false);
+  const proceedToOrder = () => {
+    if (!cart || cart.cartItems.length === 0) {
+      toast.error("Your cart is empty");
+      return;
     }
+
+    navigate("/order");
   };
 
   useEffect(() => {
@@ -103,43 +62,6 @@ export default function Order() {
     return (
       <div className="flex justify-center items-center h-screen">
         {isError.message}
-      </div>
-    );
-  }
-
-  if (orderSuccess) {
-    return (
-      <div className="bg-background-main min-h-screen flex items-center justify-center">
-        <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
-          <div className="flex flex-col items-center text-center">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-10 w-10 text-green-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-            </div>
-            <h2 className="text-2xl font-bold text-[#323142] mb-2">
-              Order Placed Successfully!
-            </h2>
-            <p className="text-gray-600 mb-6">
-              Thank you for your order. We're redirecting you to the order
-              details page.
-            </p>
-            <div className="w-full flex justify-center">
-              <div className="loading loading-dots loading-md"></div>
-            </div>
-          </div>
-        </div>
       </div>
     );
   }
@@ -222,18 +144,11 @@ export default function Order() {
           {/* <ApplyCouponInput /> */}
           <TotalOrder price={localTotalPrice} />
           <button
-            disabled={isCreatingOrder || cart?.cartItems?.length === 0}
-            onClick={createOrder}
+            disabled={cart?.cartItems?.length === 0}
+            onClick={proceedToOrder}
             className="bg-purple hover:bg-purple-dark mt-5 transition-colors duration-200 cursor-pointer text-white md:w-full text-xl rounded-2xl py-4 font-semibold flex items-center justify-center"
           >
-            {isCreatingOrder ? (
-              <>
-                <span className="loading loading-spinner loading-sm mr-2"></span>
-                Processing...
-              </>
-            ) : (
-              "Continue to Checkout"
-            )}
+            Proceed to Checkout
           </button>
         </div>
       </div>

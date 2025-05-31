@@ -15,14 +15,15 @@ import {
   LogOut,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import useLogout from "./../../Queries/Auth/useLogout";
 
-export default function RestaurantSidebar() {
+export default function RestaurantSidebar({ onLogout }) {
   const [isToggledSidebar, setIsToggledSidebar] = useState(true);
   const location = useLocation();
-  const logoutMutation = useLogout();
+
   const handleLogout = () => {
-    logoutMutation.mutateAsync();
+    if (onLogout) {
+      onLogout();
+    }
   };
 
   const isActive = (path) => {
