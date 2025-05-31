@@ -44,7 +44,7 @@ import Checkout from "./Pages/Payment/Checkout";
 import OrderStatus from "./Pages/Payment/OrderStatus";
 import Order from "./Pages/Order/Order";
 import Cart from "./Pages/Cart/Cart";
-import "leaflet/dist/leaflet.css";
+
 
 const queryClient = new QueryClient();
 
