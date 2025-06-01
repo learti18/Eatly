@@ -56,7 +56,13 @@ export default function Menudetails() {
         <div className="pb-20 ">
           <Accordion />
         </div>
-        <FloatingChat />
+        
+        {restaurant && (
+          <FloatingChat
+            restaurantId={restaurant.id}
+            restaurantName={restaurant.name}
+          />
+        )}
       </div>
     </div>
   );

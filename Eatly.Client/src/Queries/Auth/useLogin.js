@@ -5,6 +5,7 @@ import api from '../../Services/Api';
 import { STATUS } from '../../Utils/AuthStatus';
 import { getOrGenerateDeviceId } from '../../Utils/GenerateDeviceId';
 import { setCurrentEmail } from '../../Utils/UserStore';
+import { initializeFirebaseAuth } from '../../Services/FirebaseService';
 
 const useLogin = () => {
    const { login, setAuthenticationStatus } = useAuth()
@@ -20,13 +21,23 @@ const useLogin = () => {
             const { data } = await api.post("/web/auth/login", loginData)
             return data
         },
-        onSuccess: async ({ email, token, expiresAt, roles }) => {
+        onSuccess: async ({ email, token, expiresAt, roles, firebaseToken }) => {
             if(!token || !expiresAt){
                 throw new Error("Missing token or expiration time")
             }
 
+            // Initialize Firebase with the custom token
+            if (firebaseToken) {
+                try {
+                    await initializeFirebaseAuth(firebaseToken);
+                } catch (error) {
+                    console.error('Failed to initialize Firebase:', error);
+                    // Continue with regular auth even if Firebase fails
+                }
+            }
+
             setCurrentEmail(email)
-            login({ email, roles: roles || [] }, token, expiresAt)
+            login({ email, roles: roles || [] }, token, expiresAt, firebaseToken)
             setAuthenticationStatus(STATUS.SUCCEEDED)
 
             if(roles?.includes("Restaurant")) {

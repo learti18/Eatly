@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function ChatInput() {
+export default function ChatInput({ onSendMessage }) {
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+    
+    onSendMessage(message);
+    setMessage('');
+  };
+
   return (
-    <div className="flex items-center p-3 bg-white w-200 ">
+    <form onSubmit={handleSubmit} className="flex items-center p-3 bg-white w-200">
       {/* Microphone Button */}
       <button className="bg-purple p-3 rounded-lg text-white hover:bg-purple-dark focus:outline-none">
         <svg
@@ -28,17 +38,21 @@ export default function ChatInput() {
       <div className="flex-grow mx-3 relative">
         <input
           type="text"
-          placeholder="Write now..."
-          className="w-full pl-4 pr-10 py-3 rounded-xl bg-gray-100 text-text-dark  focus:outline-none"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Write a message..."
+          className="w-full pl-4 pr-10 py-3 rounded-xl bg-gray-100 text-text-dark focus:outline-none"
         />
 
-        {/* Send Button Inside Input */}
-        <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-purple hover:text-purple-dark">
+        <button
+          type="submit"
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-purple hover:text-purple-dark"
+        >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
             <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
           </svg>
         </button>
       </div>
-    </div>
+    </form>
   );
 }

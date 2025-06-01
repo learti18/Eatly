@@ -23,6 +23,7 @@ import {
   formatUserData,
   refreshAuthToken,
 } from "../Services/AuthService";
+import { initializeFirebaseAuth } from "../Services/FirebaseService";
 
 export const AuthContext = createContext({
   ...initialState,
@@ -36,8 +37,19 @@ export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, initialState);
   const isInitialAuthCheckComplete = useRef(false);
 
-  const login = useCallback((user, token, expiresAt) => {
+  const login = useCallback(async (user, token, expiresAt, firebaseToken) => {
     setAccessToken(token);
+    
+    // Initialize Firebase auth if we have a Firebase token
+    if (firebaseToken) {
+      try {
+        await initializeFirebaseAuth(firebaseToken);
+      } catch (error) {
+        console.error('Failed to initialize Firebase auth:', error);
+        // Continue with regular auth even if Firebase fails
+      }
+    }
+    
     dispatch({ type: "login", payload: { user, token, expiresAt } });
   }, []);
 
@@ -94,7 +106,7 @@ export const AuthProvider = ({ children }) => {
           setCurrentUser(data);
         }
 
-        login(formatUserData(data), data.token, data.expiresAt);
+        login(formatUserData(data), data.token, data.expiresAt, data.firebaseToken);
       } catch (error) {
         console.error("Initial authentication failed", error);
         setAuthenticationStatus(STATUS.FAILED);
@@ -112,7 +124,7 @@ export const AuthProvider = ({ children }) => {
     const tokenRefreshTimer = setTimeout(async () => {
       try {
         const { data } = await refreshAuthToken();
-        login(formatUserData(data), data.token, data.expiresAt);
+        login(formatUserData(data), data.token, data.expiresAt, data.firebaseToken);
       } catch (error) {
         console.error("Token refresh failed", error);
         logout();

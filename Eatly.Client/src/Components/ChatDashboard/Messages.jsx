@@ -1,8 +1,24 @@
 // components/ChatDashboard/Messages.js
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import ChatInput from './ChatInput';
+import { getAuth } from 'firebase/auth';
 
-export default function Messages() {
+export default function Messages({ messages = [], onSendMessage }) {
+  const messagesEndRef = useRef(null);
+  const auth = getAuth();
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  if (!auth.currentUser) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="flex flex-col h-full bg-white border-l border-gray-300">
       <div className="flex items-center space-x-3 border-b border-gray-300 px-4 py-3">
@@ -14,22 +30,32 @@ export default function Messages() {
       </div>
 
       <div className="flex-grow overflow-y-auto px-4 py-6 space-y-4">
-        <div className="text-right">
-          <div className="inline-block bg-gray-200 text-text-dark rounded-xl p-3 max-w-xs">Hi, My Order Is Not Delivered Yet. How Much Time I Wait For The Order.</div>
-          <div className="text-xs text-gray-400 mt-1">10:52</div>
-        </div>
-        <div className="text-left">
-          <div className="inline-block bg-purple text-white rounded-xl p-3 max-w-xs">Order Is On The Way Matt.</div>
-          <div className="text-xs text-gray-400 mt-1">10:53</div>
-        </div>
-        <div className="text-right">
-          <div className="inline-block bg-gray-200 text-text-dark rounded-xl p-3 max-w-xs">OKay, I’m Waiting….</div>
-          <div className="text-xs text-gray-400 mt-1">10:53</div>
-        </div>
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={`${
+              message.senderId === auth.currentUser.uid ? 'text-right' : 'text-left'
+            }`}
+          >
+            <div
+              className={`inline-block rounded-xl p-3 max-w-xs ${
+                message.senderId === auth.currentUser.uid
+                  ? 'bg-purple text-white'
+                  : 'bg-gray-200 text-text-dark'
+              }`}
+            >
+              <div>{message.content}</div>
+              <div className="text-xs opacity-75 mt-1">
+                {message.timestamp ? new Date(message.timestamp).toLocaleTimeString() : ''}
+              </div>
+            </div>
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
       </div>
 
-      <div className=" flex justify-center  py-3   ">
-        <ChatInput />
+      <div className="py-3">
+        <ChatInput onSendMessage={onSendMessage} />
       </div>
     </div>
   );
