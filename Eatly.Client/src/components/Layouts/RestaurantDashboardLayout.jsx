@@ -85,16 +85,14 @@ export default function RestaurantDashboardLayout() {
         <RestaurantSidebar onLogout={handleLogout} />
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 ">
-        <Outlet />
-      </div>
+     
+      
       {/* Error Message */}
       {errorMessage ? (
         <div>{`Error: ${errorMessage}`}</div>
       ) : (
         <ConnectComponentsProvider connectInstance={stripeConnectInstance}>
-          <div className="flex-1 py-8 px-8 md:px-10">
+          <div className="flex-1  ">
             <Outlet />
           </div>
         </ConnectComponentsProvider>
