@@ -1,3 +1,4 @@
+import './styles/utils.css';
 import { useState } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -38,6 +39,7 @@ import FoodDetails from "./Pages/Menu/FoodDetails";
 import RestaurantSetup from "./Pages/RestaurantsDashbaord/AccountSetup/RestaurantSetup";
 import ProtectedRoute from "./Routes/ProtectedRoute";
 import RestaurantsOrders from "./Pages/RestaurantsDashbaord/Orders/RestaurantsOrders";
+import RestaurantChat from "./Pages/RestaurantsDashbaord/Chat/RestaurantChat";
 import Refresh from "./Pages/StripeOnboarding/Refresh";
 import Return from "./Pages/StripeOnboarding/Return";
 import Checkout from "./Pages/Payment/Checkout";
@@ -140,6 +142,7 @@ function App() {
                       <Route path="orders" element={<RestaurantsOrders />} />
                       <Route path="account" element={<RestaurantAccount />} />
                       <Route path="drivers" element={<DriversListing />} />
+                      <Route path="chat" element={<RestaurantChat />} />
                     </Route>
                   </Route>
                 </Route>

@@ -5,14 +5,21 @@ import OrderCard from "../../components/Cards/OrderCard";
 import QuantityButton from "../../components/Buttons/QuantityButton";
 import IconButton from "../../components/Buttons/IconButton";
 import { useFoodByRestaurantId } from "../../Queries/Foods/useFoodByRestaurantId";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useAddToCart } from "../../Queries/Cart/useAddToCart";
+import { useAllFoodsById } from "../../Queries/Foods/useAllFoodsById";
+import { getIngredientEmoji, getIngredientBgColor } from "../../utils/ingredients/ingredientUtils";
 
 export default function FoodDetails() {
   const { id, foodId } = useParams();
   const { data: food, isLoading, isError } = useFoodByRestaurantId(foodId, id);
   const { mutate: addToCart, isPending } = useAddToCart();
   const [quantity, setQuantity] = useState(1);
+  const {
+    data: foods,
+    isLoading: foodsLoading,
+    isError: foodsError,
+  } = useAllFoodsById(id);
 
   const increment = () => {
     setQuantity((curr) => curr + 1);
@@ -75,22 +82,24 @@ export default function FoodDetails() {
 
             <div className="mt-10 flex flex-col lg:flex-row items-center justify-between gap-10">
               <div className="hidden lg:flex items-center gap-4">
-                <IconButton
-                  bgColor="bg-pink-200"
-                  icon={<span className="text-3xl">🧅</span>}
-                />
-                <IconButton
-                  bgColor="bg-orange-200"
-                  icon={<span className="text-3xl">🥕</span>}
-                />
-                <IconButton
-                  bgColor="bg-red-200"
-                  icon={<span className="text-3xl">🍅</span>}
-                />
-                <IconButton
-                  bgColor="bg-green-200"
-                  icon={<span className="text-3xl">🥒</span>}
-                />
+                {food.ingridients && food.ingridients.length > 0 ? (
+                  food.ingridients.map((ingredient, index) => (
+                    <IconButton
+                      key={ingredient.id || index}
+                      bgColor={getIngredientBgColor(index)}
+                      icon={
+                        <span className="text-3xl">
+                          {getIngredientEmoji(ingredient.name || ingredient)}
+                        </span>
+                      }
+                      tooltip={ingredient.name || ingredient}
+                    />
+                  ))
+                ) : (
+                  <>
+              
+                  </>
+                )}
               </div>
 
               <div className="flex items-center gap-4">
@@ -123,18 +132,36 @@ export default function FoodDetails() {
                 Recommended
               </h2>
               <div className="flex flex-col gap-5">
-                {orders.map((order) => (
-                  <OrderCard
-                    key={order.id}
-                    id={order.id}
-                    image={order.image}
-                    foodId={order.foodId}
-                    name={order.name}
-                    status={order.status}
-                    time={order.time}
-                    date={order.date}
-                  />
-                ))}
+                {foodsLoading ? (
+                  <span className="loading loading-spinner loading-xl mx-auto"></span>
+                ) : foodsError ? (
+                  <p className="text-red-500 text-sm">{foodsError.message}</p>
+                ) : (
+                  foods.map((food) => (
+                    <Link
+                    to={`/menu/${id}/food/${food.id}`}
+                      key={food.id}
+                      className="flex justify-between items-center bg-white rounded-xl shadow-sm hover:shadow-md transition duration-200 p-4 border border-gray-200"
+                    >
+                      <div className="flex gap-4 items-center">
+                        <img
+                          src={food.imageUrl}
+                          alt={food.name}
+                          className="w-14 h-14 rounded-full object-cover border border-gray-100"
+                        />
+                        <div className="flex flex-col">
+                          <h3 className="text-base font-semibold text-text-dark truncate">
+                            {food.name}
+                          </h3>
+                          <p className="text-sm text-gray-500">{food.type}</p>
+                        </div>
+                      </div>
+                      <div className="text-sm font-semibold text-gray-700">
+                        ${food.price}
+                      </div>
+                    </Link>
+                  ))
+                )}
               </div>
             </div>
           </div>

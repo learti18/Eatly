@@ -85,6 +85,10 @@ export default function RestaurantDashboardLayout() {
         <RestaurantSidebar onLogout={handleLogout} />
       </div>
 
+      {/* Main Content */}
+      <div className="flex-1 ">
+        <Outlet />
+      </div>
       {/* Error Message */}
       {errorMessage ? (
         <div>{`Error: ${errorMessage}`}</div>
