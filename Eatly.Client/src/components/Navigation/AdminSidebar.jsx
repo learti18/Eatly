@@ -12,6 +12,7 @@ import {
   ForkKnife,
   User,
   LogOut,
+  Book,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import useLogout from "./../../Queries/Auth/useLogout";
@@ -44,9 +45,9 @@ export default function Sidebar() {
     { name: "Users", to: "/dashboard/users", icon: <User size={22} /> },
     { name: "Orders", to: "/dashboard/orders", icon: <Inbox size={22} /> },
     {
-      name: "Calendar",
-      to: "/dashboard/calendar",
-      icon: <Calendar size={22} />,
+      name: "Blogs",
+      to: "/dashboard/blogs",
+      icon: <Book size={22} />,
     },
     {
       name: "Reimbursements",

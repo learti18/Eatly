@@ -44,6 +44,9 @@ import Checkout from "./Pages/Payment/Checkout";
 import OrderStatus from "./Pages/Payment/OrderStatus";
 import Order from "./Pages/Order/Order";
 import Cart from "./Pages/Cart/Cart";
+import BlogListing from "./Pages/AdminDashboard/Blogs/BlogListing";
+import AddBlogs from "./Pages/AdminDashboard/Blogs/AddBlogs";
+import EditBlogs from "./Pages/AdminDashboard/Blogs/EditBlogs";
 
 
 const queryClient = new QueryClient();
@@ -105,6 +108,18 @@ function App() {
                   <Route
                     path="restaurants"
                     element={<DashboardRestaurants />}
+                  />
+                  <Route
+                    path="blogs"
+                    element={<BlogListing />}
+                  />
+                  <Route
+                    path="blogs/add"
+                    element={<AddBlogs />}
+                  />
+                  <Route
+                    path="blogs/edit/:id"
+                    element={<EditBlogs />}
                   />
                   <Route path="orders" element={<Orders />} />
                 </Route>

@@ -1,9 +1,17 @@
 import React from "react";
 import BlogCard from "../../components/Blogs/BlogCard";
-import blogs from "../../blogs";
 import Accordion from "../../components/Accordion";
+import { useAllBlogs } from "../../Queries/Blogs/useAllBlogs";
 
 export default function Blogs() {
+  const { data: blogs, isLoading, isError } = useAllBlogs();
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <span className="loading loading-spinner loading-xl"></span>
+      </div>
+    );
+  }
   return (
     <div className=" bg-background-main">
       <div className=" py-16 px-6 mb-14  md:mb-24 md:px-20 max-w-7xl mx-auto flex flex-col items-center">
@@ -16,11 +24,10 @@ export default function Blogs() {
             <BlogCard
               id={blog.id}
               key={blog.id}
-              blogImage={blog.blogImage}
-              blogTitle={blog.blogTitle}
-              user={blog.user}
-              date={blog.date}
-              userImg={blog.userImg}
+              blogImage={blog.imageUrl}
+              blogTitle={blog.title}
+              user={blog.username}
+              date={blog.createdAt}
             />
           ))}
         </div>
