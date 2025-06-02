@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useChat } from '../../Hooks/useChat';
 import { useAuth } from '../../Hooks/useAuth';
 import { getCurrentUser } from '../../Utils/UserStore';
 import { STATUS } from '../../Utils/AuthStatus';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useRestaurantById } from '../../Queries/Restaurants/useRestaurantById';
+import { findExistingRoom } from '../../Services/FirebaseService';
 import Icon from './Icon';
 import { CircleX } from 'lucide-react';
 
@@ -14,10 +15,11 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
   const [roomId, setRoomId] = useState(null);
   const [isLoadingRoom, setIsLoadingRoom] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
-  const [isFirebaseReady, setIsFirebaseReady] = useState(false);
-  const { status, isAuthenticated } = useAuth();
+  const [firebaseUser, setFirebaseUser] = useState(null);
+  const { status, isAuthenticated, user } = useAuth();
   const currentUser = getCurrentUser();
   const firebaseAuth = getAuth();
+  const messagesEndRef = useRef(null);
   
   // Fetch restaurant data to get the user ID
   const { data: restaurant, isLoading: isLoadingRestaurant } = useRestaurantById(restaurantId);
@@ -31,70 +33,76 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
     rooms
   } = useChat(roomId);
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Scroll to bottom when messages update
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   useEffect(() => {
     if (status !== STATUS.PENDING) {
       setAuthChecked(true);
     }
   }, [status]);
 
+  // Handle Firebase authentication state
   useEffect(() => {
+    console.log('Setting up Firebase auth listener');
     const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
       console.log('Firebase auth state changed:', user ? 'authenticated' : 'not authenticated');
-      setIsFirebaseReady(!!user);
+      setFirebaseUser(user);
     });
 
-    return () => unsubscribe();
+    return () => {
+      console.log('Cleaning up Firebase auth listener');
+      unsubscribe();
+    };
   }, []);
 
+  // Handle room creation/finding
   useEffect(() => {
-    // Find existing chat room or create new one
     const findOrCreateRoom = async () => {
-      if (!isOpen || !restaurant) return;
-      
-      const currentFirebaseUser = firebaseAuth.currentUser;
-      if (!currentFirebaseUser) {
-        console.log('Waiting for Firebase authentication...');
+      if (!isOpen || !restaurant || !firebaseUser) {
+        console.log('Waiting for conditions:', {
+          isOpen,
+          hasRestaurant: !!restaurant,
+          hasFirebaseUser: !!firebaseUser
+        });
         return;
       }
-      
+
       setIsLoadingRoom(true);
       try {
-        console.log('Finding/creating room with:', {
-          currentUserId: currentFirebaseUser.uid,
-          restaurantUserId: restaurant.userId
-        });
+        // First try to find an existing room for this client
+        const existingRoomId = await findExistingRoom(firebaseUser.uid, restaurant.userId);
         
-        // Check if room already exists
-        const existingRoom = rooms.find(room => 
-          room.participants && 
-          room.participants[currentFirebaseUser.uid] && 
-          room.participants[restaurant.userId]
-        );
-
-        if (existingRoom) {
-          console.log('Found existing room:', existingRoom.id);
-          setRoomId(existingRoom.id);
-        } else if (currentFirebaseUser && restaurant.userId) {
-          // Create new room if it doesn't exist
-          console.log('Creating new room');
+        if (existingRoomId) {
+          console.log('Using existing room:', existingRoomId);
+          setRoomId(existingRoomId);
+        } else {
+          // Create new room for new client
+          console.log('Creating new room for client:', firebaseUser.uid);
           const newRoomId = await createChatRoom(
-            [currentFirebaseUser.uid, restaurant.userId],
-            `Chat with ${restaurantName}`
+            [firebaseUser.uid, restaurant.userId],
+            ` ${user?.email || currentUser?.email || 'Anonymous User'}`
           );
           console.log('Created new room:', newRoomId);
           setRoomId(newRoomId);
         }
       } catch (err) {
-        console.error('Error setting up chat:', err);
+        console.error('Error with chat room:', err);
       } finally {
         setIsLoadingRoom(false);
       }
     };
 
-    if (isAuthenticated && authChecked && isFirebaseReady && !isLoadingRestaurant) {
+    if (isAuthenticated && authChecked && !isLoadingRestaurant) {
       findOrCreateRoom();
     }
-  }, [firebaseAuth.currentUser, restaurant, rooms, isAuthenticated, authChecked, isOpen, isFirebaseReady, isLoadingRestaurant]);
+  }, [firebaseUser, restaurant, isAuthenticated, authChecked, isOpen, isLoadingRestaurant]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -109,7 +117,7 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
   };
 
   // Don't show anything while checking authentication or loading restaurant data
-  if (status === STATUS.PENDING || !authChecked || !isFirebaseReady || isLoadingRestaurant) {
+  if (status === STATUS.PENDING || !authChecked || !firebaseUser || isLoadingRestaurant) {
     return null;
   }
 
@@ -133,7 +141,10 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
         <div className="bg-white rounded-lg shadow-xl w-96 h-[500px] flex flex-col">
           {/* Header */}
           <div className="p-4 border-b flex justify-between items-center bg-purple text-white rounded-t-lg">
-            <h3 className="font-semibold">{restaurantName}</h3>
+            <div>
+              <h3 className="font-semibold">{restaurantName}</h3>
+            
+            </div>
             <button onClick={() => setIsOpen(false)} className="text-white hover:text-gray-200">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -142,7 +153,7 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide">
             {isLoadingRoom || messagesLoading ? (
               <div className="flex items-center justify-center h-full">
                 <span className="loading loading-spinner loading-lg"></span>
@@ -154,25 +165,28 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
                 No messages yet. Start the conversation!
               </div>
             ) : (
-              messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`flex ${msg.senderId === firebaseAuth.currentUser?.uid ? 'justify-end' : 'justify-start'}`}
-                >
+              <>
+                {messages.map((msg) => (
                   <div
-                    className={`max-w-xs rounded-xl p-3 ${
-                      msg.senderId === firebaseAuth.currentUser?.uid
-                        ? 'bg-purple text-white'
-                        : 'bg-gray-200 text-gray-800'
-                    }`}
+                    key={msg.id}
+                    className={`flex ${msg.senderId === firebaseAuth.currentUser?.uid ? 'justify-end' : 'justify-start'}`}
                   >
-                    <p className="break-words">{msg.content}</p>
-                    <span className="text-xs opacity-75 mt-1 block">
-                      {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}
-                    </span>
+                    <div
+                      className={`max-w-xs rounded-xl p-3 ${
+                        msg.senderId === firebaseAuth.currentUser?.uid
+                          ? 'bg-purple text-white'
+                          : 'bg-gray-200 text-gray-800'
+                      }`}
+                    >
+                      <p className="break-words">{msg.content}</p>
+                      <span className="text-xs opacity-75 mt-1 block">
+                        {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))
+                ))}
+                <div ref={messagesEndRef} />
+              </>
             )}
           </div>
 

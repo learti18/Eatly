@@ -41,7 +41,7 @@ const checkAuth = () => {
   const user = auth.currentUser;
   console.log('Checking Firebase auth:', user ? 'authenticated' : 'not authenticated');
   if (!user) {
-    throw new Error('User not authenticated with Firebase');
+    return null;
   }
   return user;
 };
@@ -49,7 +49,12 @@ const checkAuth = () => {
 export const createChatRoom = async (participantIds, roomName = '') => {
   console.log('Creating chat room with participants:', participantIds);
   const user = checkAuth();
+  if (!user) {
+    console.log('Waiting for authentication...');
+    return null;
+  }
 
+  // Create a new room
   const roomRef = ref(db, 'chats');
   const newRoomRef = push(roomRef);
   
@@ -64,7 +69,8 @@ export const createChatRoom = async (participantIds, roomName = '') => {
     createdBy: user.uid,
     name: roomName,
     participants,
-    lastMessage: null
+    lastMessage: null,
+    clientId: user.uid // Add clientId to identify the client's room
   };
 
   console.log('Setting room data:', roomData);
@@ -72,8 +78,37 @@ export const createChatRoom = async (participantIds, roomName = '') => {
   return newRoomRef.key;
 };
 
+export const findExistingRoom = async (clientId, restaurantId) => {
+  const roomsRef = ref(db, 'chats');
+  const snapshot = await get(roomsRef);
+  
+  if (snapshot.exists()) {
+    let existingRoom = null;
+    snapshot.forEach((childSnapshot) => {
+      const room = childSnapshot.val();
+      if (room.clientId === clientId && 
+          room.participants && 
+          room.participants[clientId] && 
+          room.participants[restaurantId]) {
+        existingRoom = { id: childSnapshot.key, ...room };
+      }
+    });
+    
+    if (existingRoom) {
+      console.log('Found existing room for client:', existingRoom.id);
+      return existingRoom.id;
+    }
+  }
+  
+  return null;
+};
+
 export const sendMessage = async (roomId, messageContent) => {
   const user = checkAuth();
+  if (!user) {
+    console.log('Waiting for authentication...');
+    return null;
+  }
   console.log('Sending message to room:', roomId);
 
   const messagesRef = ref(db, `chats/${roomId}/messages`);
@@ -103,6 +138,10 @@ export const sendMessage = async (roomId, messageContent) => {
 
 export const subscribeToMessages = (roomId, callback) => {
   const user = checkAuth();
+  if (!user) {
+    console.log('Waiting for authentication...');
+    return () => {};
+  }
   console.log('Subscribing to messages for room:', roomId);
 
   const messagesRef = ref(db, `chats/${roomId}/messages`);
@@ -130,6 +169,10 @@ export const subscribeToMessages = (roomId, callback) => {
 
 export const subscribeToUserRooms = (callback) => {
   const user = checkAuth();
+  if (!user) {
+    console.log('Waiting for authentication...');
+    return () => {};
+  }
   console.log('Subscribing to rooms for user:', user.uid);
 
   const roomsRef = ref(db, 'chats');

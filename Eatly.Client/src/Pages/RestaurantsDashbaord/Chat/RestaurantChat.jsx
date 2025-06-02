@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../../Hooks/useAuth";
 import { getCurrentUser } from "../../../Utils/UserStore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -14,10 +14,20 @@ export default function RestaurantChat() {
   const [loading, setLoading] = useState(true);
   const [messageLoading, setMessageLoading] = useState(false);
   const [error, setError] = useState(null);
+  const messagesEndRef = useRef(null);
   
   const { status, isAuthenticated } = useAuth();
   const currentUser = getCurrentUser();
   const firebaseAuth = getAuth();
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Scroll to bottom when messages update
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   useEffect(() => {
     if (status !== STATUS.PENDING) {
@@ -186,7 +196,7 @@ export default function RestaurantChat() {
         <div className="flex-grow h-screen p-2 rounded-md">
           {selectedRoomId ? (
             <div className="flex flex-col h-full bg-white border-l border-gray-300">
-              <div className="flex-grow overflow-y-auto px-4 py-6 space-y-4">
+              <div className="flex-grow overflow-y-auto px-4 py-6 space-y-4 scrollbar-hide">
                 {messageLoading ? (
                   <div className="flex items-center justify-center h-full">
                     <span className="loading loading-spinner loading-lg"></span>
@@ -198,25 +208,28 @@ export default function RestaurantChat() {
                     No messages yet in this conversation.
                   </div>
                 ) : (
-                  messages.map((msg) => (
-                    <div
-                      key={msg.id}
-                      className={`flex ${msg.senderId === firebaseAuth.currentUser?.uid ? 'justify-end' : 'justify-start'}`}
-                    >
+                  <>
+                    {messages.map((msg) => (
                       <div
-                        className={`max-w-xs rounded-xl p-3 ${
-                          msg.senderId === firebaseAuth.currentUser?.uid
-                            ? 'bg-purple text-white'
-                            : 'bg-gray-200 text-gray-800'
-                        }`}
+                        key={msg.id}
+                        className={`flex ${msg.senderId === firebaseAuth.currentUser?.uid ? 'justify-end' : 'justify-start'}`}
                       >
-                        <p className="break-words">{msg.content}</p>
-                        <span className="text-xs opacity-75 mt-1 block">
-                          {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}
-                        </span>
+                        <div
+                          className={`max-w-xs rounded-xl p-3 ${
+                            msg.senderId === firebaseAuth.currentUser?.uid
+                              ? 'bg-purple text-white'
+                              : 'bg-gray-200 text-gray-800'
+                          }`}
+                        >
+                          <p className="break-words">{msg.content}</p>
+                          <span className="text-xs opacity-75 mt-1 block">
+                            {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  ))
+                    ))}
+                    <div ref={messagesEndRef} />
+                  </>
                 )}
               </div>
               
