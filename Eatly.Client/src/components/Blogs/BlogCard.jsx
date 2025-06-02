@@ -13,6 +13,22 @@ export default function BlogCard({
   // Different styling based on size
   const isSm = size === "sm";
 
+  // Format the date using built-in JavaScript Date
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { month: "short", day: "numeric", year: "numeric" };
+    return date.toLocaleDateString("en-US", options);
+  };
+
+  // Extract username from email (everything before @)
+  const formatUsername = (email) => {
+    if (!email) return "";
+    return email.split("@")[0];
+  };
+
+  const formattedDate = formatDate(date);
+  const formattedUsername = formatUsername(user);
+
   return (
     <Link
       to={`/blogs/${id}`}
@@ -40,7 +56,7 @@ export default function BlogCard({
       <div className={`flex flex-col justify-center ${isSm ? "pt-2" : "pt-2"}`}>
         <div className="flex items-center gap-3">
           <img
-            src={userImg}
+            src={"/users/user1.jpg"}
             alt={user}
             className={`${
               isSm ? "w-9 h-9" : "w-10 h-10"
@@ -54,9 +70,9 @@ export default function BlogCard({
                   isSm ? "text-sm" : "text-base"
                 } font-semibold text-black`}
               >
-                {user}
+                {formattedUsername}
               </p>
-              <span className="text-xs text-gray-400">{date}</span>
+              <span className="text-xs text-gray-400">{formattedDate}</span>
             </div>
           </div>
         </div>

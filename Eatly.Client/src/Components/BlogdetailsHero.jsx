@@ -1,33 +1,48 @@
-import React from 'react';
+import React from "react";
+import { Calendar, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-export default function BlogdetailsHero({ blogImage, blogTitle, user, date, userImg }) {
+export default function BlogdetailsHero({ blogTitle, user, blogImage }) {
+  const navigate = useNavigate();
 
-    return (
-        <div className="flex flex-col">
-          <h1 className="text-text-darker pb-4 pt-4 text-xl font-semibold leading-tight sm:text-2xl">
-            {blogTitle}
-          </h1>
-    
-          <div className="flex items-center gap-4">
-            <img
-              src={userImg}
-              alt={user}
-              className="h-12 w-12 rounded-full object-cover"
-            />
-            <div>
-              <p className="text-xs text-gray-600">Written By</p>
-              <p className="text-base font-semibold text-black">{user}</p>
+  return (
+    <div className="mb-14">
+      <button
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-2 text-text-darker font-medium mb-8 hover:text-purple transition-colors"
+      >
+        <ArrowLeft size={20} />
+        Back to Blogs
+      </button>
+
+      <div className="flex flex-col gap-5">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-text-darker">
+          {blogTitle}
+        </h1>
+
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <div className="bg-gray-300 rounded-full w-8 h-8 flex items-center justify-center font-medium text-gray-600">
+              {user ? user.charAt(0).toUpperCase() : "U"}
             </div>
+            <span className="text-text-dark">{user}</span>
           </div>
-    
-          <div className="hidden overflow-hidden mt-10 shadow-lg md:block">
+        </div>
+
+        <div className="mt-6 rounded-xl overflow-hidden">
+          {blogImage ? (
             <img
               src={blogImage}
-              alt="Blog visual"
-              className="h-60 w-full object-cover md:h-80"
+              alt={blogTitle}
+              className="w-full h-[300px] md:h-[400px] object-cover"
             />
-          </div>
-          <span className="w-full border-b-2 border-gray-300 pt-5 md:hidden"></span>
+          ) : (
+            <div className="w-full h-[300px] md:h-[400px] bg-gray-200 flex items-center justify-center text-gray-400">
+              No image available
+            </div>
+          )}
         </div>
-      );
+      </div>
+    </div>
+  );
 }
