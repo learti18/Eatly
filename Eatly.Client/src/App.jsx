@@ -50,6 +50,9 @@ import BlogListing from "./Pages/AdminDashboard/Blogs/BlogListing";
 import AddBlogs from "./Pages/AdminDashboard/Blogs/AddBlogs";
 import EditBlogs from "./Pages/AdminDashboard/Blogs/EditBlogs";
 import Payments from "./Pages/RestaurantsDashbaord/Payments/Payments";
+import DriverRoute from "./Routes/DriverRoute";
+import DriverDashboard from "./Pages/DriverDashboard/DriverDashboard";
+import DriverDashboardLayout from "./components/Layouts/DriverDashboardLayout";
 
 const queryClient = new QueryClient();
 
@@ -156,6 +159,16 @@ function App() {
                       <Route path="chat" element={<RestaurantChat />} />
                     </Route>
                   </Route>
+                </Route>
+              </Route>
+
+              {/* Driver Routes */}
+              <Route element={<DriverRoute />}>
+                <Route
+                  path="/driver-dashboard"
+                  element={<DriverDashboardLayout />}
+                >
+                  <Route index element={<DriverDashboard />} />
                 </Route>
               </Route>
             </Routes>

@@ -1,13 +1,13 @@
 import React from "react";
 import { Truck, UserCheck } from "lucide-react";
 
-export default function DriverAssignment({ 
-  order, 
-  canAssignDriver, 
-  isPaid, 
-  isOrderConfirmed, 
-  availableDrivers, 
-  onAssignDriver 
+export default function DriverAssignment({
+  order,
+  canAssignDriver,
+  isPaid,
+  isOrderConfirmed,
+  availableDrivers,
+  onAssignDriver,
 }) {
   // Show driver assignment section when appropriate
   if (canAssignDriver) {
@@ -31,7 +31,7 @@ export default function DriverAssignment({
                 <option value="">Select a driver</option>
                 {availableDrivers.map((driver) => (
                   <option key={driver.id} value={driver.id}>
-                    {driver.fullName} ({driver.phoneNumber})
+                    {driver.email} ({driver.phoneNumber})
                   </option>
                 ))}
                 {availableDrivers.length === 0 && (
@@ -48,8 +48,11 @@ export default function DriverAssignment({
   }
 
   // Show read-only driver info for completed/delivered orders with a driver
-  if (isPaid && order.driverId && 
-    (order.orderStatus === "Delivered" || order.orderStatus === "Completed")) {
+  if (
+    isPaid &&
+    order.driverId &&
+    (order.orderStatus === "Delivered" || order.orderStatus === "Completed")
+  ) {
     return (
       <div className="p-6 border-b bg-gray-50">
         <DriverInfo order={order} isActive={false} />
@@ -58,8 +61,12 @@ export default function DriverAssignment({
   }
 
   // Show payment required message
-  if (isOrderConfirmed && order.paymentStatus !== "Paid" && 
-    order.orderStatus !== "Delivered" && order.orderStatus !== "Completed") {
+  if (
+    isOrderConfirmed &&
+    order.paymentStatus !== "Paid" &&
+    order.orderStatus !== "Delivered" &&
+    order.orderStatus !== "Completed"
+  ) {
     return (
       <div className="p-4 border-b bg-amber-50">
         <div className="flex items-center gap-3">
@@ -94,7 +101,9 @@ function DriverInfo({ order, isActive }) {
   const bgColor = isActive ? "bg-green-100" : "bg-gray-200";
   const textColor = isActive ? "text-green-600" : "text-gray-600";
   const titleColor = isActive ? "text-green-800" : "text-gray-700";
-  const badgeColor = isActive ? "bg-green-200 text-green-800" : "bg-gray-200 text-gray-700";
+  const badgeColor = isActive
+    ? "bg-green-200 text-green-800"
+    : "bg-gray-200 text-gray-700";
   const infoColor = isActive ? "text-green-700" : "text-gray-700";
   const detailColor = isActive ? "text-green-600" : "text-gray-600";
 
@@ -115,7 +124,8 @@ function DriverInfo({ order, isActive }) {
         </p>
         {order.driverPhoneNumber && (
           <p className={`${detailColor} mt-1`}>
-            <span className="font-medium">Phone:</span> {order.driverPhoneNumber}
+            <span className="font-medium">Phone:</span>{" "}
+            {order.driverPhoneNumber}
           </p>
         )}
       </div>

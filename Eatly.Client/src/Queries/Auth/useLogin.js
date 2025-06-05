@@ -45,7 +45,9 @@ const useLogin = () => {
                 navigate("/restaurant-profile", { replace: true })
             } else if(roles?.includes("Admin")) {
                 navigate("/dashboard", { replace: true })
-            } else {
+            } else if(roles?.includes("DeliveryDriver")) {
+                navigate("/driver-dashboard", { replace: true })
+            }else {
                 navigate("/", { replace: true })
             }
         },
