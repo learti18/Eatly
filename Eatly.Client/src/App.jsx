@@ -1,4 +1,4 @@
-import './styles/utils.css';
+import "./styles/utils.css";
 import { useState } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -19,7 +19,6 @@ import Unauthorized from "./Pages/Unauthorized";
 import RestaurantRoute from "./Routes/RestaurantRoute";
 import VerifiedRestaurantRoute from "./Routes/VerifiedRestaurantRoute";
 import RestaurantDashboard from "./Pages/RestaurantsDashbaord/RestaurantDashboard";
-import GuestRoute from "./Routes/GuestRoute";
 import PublicRoute from "./Routes/PublicRoute";
 import AdminDashboardLayout from "./components/Layouts/AdminDashboardLayout";
 import Admin from "./Pages/AdminDashboard/Admin";
@@ -32,6 +31,7 @@ import { RestaurantProvider } from "./Contexts/RestaurantContext";
 import FoodsListing from "./Pages/RestaurantsDashbaord/Foods/FoodsListing";
 import RestaurantAccount from "./Pages/RestaurantsDashbaord/Account/RestaurantAccount";
 import DriversListing from "./Pages/RestaurantsDashbaord/Drivers/DriversListing";
+import AddDriver from "./Pages/RestaurantsDashbaord/Drivers/AddDriver";
 import AddFood from "./Pages/RestaurantsDashbaord/Foods/AddFood";
 import { Toaster } from "sonner";
 import EditFood from "./Pages/RestaurantsDashbaord/Foods/EditFood";
@@ -49,7 +49,7 @@ import Cart from "./Pages/Cart/Cart";
 import BlogListing from "./Pages/AdminDashboard/Blogs/BlogListing";
 import AddBlogs from "./Pages/AdminDashboard/Blogs/AddBlogs";
 import EditBlogs from "./Pages/AdminDashboard/Blogs/EditBlogs";
-
+import Payments from "./Pages/RestaurantsDashbaord/Payments/Payments";
 
 const queryClient = new QueryClient();
 
@@ -111,18 +111,9 @@ function App() {
                     path="restaurants"
                     element={<DashboardRestaurants />}
                   />
-                  <Route
-                    path="blogs"
-                    element={<BlogListing />}
-                  />
-                  <Route
-                    path="blogs/add"
-                    element={<AddBlogs />}
-                  />
-                  <Route
-                    path="blogs/edit/:id"
-                    element={<EditBlogs />}
-                  />
+                  <Route path="blogs" element={<BlogListing />} />
+                  <Route path="blogs/add" element={<AddBlogs />} />
+                  <Route path="blogs/edit/:id" element={<EditBlogs />} />
                   <Route path="orders" element={<Orders />} />
                 </Route>
               </Route>
@@ -155,8 +146,13 @@ function App() {
                       <Route path="foods/add" element={<AddFood />} />
                       <Route path="foods/edit/:id" element={<EditFood />} />
                       <Route path="orders" element={<RestaurantsOrders />} />
-                      <Route path="account" element={<RestaurantAccount />} />
+                      <Route
+                        path="account"
+                        element={<RestaurantAccount />}
+                      />{" "}
                       <Route path="drivers" element={<DriversListing />} />
+                      <Route path="drivers/add" element={<AddDriver />} />
+                      <Route path="payments" element={<Payments />} />
                       <Route path="chat" element={<RestaurantChat />} />
                     </Route>
                   </Route>

@@ -7,9 +7,9 @@ import api from "../../Services/Api";
 import { useForm } from "react-hook-form";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import EmptyCart from "../../components/Cart/EmptyCart";
-import DeliveryOptions from "../../components/Order/DeliveryOptions";
-import AddressForm from "../../components/Order/AddressForm";
-import OrderSummary from "../../components/Order/OrderSummary";
+import DeliveryOptions from "../../components/Order/ClientUi/DeliveryOptions";
+import AddressForm from "../../components/Order/ClientUi/AddressForm";
+import OrderSummary from "../../components/Order/ClientUi/OrderSummary";
 
 export default function Order() {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import FormInput from "../Forms/FormInput";
+import FormInput from "../../Forms/FormInput";
 import { toast } from "sonner";
 
 // Import the separated components
@@ -7,7 +7,7 @@ import AddressAutocomplete from "./AddressAutocomplete";
 import MapControls from "./MapControls";
 import AddressMap from "./AddressMap";
 import FormActions from "./FormActions";
-import useAddressSuggestions from "../../hooks/useAddressSuggestions";
+import useAddressSuggestions from "../../../hooks/useAddressSuggestions";
 
 export default function AddressForm({
   register,
