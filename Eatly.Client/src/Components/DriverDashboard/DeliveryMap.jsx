@@ -18,7 +18,6 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
   const [routeDuration, setRouteDuration] = useState(null);
   const [isTrackingLocation, setIsTrackingLocation] = useState(false);
 
-  // Update map view when order data changes
   useEffect(() => {
     if (orderData?.latitude && orderData?.longitude) {
       setViewState({
@@ -29,7 +28,6 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
     }
   }, [orderData]);
 
-  // Get driver's current position
   useEffect(() => {
     if (navigator.geolocation) {
       const watchId = navigator.geolocation.watchPosition(
@@ -40,7 +38,6 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
           };
           setCurrentPosition(newPosition);
 
-          // If tracking is enabled, update the map view to follow the driver
           if (isTrackingLocation) {
             setViewState({
               longitude: newPosition.lng,
@@ -65,7 +62,6 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
     }
   }, [isTrackingLocation]);
 
-  // Get directions when we have both current position and order location
   const getDirections = useCallback(async () => {
     if (!currentPosition || !orderData?.latitude || !orderData?.longitude)
       return;

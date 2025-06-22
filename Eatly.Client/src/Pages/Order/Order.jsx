@@ -1,229 +1,374 @@
-import React, { useState, useEffect } from "react";
-import { useFetchCart } from "../../Queries/Cart/useFetchCart";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { loadStripe } from "@stripe/stripe-js";
-import api from "../../Services/Api";
-import { useForm } from "react-hook-form";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import EmptyCart from "../../components/Cart/EmptyCart";
-import DeliveryOptions from "../../components/Order/ClientUi/DeliveryOptions";
-import AddressForm from "../../components/Order/ClientUi/AddressForm";
-import OrderSummary from "../../components/Order/ClientUi/OrderSummary";
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+  Package,
+  ShoppingBag,
+  X,
+} from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  orderStatusColors,
+  orderStatusOptions,
+  paymentStatusColors,
+  paymentStatusOptions,
+} from "../../constants/statuses";
+import { useFetchUserOrders } from "../../Queries/Order/useFetchUserOrders";
+import { formatCurrency } from "../../utils/currencyFormatter";
+import { formatDate } from "../../utils/dateFormatter";
 
 export default function Order() {
-  const navigate = useNavigate();
-  const { data: cart, isLoading: cartLoading } = useFetchCart();
-  const [isCreatingCheckout, setIsCreatingCheckout] = useState(false);
-  const [addresses, setAddresses] = useState([]);
-  const [selectedAddressId, setSelectedAddressId] = useState(null);
-  const [isAddingNewAddress, setIsAddingNewAddress] = useState(false);
-  const [deliveryType, setDeliveryType] = useState("delivery");
-  const [isLoadingAddresses, setIsLoadingAddresses] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [orderStatusFilter, setOrderStatusFilter] = useState("All");
+  const [paymentStatusFilter, setPaymentStatusFilter] = useState("All");
+  const [showFilters, setShowFilters] = useState(false);
 
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    setValue,
-    getValues,
-  } = useForm({
-    defaultValues: {
-      streetAddress: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      phoneNumber: "",
-      isDefault: false,
-      latitude: null,
-      longitude: null,
-    },
+    data: orderData,
+    isLoading: ordersLoading,
+    isError: ordersError,
+  } = useFetchUserOrders({
+    pageNumber: currentPage,
+    pageSize,
+    orderStatus: orderStatusFilter !== "All" ? orderStatusFilter : undefined,
+    paymentStatus:
+      paymentStatusFilter !== "All" ? paymentStatusFilter : undefined,
   });
 
-  // Fetch user addresses on component mount
-  useEffect(() => {
-    const fetchAddresses = async () => {
-      try {
-        const response = await api.get("/user/addresses");
-        if (response.data && response.data.length > 0) {
-          setAddresses(response.data);
-          // Select default address if exists
-          const defaultAddress = response.data.find((addr) => addr.isDefault);
-          if (defaultAddress) {
-            setSelectedAddressId(defaultAddress.id);
-          } else {
-            setSelectedAddressId(response.data[0].id);
-          }
-        } else {
-          // No addresses found, prompt user to add one
-          setIsAddingNewAddress(true);
-        }
-      } catch (error) {
-        console.error("Error fetching addresses:", error);
-        toast.error("Failed to load delivery addresses");
-      } finally {
-        setIsLoadingAddresses(false);
-      }
-    };
+  // Extract orders and metadata
+  const orders = orderData?.items || [];
+  const totalOrders = orderData?.totalCount || 0;
+  const totalPages = orderData?.totalPages || 1;
 
-    fetchAddresses();
-  }, []);
-
-  const handleAddressSelect = (addressId) => {
-    setSelectedAddressId(addressId);
-    setIsAddingNewAddress(false);
-  };
-
-  const onAddressSubmit = async (data) => {
-    try {
-      const response = await api.post("/user/addresses", data);
-
-      if (response.data) {
-        const newAddressData = response.data;
-        setAddresses((prev) => [...prev, newAddressData]);
-        setSelectedAddressId(newAddressData.id);
-        setIsAddingNewAddress(false);
-        toast.success("Address added successfully");
-        reset(); // Reset form fields
-      }
-    } catch (error) {
-      console.error("Error adding address:", error);
-      toast.error("Failed to add address");
+  // Handle page navigation
+  const goToPage = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
     }
   };
 
-  const createCheckoutSession = async () => {
-    if (!selectedAddressId && deliveryType === "delivery") {
-      toast.error("Please select a delivery address");
-      return;
-    }
-
-    setIsCreatingCheckout(true);
-
-    try {
-      const response = await api.post(
-        "/payments/create-checkout-session",
-        {
-          addressId: deliveryType === "delivery" ? selectedAddressId : null,
-          // deliveryType: deliveryType,
-        },
-        { headers: { "Content-Type": "application/json" } }
-      );
-
-      const { sessionId, publicKey } = response.data;
-
-      if (!sessionId) {
-        toast.error("Failed to create checkout. Please try again.");
-        return;
-      }
-
-      const stripePromise = loadStripe(publicKey);
-      const stripe = await stripePromise;
-
-      if (!stripe) {
-        toast.error("Stripe failed to load. Please try again later.");
-        return;
-      }
-
-      const result = await stripe.redirectToCheckout({ sessionId });
-
-      if (result.error) {
-        toast.error(result.error.message);
-      }
-    } catch (error) {
-      console.error("Error creating checkout:", error);
-      toast.error("Failed to create checkout. Please try again.");
-    } finally {
-      setIsCreatingCheckout(false);
-    }
+  // Reset filters
+  const resetFilters = () => {
+    setOrderStatusFilter("All");
+    setPaymentStatusFilter("All");
   };
 
-  if (cartLoading || isLoadingAddresses) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-background-main">
-        <span className="loading loading-spinner loading-lg text-purple"></span>
-      </div>
-    );
-  }
-
-  if (!cart || cart.cartItems.length === 0) {
-    return <EmptyCart />;
-  }
-
-  // Calculate total amount including delivery fee and tax
-  const subtotal = parseFloat(cart.totalPrice);
-  const deliveryFee = deliveryType === "delivery" ? 3.99 : 0;
-  const total = (subtotal + deliveryFee + subtotal * 0.07).toFixed(2);
+  // Check if any filters are active
+  const hasActiveFilters =
+    orderStatusFilter !== "All" || paymentStatusFilter !== "All";
 
   return (
     <div className="bg-background-main min-h-screen py-12 px-4 sm:px-6">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">
-          Complete Your Order
-        </h1>
-
-        {/* Delivery Options Component */}
-        <DeliveryOptions
-          deliveryType={deliveryType}
-          setDeliveryType={setDeliveryType}
-          addresses={addresses}
-          selectedAddressId={selectedAddressId}
-          handleAddressSelect={handleAddressSelect}
-          isAddingNewAddress={isAddingNewAddress}
-          setIsAddingNewAddress={setIsAddingNewAddress}
-          isLoadingAddresses={isLoadingAddresses}
-        />
-
-        {/* Address Form Component - conditionally rendered */}
-        {deliveryType === "delivery" && isAddingNewAddress && (
-          <AddressForm
-            register={register}
-            errors={errors}
-            handleSubmit={handleSubmit}
-            onAddressSubmit={onAddressSubmit}
-            setIsAddingNewAddress={setIsAddingNewAddress}
-            setValue={setValue} // Pass setValue to the component
-            getValues={getValues} // Pass getValues to the component
-          />
-        )}
-
-        {/* Order Summary Component */}
-        <OrderSummary
-          cart={cart}
-          subtotal={subtotal}
-          deliveryFee={deliveryFee}
-          total={total}
-        />
-
-        {/* Action Buttons */}
-        <div className="flex justify-between items-center">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">Your Orders</h1>
           <button
-            onClick={() => navigate("/cart")}
-            className="flex items-center text-gray-600 hover:text-purple group"
+            onClick={() => setShowFilters(!showFilters)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+              hasActiveFilters
+                ? "bg-purple text-white hover:bg-purple-dark"
+                : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"
+            }`}
           >
-            <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1.5 transition-all duration-200" />
-            Back to Cart
-          </button>
-
-          <button
-            onClick={createCheckoutSession}
-            disabled={isCreatingCheckout}
-            className="bg-purple hover:bg-purple-dark group transition-colors duration-200 text-white px-8 py-3 rounded-xl font-semibold flex items-center"
-          >
-            {isCreatingCheckout ? (
+            {hasActiveFilters ? (
               <>
-                <span className="loading loading-spinner loading-sm mr-2"></span>
-                Processing...
+                <Filter size={16} className="animate-pulse" />
+                <span>Filters Active</span>
               </>
             ) : (
               <>
-                Proceed to Payment
-                <ArrowRight className="h-5 w-5 ml-2 transition-transform duration-200 group-hover:translate-x-1.5" />
+                <Filter size={16} />
+                <span>Filter</span>
               </>
             )}
           </button>
         </div>
+
+        {/* Filters */}
+        <div
+          className={`transition-all duration-300 ease-in-out overflow-hidden mb-6 ${
+            showFilters ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="font-semibold text-lg text-gray-800">
+                Filter Orders
+              </h2>
+              <button
+                onClick={() => setShowFilters(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Order Status
+                </label>
+                <div className="relative">
+                  <select
+                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-purple focus:ring focus:ring-purple focus:ring-opacity-50 h-10 pl-3 pr-10 text-gray-700 appearance-none"
+                    value={orderStatusFilter}
+                    onChange={(e) => {
+                      setOrderStatusFilter(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                  >
+                    {orderStatusOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <ChevronDown size={16} className="text-gray-500" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Payment Status
+                </label>
+                <div className="relative">
+                  <select
+                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-purple focus:ring focus:ring-purple focus:ring-opacity-50 h-10 pl-3 pr-10 text-gray-700 appearance-none"
+                    value={paymentStatusFilter}
+                    onChange={(e) => {
+                      setPaymentStatusFilter(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                  >
+                    {paymentStatusOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <ChevronDown size={16} className="text-gray-500" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end mt-6">
+              <button
+                onClick={resetFilters}
+                className={`px-4 py-2 rounded-lg ${
+                  hasActiveFilters
+                    ? "text-gray-700 bg-gray-100 hover:bg-gray-200"
+                    : "text-gray-400 cursor-not-allowed"
+                }`}
+                disabled={!hasActiveFilters}
+              >
+                Clear Filters
+              </button>
+              <button
+                onClick={() => setShowFilters(false)}
+                className="ml-3 px-4 py-2 bg-purple text-white rounded-lg hover:bg-purple-dark"
+              >
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Active filter indicators */}
+        {hasActiveFilters && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {orderStatusFilter !== "All" && (
+              <div className="inline-flex items-center bg-purple-50 text-purple-800 rounded-full px-3 py-1 text-sm">
+                <span>Status: {orderStatusFilter}</span>
+                <button
+                  onClick={() => setOrderStatusFilter("All")}
+                  className="ml-1 hover:text-purple-900"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            )}
+            {paymentStatusFilter !== "All" && (
+              <div className="inline-flex items-center bg-purple-50 text-purple-800 rounded-full px-3 py-1 text-sm">
+                <span>Payment: {paymentStatusFilter}</span>
+                <button
+                  onClick={() => setPaymentStatusFilter("All")}
+                  className="ml-1 hover:text-purple-900"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {ordersLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <span className="loading loading-spinner loading-lg"></span>
+          </div>
+        ) : ordersError ? (
+          <div className="bg-red-50 text-red-600 p-4 rounded-lg text-center">
+            Error loading orders. Please try again later.
+          </div>
+        ) : orders && orders.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {orders.map((order) => (
+                <Link
+                  to={`/orders/${order.id}`}
+                  key={order.id}
+                  className="block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                >
+                  <div className="p-4 border-b border-gray-100">
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center gap-2">
+                        <div className="bg-purple-50 rounded-full p-2 flex-shrink-0">
+                          <ShoppingBag size={16} className="text-purple" />
+                        </div>
+                        <h3 className="font-medium">Order #{order.id}</h3>
+                      </div>
+                      <span className="text-sm text-gray-500">
+                        {formatDate(order.orderDate)}
+                      </span>
+                    </div>
+
+                    {/* Order summary */}
+                    <div className="mt-3 flex justify-between">
+                      <div>
+                        <p className="text-gray-600 text-sm">
+                          {order.items.length} items
+                        </p>
+                        <p className="font-semibold">
+                          ${formatCurrency(order.totalPrice)}
+                        </p>
+                      </div>
+                      <div className="flex flex-col items-end gap-1">
+                        <span
+                          className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            orderStatusColors[order.orderStatus]
+                          }`}
+                        >
+                          {order.orderStatus}
+                        </span>
+                        <span
+                          className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            paymentStatusColors[order.paymentStatus]
+                          }`}
+                        >
+                          {order.paymentStatus}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Pagination controls */}
+            <div className="flex items-center justify-between mt-8 bg-white p-4 rounded-lg shadow-sm">
+              <div className="text-sm text-gray-700">
+                Showing{" "}
+                <span className="font-medium">
+                  {(currentPage - 1) * pageSize + 1}
+                </span>{" "}
+                to{" "}
+                <span className="font-medium">
+                  {Math.min(currentPage * pageSize, totalOrders)}
+                </span>{" "}
+                of <span className="font-medium">{totalOrders}</span> orders
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className={`p-2 rounded-full ${
+                    currentPage === 1
+                      ? "text-gray-300 cursor-not-allowed"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <ChevronLeft size={18} />
+                </button>
+
+                {/* Page number buttons */}
+                <div className="flex space-x-1">
+                  {[...Array(totalPages)].map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => goToPage(i + 1)}
+                      className={`px-3 py-1 rounded-md ${
+                        currentPage === i + 1
+                          ? "bg-purple text-white"
+                          : "text-gray-700 hover:bg-gray-100"
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className={`p-2 rounded-full ${
+                    currentPage === totalPages
+                      ? "text-gray-300 cursor-not-allowed"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+
+              {/* Page size selector */}
+              <div className="flex items-center space-x-2">
+                <label htmlFor="pageSize" className="text-sm text-gray-700">
+                  Items per page:
+                </label>
+                <select
+                  id="pageSize"
+                  className="rounded-md border-gray-300 text-sm"
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setCurrentPage(1); // Reset to first page when changing page size
+                  }}
+                >
+                  {[5, 10, 25].map((size) => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="bg-white p-8 rounded-lg text-center shadow-md flex flex-col items-center">
+            <Package size={48} className="text-gray-400 mb-4" />
+            <h2 className="text-lg font-medium text-gray-800 mb-2">
+              No Orders Found
+            </h2>
+            <p className="text-gray-500">
+              {orderStatusFilter !== "All" || paymentStatusFilter !== "All"
+                ? "No orders match your current filters. Try changing your filters or browse our menu to place an order."
+                : "You haven't placed any orders yet. Start shopping to see your orders here."}
+            </p>
+            <Link
+              to="/menu"
+              className="mt-6 px-6 py-3 bg-purple text-white font-medium rounded-lg hover:bg-purple-dark"
+            >
+              Browse Menu
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

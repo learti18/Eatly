@@ -53,6 +53,7 @@ import Payments from "./Pages/RestaurantsDashbaord/Payments/Payments";
 import DriverRoute from "./Routes/DriverRoute";
 import DriverDashboard from "./Pages/DriverDashboard/DriverDashboard";
 import DriverDashboardLayout from "./components/Layouts/DriverDashboardLayout";
+import OrderDetails from "./Pages/Order/OrderDetails";
 
 const queryClient = new QueryClient();
 
@@ -99,7 +100,8 @@ function App() {
               <Route element={<ProtectedRoute />}>
                 <Route element={<Layout />}>
                   <Route path="/cart" element={<Cart />} />
-                  <Route path="/order" element={<Order />} />
+                  <Route path="/orders" element={<Order />} />
+                  <Route path="/orders/:id" element={<OrderDetails />} />
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/checkout/success" element={<OrderStatus />} />
                 </Route>

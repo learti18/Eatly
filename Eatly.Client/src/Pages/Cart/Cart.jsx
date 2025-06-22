@@ -4,7 +4,8 @@ import { useFetchCart } from "../../Queries/Cart/useFetchCart";
 import OrderCard from "../../components/OrderCard";
 import { useClearCart } from "../../Queries/Cart/useClearCart";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Package } from "lucide-react";
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -14,13 +15,13 @@ export default function Cart() {
   const [localTotalPrice, setLocalTotalPrice] = useState(0);
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
 
-  const proceedToOrder = () => {
+  const proccedToCheckout = () => {
     if (!cart || cart.cartItems.length === 0) {
       toast.error("Your cart is empty");
       return;
     }
 
-    navigate("/order");
+    navigate("/checkout");
   };
 
   useEffect(() => {
@@ -106,15 +107,31 @@ export default function Cart() {
         )}
         <div className="flex flex-col gap-8">
           {!cart || cart.cartItems.length === 0 ? (
-            <div className="text-center text-2xl font-semibold text-gray-500">
-              Your cart is empty
+            <div className="flex justify-center items-center gap-5">
+              <Link
+                to="/orders"
+                className="border border-purple  px-4 py-2 rounded-xl text-purple hover:bg-purple hover:text-white transition-colors duration-200 text-center font-medium"
+              >
+                <Package className="inline mr-2" />
+                Go to Orders
+              </Link>
+              <div className="text-center text-2xl font-semibold text-gray-500">
+                Your cart is empty
+              </div>
             </div>
           ) : (
             <>
-              <div className="flex justify-end">
+              <div className="flex justify-between items-center">
+                <Link
+                  to="/orders"
+                  className="border border-purple  px-4 py-2 rounded-xl text-purple hover:bg-purple hover:text-white transition-colors duration-200 text-center font-medium"
+                >
+                  <Package className="inline mr-2" />
+                  Go to Orders
+                </Link>
                 <button
                   onClick={handleClearCartClick}
-                  className="border border-[#323142] text-[#323142] hover:bg-[#f0f0f0] transition-colors duration-200 px-4 py-2 rounded-xl font-medium flex items-center gap-2"
+                  className="border border-[#323142] text-[#323142] hover:bg-[#f0f0f0] cursor-pointer transition-colors duration-200 px-4 py-2 rounded-xl font-medium flex items-center gap-2"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -145,8 +162,12 @@ export default function Cart() {
           <TotalOrder price={localTotalPrice} />
           <button
             disabled={cart?.cartItems?.length === 0}
-            onClick={proceedToOrder}
-            className="bg-purple hover:bg-purple-dark mt-5 transition-colors duration-200 cursor-pointer text-white md:w-full text-xl rounded-2xl py-4 font-semibold flex items-center justify-center"
+            onClick={proccedToCheckout}
+            className={`${
+              cart.cartItems.length === 0
+                ? "cursor-not-allowed opacity-80"
+                : "cursor-pointer hover:bg-purple-dark"
+            } bg-purple mt-5 transition-colors duration-200 text-white md:w-full text-xl rounded-2xl py-4 font-semibold flex items-center justify-center`}
           >
             Proceed to Checkout
           </button>
