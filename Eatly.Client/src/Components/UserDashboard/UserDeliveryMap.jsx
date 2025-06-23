@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Clock, MapPin } from "lucide-react";
+import { Clock, MapPin, Phone, User } from "lucide-react";
 import Map, { Marker, NavigationControl, Source, Layer } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { getDatabase, ref, onValue } from "firebase/database";
 
 export default function UserDeliveryMap({ orderData, mapboxToken }) {
   const [viewState, setViewState] = useState({
-    longitude: -122.4194, // Default to San Francisco if no coordinates are available
+    longitude: -122.4194,
     latitude: 37.7749,
     zoom: 13,
   });
@@ -17,7 +17,6 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
   const [mapError, setMapError] = useState(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
-  // Initialize map to delivery location
   useEffect(() => {
     if (orderData?.latitude && orderData?.longitude) {
       setViewState({
@@ -28,7 +27,6 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
     }
   }, [orderData]);
 
-  // Listen to driver location updates from Firebase
   useEffect(() => {
     if (!orderData?.driverId) return;
 
@@ -46,7 +44,6 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
               lng: parseFloat(locationData.longitude),
             });
 
-            // Only fetch directions if we have valid coordinates
             fetchDirections(locationData.longitude, locationData.latitude);
           }
         },
@@ -73,7 +70,6 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
       const destinationLng = parseFloat(orderData.longitude);
       const destinationLat = parseFloat(orderData.latitude);
 
-      // Validate coordinates
       if (
         isNaN(driverLng) ||
         isNaN(driverLat) ||
@@ -85,7 +81,7 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
       }
 
       const response = await fetch(
-        `https://api.mapbox.com/directions/v5/mapbox/driving/${driverLng},${driverLat};${destinationLng},${destinationLat}?steps=true&geometries=geojson&access_token=${mapboxToken}`
+        `https://api.mapbox.com/directions/v5/mapbox/driving/${driverLng},${driverLat};${destinationLng},${destinationLat}?steps=true&geometries=geojson&overview=full&access_token=${mapboxToken}`
       );
 
       if (!response.ok) {
@@ -129,7 +125,6 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
     return `${hours} hr ${remainingMinutes} min`;
   };
 
-  // Route style for the directions line
   const routeLayer = {
     id: "route",
     type: "line",
@@ -144,7 +139,6 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
     },
   };
 
-  // Check if we have valid coordinates
   const hasValidDeliveryCoordinates =
     orderData?.latitude &&
     orderData?.longitude &&
@@ -152,34 +146,8 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
     !isNaN(parseFloat(orderData.longitude));
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm mb-6 border border-gray-100">
-      <h3 className="text-lg font-semibold mb-4 flex items-center">
-        <MapPin size={18} className="mr-2 text-purple" />
-        Delivery Tracking
-      </h3>
-
-      {/* {driverPosition ? (
-        <div className="mb-4 flex items-center gap-2 px-4 py-3 bg-purple bg-opacity-10 rounded-lg">
-          <Clock size={18} className="text-purple" />
-          <div>
-            <p className="text-gray-700">
-              <span className="font-medium">Estimated arrival:</span>{" "}
-              <span className="text-purple font-semibold">
-                {formatDuration(routeDuration)}
-              </span>
-            </p>
-            <p className="text-sm text-gray-500">
-              Your driver is {formatDistance(routeDistance)}
-            </p>
-          </div>
-        </div>
-      ) : orderData?.orderStatus === "OutForDelivery" ? (
-        <div className="mb-4 px-4 py-3 bg-yellow-50 rounded-lg text-sm text-yellow-700">
-          Driver is preparing to deliver your order. Please wait...
-        </div>
-      ) : null} */}
-
-      <div className="relative h-[350px] w-full rounded-lg overflow-hidden border border-gray-200">
+    <div className="mb-32 px-2">
+      <div className="relative h-[450px] w-full rounded-2xl overflow-hidden shadow-2xl border border-gray-200">
         {mapError ? (
           <div className="bg-red-50 h-full flex flex-col items-center justify-center p-6 text-center">
             <div className="text-red-500 mb-2">
@@ -207,7 +175,8 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
         ) : hasValidDeliveryCoordinates ? (
           <Map
             mapboxAccessToken={mapboxToken}
-            mapStyle="mapbox://styles/mapbox/streets-v11"
+            mapStyle="mapbox://styles/leart22/cmc8ek9le02l401qxdl5j8z1v"
+            attributionControl={false}
             style={{ width: "100%", height: "100%" }}
             {...viewState}
             onMove={(evt) => setViewState(evt.viewState)}
@@ -299,46 +268,67 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
         )}
       </div>
 
-      {driverPosition && (
+      {/* {driverPosition && (
         <div className="mt-3 px-4 py-2 bg-gray-50 rounded-lg text-sm text-center">
           <p className="text-gray-700">
             Your order is on the way! The driver's location is updated in
             real-time.
           </p>
         </div>
-      )}
-
-      <div className="bg-white rounded-xl flex flex-col justify-center p-2 shadow-md">
-        <div className="bg-text-dark text-white text-center px-4 py-2 rounded-t-xl">
-          <h2>driver@gmail.com</h2>
-          <p>+383920982</p>
+      )} */}
+      <div className="drop-shadow-2xl bg-white mx-auto mt-5 w-full rounded-3xl max-w-md">
+        <div className="bg-text-dark w-full text-white font-light px-8 py-4 rounded-t-3xl">
+          <h2 className="flex items-center gap-2">
+            <User size={18} />
+            {orderData.driverName}
+          </h2>
+          <p className="flex items-center gap-1">
+            <Phone size={18} />
+            {orderData.driverPhoneNumber}
+          </p>
         </div>
         {driverPosition ? (
-          <div className="mb-4 flex items-center gap-2 px-4 py-3 bg-white bg-opacity-10 rounded-lg">
-            <div className="flex flex-col">
-              <div className="bg-purple-light p-1 rounded-full">
-                <Clock size={24} className=" text-purple-dark" />
+          <div className="mb-4 flex items-center justify-start w-full gap-6 px-5 py-8 bg-opacity-10">
+            <div className="flex flex-col ">
+              <img
+                src="/icons/Locatin.svg"
+                alt="Location Icon"
+                className="size-10"
+              />
+              <div className="h-16 flex flex-col items-center justify-center">
+                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
               </div>
-              <div className="h-10 flex flex-col items-center justify-center">
-                <div className="w-1 h-1 bg-purple-light rounded-full my-0.5"></div>
-                <div className="w-1 h-1 bg-purple-light rounded-full my-0.5"></div>
-                <div className="w-1 h-1 bg-purple-light rounded-full my-0.5"></div>
+              <img
+                src="/icons/Time.svg"
+                alt="Location Icon"
+                className="size-10"
+              />
+            </div>
+            <div className="flex flex-col gap-7 text-sm">
+              <div>
+                <p className="text-gray-400">Your Address</p>
+                <p>{orderData.streetAddress}</p>
+                <p>{orderData.deliveryAddress?.street}</p>
+                <p>
+                  {orderData.city}, {orderData.state} {orderData.zipCode}
+                </p>
+                <p>{orderData.deliveryAddress?.phoneNumber}</p>
               </div>
-              <div className="bg-purple-light p-1 rounded-full">
-                <MapPin size={24} className="text-purple-dark" />
+              <div>
+                <p className="text-gray-400">Your Driver</p>
+                <p className="text-gray-800">{formatDuration(routeDuration)}</p>
+                <p className="text-gray-800">{formatDistance(routeDistance)}</p>
               </div>
             </div>
-            <div>
-              <p className="text-gray-800">
-                <span className="font-medium">Estimated arrival:</span>{" "}
-                <span className="text-gray-800 font-semibold">
-                  {formatDuration(routeDuration)}
-                </span>
-              </p>
-              <p className="text-sm text-gray-800">
-                Your driver is {formatDistance(routeDistance)}
-              </p>
-            </div>
+            <p className="bg-purple text-white text-sm px-6 py-3 rounded-md self-end ml-auto">
+              {orderData.orderStatus}
+            </p>
           </div>
         ) : orderData?.orderStatus === "OutForDelivery" ? (
           <div className="mb-4 px-4 py-3 bg-yellow-50 rounded-lg text-sm text-yellow-700">

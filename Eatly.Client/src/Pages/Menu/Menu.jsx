@@ -2,10 +2,7 @@ import React from "react";
 import PromoBanner from "../../Components/PromoBanner";
 import Category from "../../Components/Category";
 import Accordion from "../../components/Accordion";
-import TopRestaurantsSection from "../../components/Home/TopRestaurantsSection";
 import RestaurantCard from "../../components/Cards/RestaurantCard";
-import { restaurants } from "../../restaurants";
-import { ArrowRight } from "lucide-react";
 import { useAllRestaurants } from "../../Queries/Restaurants/useAllRestaurants";
 
 export default function Menu() {

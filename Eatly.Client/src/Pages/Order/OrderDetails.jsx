@@ -1,16 +1,11 @@
 import React from "react";
 import { useFetchOrderById } from "../../Queries/Order/useFetchOrderById";
 import { useParams, Link } from "react-router-dom";
-import OrderItemsTable from "../../components/Table/OrderItemsTable";
-import OrderCard from "../../components/OrderCard";
-import DeliveryMap from "../../components/DriverDashboard/DeliveryMap";
+
 import UserDeliveryMap from "../../components/UserDashboard/UserDeliveryMap";
 import { ChevronLeft, Package, ShoppingBag, Clock, MapPin } from "lucide-react";
 import { formatDate } from "../../utils/dateFormatter";
-import {
-  orderStatusColors,
-  paymentStatusColors,
-} from "../../constants/statuses";
+import { paymentStatusColors } from "../../constants/statuses";
 
 const MAPBOX_TOKEN =
   import.meta.env.VITE_APP_MAPBOX_TOKEN || "your_mapbox_token_here";
@@ -56,13 +51,6 @@ export default function OrderDetails() {
                 <div className="flex flex-wrap gap-2">
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      orderStatusColors[order.orderStatus]
-                    }`}
-                  >
-                    {order.orderStatus}
-                  </span>
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${
                       paymentStatusColors[order.paymentStatus]
                     }`}
                   >
@@ -77,76 +65,75 @@ export default function OrderDetails() {
               <UserDeliveryMap orderData={order} mapboxToken={MAPBOX_TOKEN} />
             )}
 
-            {/* Order summary section */}
-            <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
+            {/* Order items section */}
+            <div className="max-w-3xl mx-auto my-20">
               <h2 className="text-xl font-semibold mb-6 flex items-center">
-                <ShoppingBag size={18} className="mr-2 text-purple" />
-                Order Summary
+                <Package size={18} className="mr-2 text-purple" />
+                Order Items
               </h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">
-                    DELIVERY DETAILS
-                  </h3>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-gray-800">{order.streetAddress}</p>
-                    <p className="text-gray-600">
-                      {order.deliveryAddress?.street}
-                    </p>
-                    <p className="text-gray-600">
-                      {order.city}, {order.state} {order.zipCode}
-                    </p>
-                    <p className="text-gray-600 mt-2">
-                      {order.deliveryAddress?.phoneNumber}
-                    </p>
+              <div className="space-y-5">
+                {order.items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex flex-row items-center justify-between bg-white p-4 rounded-2xl shadow-xl"
+                  >
+                    <div className="flex space-x-4">
+                      <img
+                        src={item.foodImageUrl}
+                        alt={item.foodName}
+                        className="w-20 h-20 rounded-full object-cover"
+                      />
+                      <div>
+                        <h3 className="text-lg font-medium text-gray-800">
+                          {item.foodName}
+                        </h3>
+                        <p className="text-sm text-gray-600">{item.price}$</p>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-start">
+                      <div className="text-right">
+                        <p className="text-gray-800 font-semibold">
+                          ${item.price.toFixed(2) * item.quantity}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Quantity: {item.quantity}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">
-                    PAYMENT INFORMATION
-                  </h3>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-gray-800">
-                      <span className="font-medium">Subtotal:</span> $
-                      {order.subtotal?.toFixed(2)}
-                    </p>
-                    <p className="text-gray-800">
-                      <span className="font-medium">Delivery Fee:</span> $
-                      {order.deliveryFee?.toFixed(2)}
-                    </p>
-                    {order.discount > 0 && (
-                      <p className="text-green-600">
-                        <span className="font-medium">Discount:</span> -$
-                        {order.discount?.toFixed(2)}
+                ))}
+                <div className="my-5">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-800">
+                        Total Amount
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        {order.items.length} items
                       </p>
-                    )}
-                    <div className="border-t border-gray-200 my-2 pt-2">
-                      <p className="text-gray-900 font-semibold">
-                        <span>Total:</span> ${order.totalPrice?.toFixed(2)}
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-semibold text-gray-800">
+                        ${order.totalPrice.toFixed(2)}
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            {/* Order items section */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-xl font-semibold mb-6 flex items-center">
-                <Package size={18} className="mr-2 text-purple" />
-                Order Items
-              </h2>
-              <div className="space-y-6">
-                {order.items.map((item) => (
-                  <OrderCard {...item} key={item.id} />
-                ))}
-              </div>
-            </div>
           </div>
         )}
       </div>
+      <p className="text-xs text-gray-500 mt-10">
+        ©{" "}
+        <a href="https://www.mapbox.com/about/maps/" target="_blank">
+          Mapbox
+        </a>
+        ©{" "}
+        <a href="https://www.openstreetmap.org/about/" target="_blank">
+          OpenStreetMap
+        </a>
+      </p>
     </div>
   );
 }

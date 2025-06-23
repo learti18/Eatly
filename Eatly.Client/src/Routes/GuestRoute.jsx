@@ -16,7 +16,7 @@ export default function GuestRoute() {
       );
     }
 
-    if (status === STATUS.SUCCESS) {
+    if (isAuthenticated) {
       return <Navigate to={location.state?.from?.pathname || "/"} replace />;
     }
 

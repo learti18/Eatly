@@ -19,7 +19,7 @@ import { useFetchUserOrders } from "../../Queries/Order/useFetchUserOrders";
 import { formatCurrency } from "../../utils/currencyFormatter";
 import { formatDate } from "../../utils/dateFormatter";
 
-export default function Order() {
+export default function UserOrders() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [orderStatusFilter, setOrderStatusFilter] = useState("All");
@@ -38,25 +38,21 @@ export default function Order() {
       paymentStatusFilter !== "All" ? paymentStatusFilter : undefined,
   });
 
-  // Extract orders and metadata
   const orders = orderData?.items || [];
   const totalOrders = orderData?.totalCount || 0;
   const totalPages = orderData?.totalPages || 1;
 
-  // Handle page navigation
   const goToPage = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
 
-  // Reset filters
   const resetFilters = () => {
     setOrderStatusFilter("All");
     setPaymentStatusFilter("All");
   };
 
-  // Check if any filters are active
   const hasActiveFilters =
     orderStatusFilter !== "All" || paymentStatusFilter !== "All";
 

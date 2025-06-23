@@ -1,6 +1,5 @@
 import React from "react";
 import BlogdetailsHero from "../../components/BlogdetailsHero";
-import blogs from "../../blogs";
 import BlogCard from "../../components/Blogs/BlogCard";
 import BlogdetailsContent from "../../components/BlogdetailsContent";
 import { useBlogById } from "../../Queries/Blogs/useBlogById";
@@ -49,17 +48,19 @@ export default function Blogdetails() {
             </h2>
             <div className="flex flex-col gap-10">
               {allBlogs &&
-                allBlogs.slice(0, 3).map((relatedBlog) => (
-                  <BlogCard
-                    id={relatedBlog.id}
-                    key={relatedBlog.id}
-                    blogImage={relatedBlog.imageUrl}
-                    blogTitle={relatedBlog.title}
-                    user={relatedBlog.username}
-                    date={relatedBlog.createdAt}
-                    size="sm"
-                  />
-                ))}
+                allBlogs
+                  .slice(0, 3)
+                  .map((relatedBlog) => (
+                    <BlogCard
+                      id={relatedBlog.id}
+                      key={relatedBlog.id}
+                      blogImage={relatedBlog.imageUrl}
+                      blogTitle={relatedBlog.title}
+                      user={relatedBlog.username}
+                      date={relatedBlog.createdAt}
+                      size="sm"
+                    />
+                  ))}
             </div>
           </div>
         </div>

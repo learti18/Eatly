@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { foods } from "../../foods";
-import { orders } from "../../orders";
-import OrderCard from "../../components/Cards/OrderCard";
 import QuantityButton from "../../components/Buttons/QuantityButton";
 import IconButton from "../../components/Buttons/IconButton";
 import { useFoodByRestaurantId } from "../../Queries/Foods/useFoodByRestaurantId";
 import { Link, useParams } from "react-router-dom";
 import { useAddToCart } from "../../Queries/Cart/useAddToCart";
 import { useAllFoodsById } from "../../Queries/Foods/useAllFoodsById";
-import { getIngredientEmoji, getIngredientBgColor } from "../../utils/ingredients/ingredientUtils";
+import {
+  getIngredientEmoji,
+  getIngredientBgColor,
+} from "../../utils/ingredients/ingredientUtils";
 
 export default function FoodDetails() {
   const { id, foodId } = useParams();
@@ -96,9 +96,7 @@ export default function FoodDetails() {
                     />
                   ))
                 ) : (
-                  <>
-              
-                  </>
+                  <></>
                 )}
               </div>
 
@@ -139,7 +137,7 @@ export default function FoodDetails() {
                 ) : (
                   foods.map((food) => (
                     <Link
-                    to={`/menu/${id}/food/${food.id}`}
+                      to={`/menu/${id}/food/${food.id}`}
                       key={food.id}
                       className="flex justify-between items-center bg-white rounded-xl shadow-sm hover:shadow-md transition duration-200 p-4 border border-gray-200"
                     >

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Navigation, Layers } from "lucide-react";
 import Map, { Marker, NavigationControl, Source, Layer } from "react-map-gl";
 import { toast } from "sonner";
@@ -17,6 +17,7 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
   const [routeDistance, setRouteDistance] = useState(null);
   const [routeDuration, setRouteDuration] = useState(null);
   const [isTrackingLocation, setIsTrackingLocation] = useState(false);
+  const lastFetchTimeRef = useRef(null);
 
   useEffect(() => {
     if (orderData?.latitude && orderData?.longitude) {
@@ -27,6 +28,40 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
       });
     }
   }, [orderData]);
+
+  const getDirections = useCallback(async () => {
+    if (!currentPosition || !orderData?.latitude || !orderData?.longitude)
+      return;
+
+    // Throttle requests to prevent infinite loop - only fetch if 5 seconds have passed
+    const now = Date.now();
+    if (lastFetchTimeRef.current && now - lastFetchTimeRef.current < 5000) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://api.mapbox.com/directions/v5/mapbox/driving/${currentPosition.lng},${currentPosition.lat};${orderData.longitude},${orderData.latitude}?steps=true&geometries=geojson&overview=full&access_token=${mapboxToken}`
+      );
+      const data = await response.json();
+
+      if (data.routes && data.routes.length > 0) {
+        setDirectionsData(data.routes[0].geometry);
+        setRouteDistance(data.routes[0].distance);
+        setRouteDuration(data.routes[0].duration);
+        setShowDirections(true);
+
+        setViewState((prevViewState) => ({
+          ...prevViewState,
+          zoom: 12,
+        }));
+        lastFetchTimeRef.current = now;
+      }
+    } catch (error) {
+      console.error("Error fetching directions:", error);
+      toast.error("Could not get directions. Please try again.");
+    }
+  }, [currentPosition, orderData, mapboxToken]);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -46,6 +81,7 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
             });
           }
 
+          // Update Firebase location
           const db = getDatabase();
           set(ref(db, `drivers/${orderData.driverId}/location`), {
             latitude: newPosition.lat,
@@ -60,34 +96,25 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
 
       return () => navigator.geolocation.clearWatch(watchId);
     }
-  }, [isTrackingLocation]);
+  }, [isTrackingLocation, orderData?.driverId]); // Removed getDirections from dependencies
 
-  const getDirections = useCallback(async () => {
-    if (!currentPosition || !orderData?.latitude || !orderData?.longitude)
-      return;
-
-    try {
-      const response = await fetch(
-        `https://api.mapbox.com/directions/v5/mapbox/driving/${currentPosition.lng},${currentPosition.lat};${orderData.longitude},${orderData.latitude}?steps=true&geometries=geojson&access_token=${mapboxToken}`
-      );
-      const data = await response.json();
-
-      if (data.routes && data.routes.length > 0) {
-        setDirectionsData(data.routes[0].geometry);
-        setRouteDistance(data.routes[0].distance);
-        setRouteDuration(data.routes[0].duration);
-        setShowDirections(true);
-
-        setViewState((prevViewState) => ({
-          ...prevViewState,
-          zoom: 12,
-        }));
-      }
-    } catch (error) {
-      console.error("Error fetching directions:", error);
-      toast.error("Could not get directions. Please try again.");
+  // Separate effect to handle directions updates with throttling
+  useEffect(() => {
+    if (
+      currentPosition &&
+      orderData?.latitude &&
+      orderData?.longitude &&
+      showDirections
+    ) {
+      getDirections();
     }
-  }, [currentPosition, orderData, mapboxToken]);
+  }, [
+    currentPosition,
+    orderData?.latitude,
+    orderData?.longitude,
+    showDirections,
+    getDirections,
+  ]);
 
   const formatDistance = (meters) => {
     if (!meters) return "";
@@ -118,7 +145,6 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
     }
   };
 
-  // Route style for the directions line
   const routeLayer = {
     id: "route",
     type: "line",
@@ -128,8 +154,9 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
     },
     paint: {
       "line-color": "#6c5fbc",
-      "line-width": 5,
-      "line-opacity": 0.8,
+      "line-width": 6,
+      "line-opacity": 0.85,
+      "line-blur": 0.5,
     },
   };
 
@@ -167,7 +194,6 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
             style={{ width: "100%", height: "100%" }}
             {...viewState}
             onMove={(evt) => {
-              // Only update view state if not in tracking mode
               if (!isTrackingLocation) {
                 setViewState(evt.viewState);
               }
