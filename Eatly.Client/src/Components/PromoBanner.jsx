@@ -1,7 +1,11 @@
 import React from "react";
 import SearchInput from "./Inputs/SearchInput";
 
-export default function PromoBanner() {
+export default function PromoBanner({ 
+  searchValue = "", 
+  onSearchChange = () => {},
+  searchPlaceholder = "Search restaurants by name, cuisine, or location..."
+}) {
   return (
     <div className="flex flex-col justify-between w-full lg:w-2/3 ">
       <div className="w-full">
@@ -24,11 +28,12 @@ export default function PromoBanner() {
         </div>
       </div>
       <div className="flex flex-col w-full mt-15">
-        <SearchInput />
-        {/* <div className='flex w-full mt-5'>
-                <button className='w-full rounded-s-lg py-4 border border-[#6C5FBC] text-[#6C5FBC] bg-white'>Food</button>
-                <button className="w-full rounded-e-lg py-4 bg-[#6C5FBC] text-white">Restaurant</button>
-            </div> */}
+        <SearchInput 
+          value={searchValue}
+          onChange={onSearchChange}
+          placeholder={searchPlaceholder}
+        />
+        
       </div>
     </div>
   );
