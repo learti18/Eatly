@@ -18,7 +18,7 @@ export default function TopRestaurantsSection() {
           ) : isError ? (
             <p>{isError?.message}</p>
           ) : (
-            restaurants
+            restaurants.items
               .slice(0, 3)
               .map((restaurant) => (
                 <RestaurantCard key={restaurant.id} restaurant={restaurant} />

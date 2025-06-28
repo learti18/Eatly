@@ -23,7 +23,7 @@ export default function FoodCard({ food }) {
     <Link
       to={`food/${food.id}`}
       style={{ boxShadow: "0px 60px 35px rgba(0, 0, 0, 0.08)" }}
-      className="relative bg-white rounded-[34.58px] py-2 px-5 hover:drop-shadow-xl transition-all duration-300 ease-in-out cursor-pointer"
+      className="relative bg-white rounded-[34.58px] py-2 px-4 md:px-5 hover:drop-shadow-xl transition-all duration-300 ease-in-out cursor-pointer"
     >
       <div
         onClick={handleFavoriteClick}
@@ -46,11 +46,11 @@ export default function FoodCard({ food }) {
           />
         </svg>
       </div>
-      <div className="max-w-[250px] pt-8 flex justify-center items-center mx-auto">
+      <div className="mt-8 mb-2 max-w-[300px] flex justify-center items-center mx-auto">
         <img
           src={food.imageUrl}
           alt="food"
-          className="p-1 w-40 h-40 rounded-full"
+          className="w-48 aspect-square rounded-full"
         />
       </div>
       <Badge type={food.type} />
@@ -63,13 +63,13 @@ export default function FoodCard({ food }) {
         <p>4.5</p>
       </div>
       <div className="flex items-center justify-between mt-3 pb-6">
-        <p className="text-gray-900 text-2xl font-semibold pt-2">
+        <p className="text-gray-900 text-2xl md:text-3xl font-semibold">
           ${dollars}
           <span className="text-text-light text-lg">.{cents}</span>
         </p>
         <button
           onClick={handleAddToCart}
-          className="cursor-pointer bg-text-dark text-white text-4xl px-2 rounded-[9px] hover:bg-gray-900 transition-colors duration-300 ease-in-out"
+          className="cursor-pointer bg-text-dark text-white text-3xl md:text-4xl px-2 rounded-[9px] hover:bg-gray-900 transition-colors duration-300 ease-in-out"
         >
           +
         </button>

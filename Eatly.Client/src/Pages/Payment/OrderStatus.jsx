@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import api from "../../Services/Api";
 
 export default function OrderStatus() {
@@ -7,26 +7,38 @@ export default function OrderStatus() {
   const session_id = searchParams.get("session_id");
   const [sessionData, setSessionData] = useState(null);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchSessionData = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get("session_id");
+
+    if (!sessionId) {
+      toast.error("No session ID found in URL");
+      return;
+    }
+
+    async function fetchOrder() {
       try {
         const response = await api.get(
-          `/payments/session?sessionId=${session_id}`
+          `/payments/session?sessionId=${sessionId}`
         );
+        const { orderId } = response.data;
 
-        if (response.status !== 200) {
-          throw new Error("Failed to fetch session data");
+        if (!orderId) {
+          toast.error("Order not found for this session");
+          return;
         }
 
-        setSessionData(response.data);
-      } catch (err) {
-        console.error("Error fetching session data:", err);
-        setError("Failed to fetch order status. Please try again later.");
+        navigate(`/orders/${orderId}`);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to fetch order details");
       }
-    };
-    if (session_id) fetchSessionData();
-  }, [session_id]);
+    }
+
+    fetchOrder();
+  }, [navigate]);
 
   if (error) return <div>Error: {error}</div>;
 

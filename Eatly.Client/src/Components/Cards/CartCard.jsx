@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useRemoveCartItem } from "./../Queries/Cart/useRemoveCartItem";
-import { useUpdateCartItem } from "../Queries/Cart/useUpdateCartItem";
+import { useRemoveCartItem } from "../../Queries/Cart/useRemoveCartItem";
+import { useUpdateCartItem } from "../../Queries/Cart/useUpdateCartItem";
 import { toast } from "sonner";
 
 const fadeInKeyframes = `
@@ -14,7 +14,7 @@ const fadeInKeyframes = `
   }
 `;
 
-export default function OrderCard({
+export default function CartCard({
   id,
   foodId,
   foodName,
@@ -151,7 +151,7 @@ export default function OrderCard({
       <div className="md:w-full rounded-2xl border-white py-1 px-4 drop-shadow-xl bg-white flex items-center justify-between ">
         <div className="flex gap-5">
           <img
-            className="max-w-26 object-contain rounded-full"
+            className="w-20 md:w-28 object-contain rounded-full"
             src={foodImageUrl}
           />
           <div className="flex flex-col justify-center">
@@ -161,11 +161,11 @@ export default function OrderCard({
             </p>
           </div>
         </div>
-        <div className="flex flex-col justify-center gap-3 p-6">
+        <div className="flex flex-col justify-center gap-3 py-5">
           <div className="flex items-center gap-3">
             <button
               onClick={handleDecrement}
-              className="text-[#323142] text-3xl cursor-pointer border border-[#323142] rounded-xl w-9 h-9 flex items-center justify-center bg-white hover:bg-[#f0f0f0] hover:shadow-md transition-all duration-200"
+              className="text-[#323142] text-xl md:text-3xl px-2 cursor-pointer border border-[#323142] rounded-lg md:rounded-xl flex items-center justify-center bg-white hover:bg-[#f0f0f0] hover:shadow-md transition-all duration-200"
             >
               -
             </button>
@@ -174,7 +174,7 @@ export default function OrderCard({
             </p>
             <button
               onClick={handleIncrement}
-              className="text-white text-3xl cursor-pointer rounded-xl w-9 h-9 flex items-center justify-center bg-[#323142] hover:bg-[#4a4963] hover:shadow-md transition-all duration-200"
+              className="text-white text-xl md:text-3xl px-2 cursor-pointer rounded-lg md:rounded-xl flex items-center justify-center bg-[#323142] hover:bg-[#4a4963] hover:shadow-md transition-all duration-200"
             >
               +
             </button>

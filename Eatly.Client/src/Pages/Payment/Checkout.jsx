@@ -106,7 +106,6 @@ export default function Checkout() {
         "/payments/create-checkout-session",
         {
           addressId: deliveryType === "delivery" ? selectedAddressId : null,
-          // deliveryType: deliveryType,
         },
         { headers: { "Content-Type": "application/json" } }
       );

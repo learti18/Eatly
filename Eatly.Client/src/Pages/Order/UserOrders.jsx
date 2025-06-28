@@ -1,14 +1,6 @@
-import {
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Filter,
-  Package,
-  ShoppingBag,
-  X,
-} from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { ChevronDown, Filter, Package, ShoppingBag, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   orderStatusColors,
   orderStatusOptions,
@@ -16,15 +8,118 @@ import {
   paymentStatusOptions,
 } from "../../constants/statuses";
 import { useFetchUserOrders } from "../../Queries/Order/useFetchUserOrders";
+import Pagination from "../../components/Shared/Pagination";
 import { formatCurrency } from "../../utils/currencyFormatter";
 import { formatDate } from "../../utils/dateFormatter";
 
 export default function UserOrders() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [orderStatusFilter, setOrderStatusFilter] = useState("All");
-  const [paymentStatusFilter, setPaymentStatusFilter] = useState("All");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(() => {
+    return parseInt(searchParams.get("page")) || 1;
+  });
+  const [pageSize, setPageSize] = useState(() => {
+    return parseInt(searchParams.get("pageSize")) || 10;
+  });
+  const [orderStatusFilter, setOrderStatusFilter] = useState(() => {
+    return searchParams.get("orderStatus") || "All";
+  });
+  const [paymentStatusFilter, setPaymentStatusFilter] = useState(() => {
+    return searchParams.get("paymentStatus") || "All";
+  });
   const [showFilters, setShowFilters] = useState(false);
+
+  const updateUrlParams = (updates) => {
+    const newParams = new URLSearchParams(searchParams);
+
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value && value !== "All" && value !== 1 && value !== 10) {
+        newParams.set(key, value.toString());
+      } else if (key === "page" && value > 1) {
+        newParams.set(key, value.toString());
+      } else if (key === "pageSize" && value !== 10) {
+        newParams.set(key, value.toString());
+      } else {
+        newParams.delete(key);
+      }
+    });
+
+    setSearchParams(newParams);
+  };
+
+  const handleOrderStatusChange = (status) => {
+    setOrderStatusFilter(status);
+    setCurrentPage(1);
+    updateUrlParams({
+      page: 1,
+      orderStatus: status,
+      paymentStatus: paymentStatusFilter,
+      pageSize,
+    });
+  };
+
+  const handlePaymentStatusChange = (status) => {
+    setPaymentStatusFilter(status);
+    setCurrentPage(1);
+    updateUrlParams({
+      page: 1,
+      orderStatus: orderStatusFilter,
+      paymentStatus: status,
+      pageSize,
+    });
+  };
+
+  const handlePageSizeChange = (size) => {
+    setPageSize(size);
+    setCurrentPage(1);
+    updateUrlParams({
+      page: 1,
+      orderStatus: orderStatusFilter,
+      paymentStatus: paymentStatusFilter,
+      pageSize: size,
+    });
+  };
+
+  const resetFilters = () => {
+    setOrderStatusFilter("All");
+    setPaymentStatusFilter("All");
+    setCurrentPage(1);
+    setPageSize(10);
+    setSearchParams({});
+  };
+
+  const removeOrderStatusFilter = () => {
+    setOrderStatusFilter("All");
+    setCurrentPage(1);
+    updateUrlParams({
+      page: 1,
+      orderStatus: "All",
+      paymentStatus: paymentStatusFilter,
+      pageSize,
+    });
+  };
+
+  const removePaymentStatusFilter = () => {
+    setPaymentStatusFilter("All");
+    setCurrentPage(1);
+    updateUrlParams({
+      page: 1,
+      orderStatus: orderStatusFilter,
+      paymentStatus: "All",
+      pageSize,
+    });
+  };
+
+  useEffect(() => {
+    const page = parseInt(searchParams.get("page")) || 1;
+    const size = parseInt(searchParams.get("pageSize")) || 10;
+    const orderStatus = searchParams.get("orderStatus") || "All";
+    const paymentStatus = searchParams.get("paymentStatus") || "All";
+
+    setCurrentPage(page);
+    setPageSize(size);
+    setOrderStatusFilter(orderStatus);
+    setPaymentStatusFilter(paymentStatus);
+  }, [searchParams]);
 
   const {
     data: orderData,
@@ -45,12 +140,13 @@ export default function UserOrders() {
   const goToPage = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
+      updateUrlParams({
+        page,
+        orderStatus: orderStatusFilter,
+        paymentStatus: paymentStatusFilter,
+        pageSize,
+      });
     }
-  };
-
-  const resetFilters = () => {
-    setOrderStatusFilter("All");
-    setPaymentStatusFilter("All");
   };
 
   const hasActiveFilters =
@@ -111,10 +207,7 @@ export default function UserOrders() {
                   <select
                     className="w-full rounded-md border-gray-300 shadow-sm focus:border-purple focus:ring focus:ring-purple focus:ring-opacity-50 h-10 pl-3 pr-10 text-gray-700 appearance-none"
                     value={orderStatusFilter}
-                    onChange={(e) => {
-                      setOrderStatusFilter(e.target.value);
-                      setCurrentPage(1);
-                    }}
+                    onChange={(e) => handleOrderStatusChange(e.target.value)}
                   >
                     {orderStatusOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -136,10 +229,7 @@ export default function UserOrders() {
                   <select
                     className="w-full rounded-md border-gray-300 shadow-sm focus:border-purple focus:ring focus:ring-purple focus:ring-opacity-50 h-10 pl-3 pr-10 text-gray-700 appearance-none"
                     value={paymentStatusFilter}
-                    onChange={(e) => {
-                      setPaymentStatusFilter(e.target.value);
-                      setCurrentPage(1);
-                    }}
+                    onChange={(e) => handlePaymentStatusChange(e.target.value)}
                   >
                     {paymentStatusOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -180,11 +270,11 @@ export default function UserOrders() {
         {hasActiveFilters && (
           <div className="flex flex-wrap gap-2 mb-4">
             {orderStatusFilter !== "All" && (
-              <div className="inline-flex items-center bg-purple-50 text-purple-800 rounded-full px-3 py-1 text-sm">
+              <div className="inline-flex items-center bg-purple-light text-purple rounded-full px-3 py-1 text-sm">
                 <span>Status: {orderStatusFilter}</span>
                 <button
-                  onClick={() => setOrderStatusFilter("All")}
-                  className="ml-1 hover:text-purple-900"
+                  onClick={removeOrderStatusFilter}
+                  className="ml-1 hover:text-purple-dark"
                 >
                   <X size={14} />
                 </button>
@@ -194,7 +284,7 @@ export default function UserOrders() {
               <div className="inline-flex items-center bg-purple-50 text-purple-800 rounded-full px-3 py-1 text-sm">
                 <span>Payment: {paymentStatusFilter}</span>
                 <button
-                  onClick={() => setPaymentStatusFilter("All")}
+                  onClick={removePaymentStatusFilter}
                   className="ml-1 hover:text-purple-900"
                 >
                   <X size={14} />
@@ -219,6 +309,15 @@ export default function UserOrders() {
                 <Link
                   to={`/orders/${order.id}`}
                   key={order.id}
+                  state={{
+                    returnTo: `/orders?${searchParams.toString()}`,
+                    filters: {
+                      orderStatus: orderStatusFilter,
+                      paymentStatus: paymentStatusFilter,
+                      page: currentPage,
+                      pageSize: pageSize,
+                    },
+                  }}
                   className="block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
                 >
                   <div className="p-4 border-b border-gray-100">
@@ -266,85 +365,14 @@ export default function UserOrders() {
               ))}
             </div>
 
-            {/* Pagination controls */}
-            <div className="flex items-center justify-between mt-8 bg-white p-4 rounded-lg shadow-sm">
-              <div className="text-sm text-gray-700">
-                Showing{" "}
-                <span className="font-medium">
-                  {(currentPage - 1) * pageSize + 1}
-                </span>{" "}
-                to{" "}
-                <span className="font-medium">
-                  {Math.min(currentPage * pageSize, totalOrders)}
-                </span>{" "}
-                of <span className="font-medium">{totalOrders}</span> orders
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => goToPage(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className={`p-2 rounded-full ${
-                    currentPage === 1
-                      ? "text-gray-300 cursor-not-allowed"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <ChevronLeft size={18} />
-                </button>
-
-                {/* Page number buttons */}
-                <div className="flex space-x-1">
-                  {[...Array(totalPages)].map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => goToPage(i + 1)}
-                      className={`px-3 py-1 rounded-md ${
-                        currentPage === i + 1
-                          ? "bg-purple text-white"
-                          : "text-gray-700 hover:bg-gray-100"
-                      }`}
-                    >
-                      {i + 1}
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  onClick={() => goToPage(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className={`p-2 rounded-full ${
-                    currentPage === totalPages
-                      ? "text-gray-300 cursor-not-allowed"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <ChevronRight size={18} />
-                </button>
-              </div>
-
-              {/* Page size selector */}
-              <div className="flex items-center space-x-2">
-                <label htmlFor="pageSize" className="text-sm text-gray-700">
-                  Items per page:
-                </label>
-                <select
-                  id="pageSize"
-                  className="rounded-md border-gray-300 text-sm"
-                  value={pageSize}
-                  onChange={(e) => {
-                    setPageSize(Number(e.target.value));
-                    setCurrentPage(1); // Reset to first page when changing page size
-                  }}
-                >
-                  {[5, 10, 25].map((size) => (
-                    <option key={size} value={size}>
-                      {size}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalItems={totalOrders}
+              pageSize={pageSize}
+              onPageChange={goToPage}
+              onPageSizeChange={handlePageSizeChange}
+            />
           </>
         ) : (
           <div className="bg-white p-8 rounded-lg text-center shadow-md flex flex-col items-center">

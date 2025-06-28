@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import TotalOrder from "../../Components/TotalOrder";
 import { useFetchCart } from "../../Queries/Cart/useFetchCart";
-import OrderCard from "../../components/OrderCard";
 import { useClearCart } from "../../Queries/Cart/useClearCart";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import { Package } from "lucide-react";
+import CartCard from "../../components/Cards/CartCard";
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -150,7 +150,7 @@ export default function Cart() {
                 </button>
               </div>
               {cart.cartItems.map((item) => (
-                <OrderCard
+                <CartCard
                   key={item.id}
                   {...item}
                   onPriceChange={handleItemPriceChange}
@@ -158,7 +158,7 @@ export default function Cart() {
               ))}
             </>
           )}
-          {/* <ApplyCouponInput /> */}
+
           <TotalOrder price={localTotalPrice} />
           <button
             disabled={cart?.cartItems?.length === 0}

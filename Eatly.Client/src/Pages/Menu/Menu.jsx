@@ -27,7 +27,7 @@ export default function Menu() {
             ) : isError ? (
               <p>{isError?.message}</p>
             ) : (
-              restaurants.map((restaurant) => (
+              restaurants.items.map((restaurant) => (
                 <RestaurantCard key={restaurant.id} restaurant={restaurant} />
               ))
             )}

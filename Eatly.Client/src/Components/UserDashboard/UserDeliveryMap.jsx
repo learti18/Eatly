@@ -149,7 +149,7 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
     <div className="mb-32 px-2">
       <div className="relative h-[450px] w-full rounded-2xl overflow-hidden shadow-2xl border border-gray-200">
         {mapError ? (
-          <div className="bg-red-50 h-full flex flex-col items-center justify-center p-6 text-center">
+          <div className="bg-r   h-full flex flex-col items-center justify-center p-6 text-center">
             <div className="text-red-500 mb-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -288,7 +288,7 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
           </p>
         </div>
         {driverPosition ? (
-          <div className="mb-4 flex items-center justify-start w-full gap-6 px-5 py-8 bg-opacity-10">
+          <div className="flex items-center justify-start w-full gap-6 px-5 py-8 bg-opacity-10">
             <div className="flex flex-col ">
               <img
                 src="/icons/Locatin.svg"
