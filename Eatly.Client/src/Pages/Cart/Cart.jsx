@@ -107,15 +107,15 @@ export default function Cart() {
         )}
         <div className="flex flex-col">
           {!cart || cart.cartItems.length === 0 ? (
-            <div className="flex justify-center items-center gap-5">
+            <div className="flex justify-center items-center gap-4">
               <Link
                 to="/orders"
-                className="border border-purple  px-4 py-2 rounded-xl text-purple hover:bg-purple hover:text-white transition-colors duration-200 text-center font-medium"
+                className="border border-purple text-sm md:text-base px-4 py-2 rounded-xl text-purple hover:bg-purple hover:text-white transition-colors duration-200 text-center font-medium"
               >
-                <Package className="inline mr-2" />
+                <Package className="inline mr-2" size={18} />
                 Go to Orders
               </Link>
-              <div className="text-center text-2xl font-semibold text-gray-500">
+              <div className="text-center text-xl md:text-2xl leading-tight font-medium text-gray-500">
                 Your cart is empty
               </div>
             </div>
@@ -169,7 +169,7 @@ export default function Cart() {
               cart.cartItems.length === 0
                 ? "cursor-not-allowed opacity-80"
                 : "cursor-pointer hover:bg-purple-dark"
-            } bg-purple mt-5 transition-colors duration-200 text-white md:w-full text-xl rounded-2xl py-4 font-semibold flex items-center justify-center`}
+            } bg-purple mt-5 transition-colors duration-200 text-white md:w-full text-lg md:text-xl rounded-2xl py-4 font-medium flex items-center justify-center`}
           >
             Proceed to Checkout
           </button>
