@@ -53,7 +53,7 @@ export default function Cart() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen bg-background-main">
         <span className="loading loading-spinner loading-xl"></span>
       </div>
     );
@@ -61,14 +61,14 @@ export default function Cart() {
 
   if (isError) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen bg-background-main">
         {isError.message}
       </div>
     );
   }
 
   return (
-    <div className="bg-background-main min-h-screen">
+    <div className="bg-background-main">
       <div className="max-w-4xl mx-auto py-16 px-6">
         {showClearConfirmation && (
           <div className="fixed inset-0 bg-white/30 backdrop-blur-md z-50 flex items-center justify-center">
@@ -105,7 +105,7 @@ export default function Cart() {
             </div>
           </div>
         )}
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col">
           {!cart || cart.cartItems.length === 0 ? (
             <div className="flex justify-center items-center gap-5">
               <Link
@@ -121,10 +121,10 @@ export default function Cart() {
             </div>
           ) : (
             <>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center mb-8">
                 <Link
                   to="/orders"
-                  className="border border-purple  px-4 py-2 rounded-xl text-purple hover:bg-purple hover:text-white transition-colors duration-200 text-center font-medium"
+                  className="border border-purple px-4 py-2 rounded-xl text-purple hover:bg-purple hover:text-white transition-colors duration-200 text-center font-medium"
                 >
                   <Package className="inline mr-2" />
                   Go to Orders
@@ -149,13 +149,15 @@ export default function Cart() {
                   Clear Cart
                 </button>
               </div>
-              {cart.cartItems.map((item) => (
-                <CartCard
-                  key={item.id}
-                  {...item}
-                  onPriceChange={handleItemPriceChange}
-                />
-              ))}
+              <div className="space-y-5">
+                {cart.cartItems.map((item) => (
+                  <CartCard
+                    key={item.id}
+                    {...item}
+                    onPriceChange={handleItemPriceChange}
+                  />
+                ))}
+              </div>
             </>
           )}
 

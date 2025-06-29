@@ -62,16 +62,7 @@ export default function FoodTableRow({ food }) {
       </td>
 
       <td className="p-4">
-        <div className="flex flex-col space-y-2 items-center">
-          <button
-            onClick={handleView}
-            className="flex items-center cursor-pointer justify-center w-full gap-1 px-2 py-1 bg-gray-50 text-gray-600 hover:bg-gray-100 rounded-md text-sm font-medium transition-colors"
-            title="View details"
-          >
-            <Eye size={14} />
-            <span>View</span>
-          </button>
-
+        <div className="flex flex-col space-y-3 items-center">
           <Link
             to={`/restaurant-dashboard/foods/edit/${id}`}
             className="flex items-center justify-center cursor-pointer w-full gap-1 px-2 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-md text-sm font-medium transition-colors"

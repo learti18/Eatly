@@ -63,12 +63,6 @@ export default function OrderTableRow({ order, statusTypes }) {
       <tr className="hover:bg-gray-50">
         <td className="px-6 py-4 whitespace-nowrap">
           <div className="text-sm font-medium text-gray-900">#{order.id}</div>
-          <div
-            className="text-xs text-gray-500 truncate max-w-[150px]"
-            title={order.userId}
-          >
-            User: {order.userId.substring(0, 8)}...
-          </div>
         </td>
         <td className="px-6 py-4 whitespace-nowrap">
           <div className="text-sm text-gray-900">
@@ -76,10 +70,16 @@ export default function OrderTableRow({ order, statusTypes }) {
           </div>
         </td>
         <td className="px-6 py-4 whitespace-nowrap">
-          <div className="flex items-center gap-2">
-            <div className="bg-purple/10 text-purple rounded-full w-7 h-7 flex items-center justify-center font-medium">
-              {order.items.length}
-            </div>
+          <div
+            className="text-xs text-gray-500 truncate max-w-[150px]"
+            title={order.userId}
+          >
+            ID: {order.userId.substring(0, 8)}...
+          </div>
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap">
+          <div className="bg-purple/10 text-purple rounded-full w-7 h-7 flex items-center justify-center font-medium">
+            {order.items.length}
           </div>
         </td>
         <td className="px-6 py-4 whitespace-nowrap">
@@ -117,7 +117,7 @@ export default function OrderTableRow({ order, statusTypes }) {
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center justify-center gap-1 px-3 py-1.5 bg-purple-50 text-purple hover:bg-purple-100 rounded-md text-sm font-medium transition-colors mx-auto"
+            className="flex items-center justify-center gap-1 px-3 py-1.5 bg-purple-50 text-purple hover:bg-purple-light rounded-md text-sm font-medium transition-colors mx-auto"
           >
             <Eye size={14} />
             <span>Details</span>

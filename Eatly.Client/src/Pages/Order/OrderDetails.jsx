@@ -9,6 +9,7 @@ import {
   MapPin,
   Home,
   UtensilsCrossed,
+  Check,
 } from "lucide-react";
 import { formatDate } from "../../utils/dateFormatter";
 import { paymentStatusColors } from "../../constants/statuses";
@@ -62,16 +63,6 @@ export default function OrderDetails() {
                     {formatDate(order.orderDate)}
                   </p>
                 </div>
-
-                {/* <div className="flex flex-wrap gap-2">
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      paymentStatusColors[order.paymentStatus]
-                    }`}
-                  >
-                    {order.paymentStatus}
-                  </span>
-                </div> */}
               </div>
               {order.restaurantName && (
                 <div className="flex items-center gap-3 mt-8 pl-2">
@@ -152,20 +143,7 @@ export default function OrderDetails() {
                   <div className="p-6">
                     <div className="flex flex-col items-center text-center">
                       <div className="bg-green-50 border-2 border-green-200 p-4 rounded-full mb-4">
-                        <svg
-                          width="32"
-                          height="32"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="text-green-600"
-                        >
-                          <path d="M9 12l2 2 4-4" />
-                          <circle cx="12" cy="12" r="10" />
-                        </svg>
+                        <Check className="text-green-600" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-800 mb-2">
                         {order.orderStatus === "Completed"
@@ -212,10 +190,6 @@ export default function OrderDetails() {
 
             {/* Order items section */}
             <div className="max-w-3xl mx-auto my-20">
-              <h2 className="text-xl font-semibold mb-6 flex items-center">
-                <Package size={18} className="mr-2 text-purple" />
-                Order Items
-              </h2>
               <div className="space-y-5">
                 {order.items.map((item) => (
                   <div

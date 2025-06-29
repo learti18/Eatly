@@ -7,7 +7,6 @@ import {
   Clock,
   MapPin,
   ShoppingBag,
-  CreditCard,
 } from "lucide-react";
 
 export default function OrderCard({

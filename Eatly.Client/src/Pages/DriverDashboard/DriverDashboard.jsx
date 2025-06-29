@@ -1,4 +1,4 @@
-import { getDatabase, onValue, ref } from "firebase/database";
+import { getDatabase, onValue, ref, remove } from "firebase/database";
 import React, { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useFetchOrderById } from "../../Queries/Order/useFetchOrderById";
@@ -12,40 +12,53 @@ import OrderSummary from "./../../components/DriverDashboard/OrderSummary";
 import CustomerDetails from "./../../components/DriverDashboard/CustomerDetails";
 import DeliveryMap from "../../components/DriverDashboard/DeliveryMap";
 import OrderItems from "./../../components/DriverDashboard/OrderItems";
+import { useUpdateOrderStatus } from "../../Queries/Order/useUpdateOrderStatus";
 
 export default function DriverDashboard() {
   const [orderId, setOrderId] = useState(null);
+  const [driverId, setDriverId] = useState(null);
+  const [unsubscribeCallbacks, setUnsubscribeCallbacks] = useState([]);
   const {
     data: orderData,
     isLoading: isOrderLoading,
     error: orderError,
     refetch: refetchOrder,
   } = useFetchOrderById(orderId);
+  const { mutate: updateOrderStatus, isPending: isUpdating } =
+    useUpdateOrderStatus();
 
-  // Listen for assigned orders from Firebase
   useEffect(() => {
     const auth = getAuth();
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        const driverId = user.uid;
-        listenForAssignedOrder(driverId, (orderId) => {
+        const currentDriverId = user.uid;
+        setDriverId(currentDriverId);
+        listenForAssignedOrder(currentDriverId, (orderId) => {
           console.log(`New order assigned: ${orderId}`);
 
           const db = getDatabase();
           const orderRef = ref(db, `orders/${orderId}`);
-          onValue(orderRef, (snapshot) => {
+          const orderUnsubscribe = onValue(orderRef, (snapshot) => {
             const orderData = snapshot.val();
             if (orderData) {
               console.log(`Order details:`, orderData);
               setOrderId(orderId);
             }
           });
+
+          // Store unsubscribe callback
+          setUnsubscribeCallbacks((prev) => [...prev, orderUnsubscribe]);
         });
       } else {
         console.warn("Driver not logged in");
       }
     });
+
+    // Cleanup on unmount
+    return () => {
+      unsubscribeCallbacks.forEach((unsubscribe) => unsubscribe());
+    };
   }, []);
 
   const listenForAssignedOrder = (driverId, callBack) => {
@@ -53,23 +66,74 @@ export default function DriverDashboard() {
     const db = getDatabase();
     const orderRef = ref(db, `drivers/${driverId}/currentOrder`);
 
-    onValue(orderRef, (snapshot) => {
+    const unsubscribe = onValue(orderRef, (snapshot) => {
       const orderId = snapshot.val();
       if (orderId) {
         callBack(orderId);
       }
     });
+
+    // Store the unsubscribe callback
+    setUnsubscribeCallbacks((prev) => [...prev, unsubscribe]);
   };
 
-  // Handler for marking order as delivered
+  const cleanupCompletedOrder = async (orderId, driverId) => {
+    try {
+      const db = getDatabase();
+
+      // Remove order from driver's current order
+      await remove(ref(db, `drivers/${driverId}/currentOrder`));
+
+      // Remove driver assignment from order
+      await remove(ref(db, `orders/${orderId}/driverId`));
+
+      console.log(`Cleaned up completed order: ${orderId}`);
+    } catch (error) {
+      console.error("Error cleaning up completed order:", error);
+    }
+  };
+
   const handleMarkAsDelivered = () => {
-    // Placeholder for future API implementation
-    toast.success(`Order #${orderData.id} status updated to Delivered`);
-    refetchOrder();
+    if (!orderData || !orderData.id) {
+      toast.error("No order data available to mark as delivered.");
+      return;
+    }
+
+    updateOrderStatus(
+      {
+        id: orderData.id,
+        status: 5, // Completed status
+      },
+      {
+        onSuccess: async () => {
+          toast.success(`Order #${orderData.id} marked as completed`);
+
+          // Clean up Firebase references
+          if (driverId) {
+            await cleanupCompletedOrder(orderData.id, driverId);
+          }
+
+          // Clean up local state
+          setOrderId(null);
+
+          // Unsubscribe from listeners
+          unsubscribeCallbacks.forEach((unsubscribe) => unsubscribe());
+          setUnsubscribeCallbacks([]);
+
+          toast.success(
+            "Order completed successfully. Ready for new assignments!"
+          );
+        },
+        onError: (error) => {
+          toast.error("Failed to update order status");
+          console.error("Error updating order status:", error);
+        },
+      }
+    );
   };
 
   return (
-    <div className="p-4 max-w-6xl mx-auto">
+    <div className="p-4">
       <h1 className="text-3xl font-bold mb-6 text-purple">Driver Dashboard</h1>
 
       {isOrderLoading && (
@@ -103,6 +167,7 @@ export default function DriverDashboard() {
             <OrderSummary
               orderData={orderData}
               onMarkDelivered={handleMarkAsDelivered}
+              updatingStatus={isUpdating}
             />
             <CustomerDetails orderData={orderData} />
           </div>

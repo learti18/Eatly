@@ -21,14 +21,12 @@ export default function Layout() {
   if (!mounted) return null;
 
   return (
-    <div className="">
+    <div className="min-h-screen flex flex-col">
       <div className={`${isAuthPage ? "block md:hidden" : "block"}`}>
         <Navbar />
       </div>
       <main
-        className={`min-h-screen z-10 ${
-          isAuthPage ? "pt-10 md:pt-0" : "pt-20"
-        } bg-white`}
+        className={`flex-1 z-10 ${isAuthPage ? "pt-10 md:pt-0" : "pt-20"} `}
       >
         <Outlet />
       </main>

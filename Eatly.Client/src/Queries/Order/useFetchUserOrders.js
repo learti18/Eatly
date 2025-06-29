@@ -7,7 +7,6 @@ export const useFetchUserOrders = (options = { pageNumber: 1, pageSize: 5 }) => 
     queryFn: async () => {
       const { pageNumber, pageSize, orderStatus, paymentStatus } = options;
       
-      // Build the query string with filters
       let queryParams = `pageNumber=${pageNumber}&pageSize=${pageSize}`;
       if (orderStatus) queryParams += `&orderStatus=${orderStatus}`;
       if (paymentStatus) queryParams += `&paymentStatus=${paymentStatus}`;

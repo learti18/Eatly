@@ -146,10 +146,10 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
     !isNaN(parseFloat(orderData.longitude));
 
   return (
-    <div className="mb-32 px-2">
+    <div className="mb-20 px-2">
       <div className="relative h-[450px] w-full rounded-2xl overflow-hidden shadow-2xl border border-gray-200">
         {mapError ? (
-          <div className="bg-r   h-full flex flex-col items-center justify-center p-6 text-center">
+          <div className="bg-red-200   h-full flex flex-col items-center justify-center p-6 text-center">
             <div className="text-red-500 mb-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -267,15 +267,6 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
           </div>
         )}
       </div>
-
-      {/* {driverPosition && (
-        <div className="mt-3 px-4 py-2 bg-gray-50 rounded-lg text-sm text-center">
-          <p className="text-gray-700">
-            Your order is on the way! The driver's location is updated in
-            real-time.
-          </p>
-        </div>
-      )} */}
       <div className="drop-shadow-2xl bg-white mx-auto mt-5 w-full rounded-3xl max-w-md">
         <div className="bg-text-dark w-full text-white font-light px-8 py-4 rounded-t-3xl">
           <h2 className="flex items-center gap-2">
@@ -288,7 +279,7 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
           </p>
         </div>
         {driverPosition ? (
-          <div className="flex items-center justify-start w-full gap-6 px-5 py-8 bg-opacity-10">
+          <div className="flex items-center justify-start w-full gap-6 px-4 py-8 bg-opacity-10">
             <div className="flex flex-col ">
               <img
                 src="/icons/Locatin.svg"
@@ -310,7 +301,7 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
                 className="size-10"
               />
             </div>
-            <div className="flex flex-col gap-7 text-sm">
+            <div className="flex flex-col gap-7 text-xs md:text-sm">
               <div>
                 <p className="text-gray-400">Your Address</p>
                 <p>{orderData.streetAddress}</p>
@@ -326,7 +317,7 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
                 <p className="text-gray-800">{formatDistance(routeDistance)}</p>
               </div>
             </div>
-            <p className="bg-purple text-white text-sm px-6 py-3 rounded-md self-end ml-auto">
+            <p className="bg-purple text-white text-sm px-5 py-3 rounded-md self-end ml-auto">
               {orderData.orderStatus}
             </p>
           </div>

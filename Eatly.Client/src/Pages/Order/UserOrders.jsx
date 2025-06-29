@@ -1,6 +1,5 @@
 import { ChevronDown, Filter, Package, ShoppingBag, X } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   orderStatusColors,
   orderStatusOptions,
@@ -11,115 +10,39 @@ import { useFetchUserOrders } from "../../Queries/Order/useFetchUserOrders";
 import Pagination from "../../components/Shared/Pagination";
 import { formatCurrency } from "../../utils/currencyFormatter";
 import { formatDate } from "../../utils/dateFormatter";
+import useOrderFiltering from "../../Hooks/useOrderFiltering";
+import OrderFilters from "../../components/Order/ClientUi/OrderFilters";
 
 export default function UserOrders() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(() => {
-    return parseInt(searchParams.get("page")) || 1;
-  });
-  const [pageSize, setPageSize] = useState(() => {
-    return parseInt(searchParams.get("pageSize")) || 10;
-  });
-  const [orderStatusFilter, setOrderStatusFilter] = useState(() => {
-    return searchParams.get("orderStatus") || "All";
-  });
-  const [paymentStatusFilter, setPaymentStatusFilter] = useState(() => {
-    return searchParams.get("paymentStatus") || "All";
-  });
-  const [showFilters, setShowFilters] = useState(false);
+  const {
+    currentPage,
+    setCurrentPage,
+    pageSize,
+    orderStatusFilter,
+    setOrderStatusFilter: handleOrderStatusChange,
+    paymentStatusFilter,
+    setPaymentStatusFilter: handlePaymentStatusChange,
+    showFilters,
+    setShowFilters,
+    resetFilters,
+    removeOrderStatusFilter,
+    removePaymentStatusFilter,
+    handlePageSizeChange,
+    searchParams,
+    updateUrlParams,
+  } = useOrderFiltering();
 
-  const updateUrlParams = (updates) => {
-    const newParams = new URLSearchParams(searchParams);
-
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value && value !== "All" && value !== 1 && value !== 10) {
-        newParams.set(key, value.toString());
-      } else if (key === "page" && value > 1) {
-        newParams.set(key, value.toString());
-      } else if (key === "pageSize" && value !== 10) {
-        newParams.set(key, value.toString());
-      } else {
-        newParams.delete(key);
-      }
-    });
-
-    setSearchParams(newParams);
+  const goToPage = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      updateUrlParams({
+        page,
+        orderStatus: orderStatusFilter,
+        paymentStatus: paymentStatusFilter,
+        pageSize,
+      });
+    }
   };
-
-  const handleOrderStatusChange = (status) => {
-    setOrderStatusFilter(status);
-    setCurrentPage(1);
-    updateUrlParams({
-      page: 1,
-      orderStatus: status,
-      paymentStatus: paymentStatusFilter,
-      pageSize,
-    });
-  };
-
-  const handlePaymentStatusChange = (status) => {
-    setPaymentStatusFilter(status);
-    setCurrentPage(1);
-    updateUrlParams({
-      page: 1,
-      orderStatus: orderStatusFilter,
-      paymentStatus: status,
-      pageSize,
-    });
-  };
-
-  const handlePageSizeChange = (size) => {
-    setPageSize(size);
-    setCurrentPage(1);
-    updateUrlParams({
-      page: 1,
-      orderStatus: orderStatusFilter,
-      paymentStatus: paymentStatusFilter,
-      pageSize: size,
-    });
-  };
-
-  const resetFilters = () => {
-    setOrderStatusFilter("All");
-    setPaymentStatusFilter("All");
-    setCurrentPage(1);
-    setPageSize(10);
-    setSearchParams({});
-  };
-
-  const removeOrderStatusFilter = () => {
-    setOrderStatusFilter("All");
-    setCurrentPage(1);
-    updateUrlParams({
-      page: 1,
-      orderStatus: "All",
-      paymentStatus: paymentStatusFilter,
-      pageSize,
-    });
-  };
-
-  const removePaymentStatusFilter = () => {
-    setPaymentStatusFilter("All");
-    setCurrentPage(1);
-    updateUrlParams({
-      page: 1,
-      orderStatus: orderStatusFilter,
-      paymentStatus: "All",
-      pageSize,
-    });
-  };
-
-  useEffect(() => {
-    const page = parseInt(searchParams.get("page")) || 1;
-    const size = parseInt(searchParams.get("pageSize")) || 10;
-    const orderStatus = searchParams.get("orderStatus") || "All";
-    const paymentStatus = searchParams.get("paymentStatus") || "All";
-
-    setCurrentPage(page);
-    setPageSize(size);
-    setOrderStatusFilter(orderStatus);
-    setPaymentStatusFilter(paymentStatus);
-  }, [searchParams]);
 
   const {
     data: orderData,
@@ -136,18 +59,6 @@ export default function UserOrders() {
   const orders = orderData?.items || [];
   const totalOrders = orderData?.totalCount || 0;
   const totalPages = orderData?.totalPages || 1;
-
-  const goToPage = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-      updateUrlParams({
-        page,
-        orderStatus: orderStatusFilter,
-        paymentStatus: paymentStatusFilter,
-        pageSize,
-      });
-    }
-  };
 
   const hasActiveFilters =
     orderStatusFilter !== "All" || paymentStatusFilter !== "All";
@@ -179,92 +90,20 @@ export default function UserOrders() {
           </button>
         </div>
 
-        {/* Filters */}
-        <div
-          className={`transition-all duration-300 ease-in-out overflow-hidden mb-6 ${
-            showFilters ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-          }`}
-        >
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="font-semibold text-lg text-gray-800">
-                Filter Orders
-              </h2>
-              <button
-                onClick={() => setShowFilters(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Order Status
-                </label>
-                <div className="relative">
-                  <select
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-purple focus:ring focus:ring-purple focus:ring-opacity-50 h-10 pl-3 pr-10 text-gray-700 appearance-none"
-                    value={orderStatusFilter}
-                    onChange={(e) => handleOrderStatusChange(e.target.value)}
-                  >
-                    {orderStatusOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                    <ChevronDown size={16} className="text-gray-500" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Payment Status
-                </label>
-                <div className="relative">
-                  <select
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-purple focus:ring focus:ring-purple focus:ring-opacity-50 h-10 pl-3 pr-10 text-gray-700 appearance-none"
-                    value={paymentStatusFilter}
-                    onChange={(e) => handlePaymentStatusChange(e.target.value)}
-                  >
-                    {paymentStatusOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                    <ChevronDown size={16} className="text-gray-500" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-end mt-6">
-              <button
-                onClick={resetFilters}
-                className={`px-4 py-2 rounded-lg ${
-                  hasActiveFilters
-                    ? "text-gray-700 bg-gray-100 hover:bg-gray-200"
-                    : "text-gray-400 cursor-not-allowed"
-                }`}
-                disabled={!hasActiveFilters}
-              >
-                Clear Filters
-              </button>
-              <button
-                onClick={() => setShowFilters(false)}
-                className="ml-3 px-4 py-2 bg-purple text-white rounded-lg hover:bg-purple-dark"
-              >
-                Apply Filters
-              </button>
-            </div>
-          </div>
-        </div>
+        {/* Filters Section */}
+        <OrderFilters
+          showFilters={showFilters}
+          setShowFilters={setShowFilters}
+          orderStatusFilter={orderStatusFilter}
+          handleOrderStatusChange={handleOrderStatusChange}
+          paymentStatusFilter={paymentStatusFilter}
+          handlePaymentStatusChange={handlePaymentStatusChange}
+          resetFilters={resetFilters}
+          hasActiveFilters={hasActiveFilters}
+          orderStatusOptions={orderStatusOptions}
+          paymentStatusOptions={paymentStatusOptions}
+          updateUrlParams={updateUrlParams}
+        />
 
         {/* Active filter indicators */}
         {hasActiveFilters && (
@@ -281,11 +120,11 @@ export default function UserOrders() {
               </div>
             )}
             {paymentStatusFilter !== "All" && (
-              <div className="inline-flex items-center bg-purple-50 text-purple-800 rounded-full px-3 py-1 text-sm">
+              <div className="inline-flex items-center bg-purple-light text-purple rounded-full px-3 py-1 text-sm">
                 <span>Payment: {paymentStatusFilter}</span>
                 <button
                   onClick={removePaymentStatusFilter}
-                  className="ml-1 hover:text-purple-900"
+                  className="ml-1 hover:text-purple-dark"
                 >
                   <X size={14} />
                 </button>

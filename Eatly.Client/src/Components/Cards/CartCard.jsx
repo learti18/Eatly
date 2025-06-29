@@ -148,7 +148,7 @@ export default function CartCard({
           </div>
         </div>
       )}
-      <div className="md:w-full rounded-2xl border-white py-1 px-4 drop-shadow-xl bg-white flex items-center justify-between ">
+      <div className="md:w-full rounded-2xl border-white py-2 px-4 drop-shadow-xl bg-white flex items-center justify-between ">
         <div className="flex gap-5">
           <img
             className="w-20 md:w-28 object-contain rounded-full"
@@ -165,7 +165,7 @@ export default function CartCard({
           <div className="flex items-center gap-3">
             <button
               onClick={handleDecrement}
-              className="text-[#323142] text-xl md:text-3xl px-2 cursor-pointer border border-[#323142] rounded-lg md:rounded-xl flex items-center justify-center bg-white hover:bg-[#f0f0f0] hover:shadow-md transition-all duration-200"
+              className="text-[#323142] text-xl md:text-2xl w-7 h-7 md:w-8 md:h-8 cursor-pointer border border-[#323142] rounded-lg md:rounded-xl flex items-center justify-center bg-white hover:bg-[#f0f0f0] hover:shadow-md transition-all duration-200"
             >
               -
             </button>
@@ -174,7 +174,7 @@ export default function CartCard({
             </p>
             <button
               onClick={handleIncrement}
-              className="text-white text-xl md:text-3xl px-2 cursor-pointer rounded-lg md:rounded-xl flex items-center justify-center bg-[#323142] hover:bg-[#4a4963] hover:shadow-md transition-all duration-200"
+              className="text-white text-xl md:text-2xl w-7 h-7 md:w-8 md:h-8 cursor-pointer rounded-lg md:rounded-xl flex items-center justify-center bg-[#323142] hover:bg-[#4a4963] hover:shadow-md transition-all duration-200"
             >
               +
             </button>
