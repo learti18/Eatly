@@ -16,7 +16,7 @@ export default function Badge({ type }) {
     },
   };
   return (
-    <div className="badge text-xs" style={style[type]}>
+    <div className="badge text-xs h-[1.3rem] md:h-6" style={style[type]}>
       {type}
     </div>
   );

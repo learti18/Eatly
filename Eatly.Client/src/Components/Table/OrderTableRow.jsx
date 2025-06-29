@@ -1,97 +1,68 @@
 import React, { useState, useEffect, useRef } from "react";
+import ReactDOM from "react-dom";
 import { formatCurrency } from "../../utils/currencyFormatter";
 import { formatDate } from "../../utils/dateFormatter";
-import { useUpdateOrderStatus } from "../../Queries/Order/useUpdateOrderStatus";
+import { Eye, ShoppingBag, CreditCard } from "lucide-react";
+import { useDrivers } from "../../Queries/Drivers/useDrivers";
+import { useAssignDriver } from "../../Queries/Order/useAssignDriver";
 import { toast } from "sonner";
-import StatusDropdown from "./StatusDropdown";
-import OrderDetailsPanel from "./OrderDetailsPanel";
+import OrderDetailsModal from "../Order/RestaurantDashboardUi/OrderDetailsModal";
+import { getDatabase, ref, set } from "firebase/database";
 
-export default function OrderTableRow({
-  order,
-  isExpanded,
-  onToggleExpand,
-  statusTypes,
-}) {
-  const { mutate: updateStatus, isLoading: isUpdating } =
-    useUpdateOrderStatus();
-  const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
-  const [dropdownPosition, setDropdownPosition] = useState("bottom");
-  const statusBtnRef = useRef(null);
-  const dropdownRef = useRef(null);
+export default function OrderTableRow({ order, statusTypes }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { data: drivers = [], isLoading: isLoadingDrivers } = useDrivers();
+  const { mutate: assignDriver } = useAssignDriver();
 
-  const statusColors = {
-    Pending: "bg-yellow-100 text-yellow-800",
-    Processing: "bg-blue-100 text-blue-800",
+  // Order status colors
+  const orderStatusColors = {
+    Pending: "bg-gray-100 text-gray-800",
+    InPreparation: "bg-yellow-100 text-yellow-800",
+    ReadyForPickup: "bg-blue-100 text-blue-800",
+    OutForDelivery: "bg-purple-100 text-purple-800",
+    Delivered: "bg-indigo-100 text-indigo-800",
     Completed: "bg-green-100 text-green-800",
     Cancelled: "bg-red-100 text-red-800",
-    Delivered: "bg-purple-100 text-purple-800",
   };
 
-  const handleStatusChange = (newStatus) => {
-    updateStatus(
-      {
-        id: order.id,
-        status: newStatus.value, // Only send the status value/id, not the entire object
-      },
+  // Payment status colors
+  const paymentStatusColors = {
+    Unpaid: "bg-red-100 text-red-800",
+    AwaitingPayment: "bg-yellow-100 text-yellow-800",
+    Processing: "bg-blue-100 text-blue-800",
+    Paid: "bg-green-100 text-green-800",
+    Failed: "bg-red-100 text-red-800",
+    Cancelled: "bg-gray-100 text-gray-800",
+    Refunded: "bg-orange-100 text-orange-800",
+  };
+
+  const handleAssignDriver = (driverId) => {
+    assignDriver(
+      { orderId: order.id, driverId },
       {
         onSuccess: () => {
-          toast.success(
-            `Order #${order.id} status updated to ${newStatus.label}`
-          );
-          setStatusDropdownOpen(false);
+          toast.success(`Driver assigned to order #${order.id}`);
         },
         onError: (error) => {
-          toast.error("Failed to update order status");
-          console.error("Error updating order status:", error);
+          toast.error("Failed to assign driver");
+          console.error("Error assigning driver:", error);
         },
       }
     );
+    assignDriverOnRealTime(order.id, driverId);
   };
+  const assignDriverOnRealTime = (orderId, driverId) => {
+    const db = getDatabase();
+    set(ref(db, `orders/${orderId}/driverId`), driverId);
 
-  // Check if dropdown should appear above or below based on space available
-  useEffect(() => {
-    if (statusDropdownOpen && statusBtnRef.current && dropdownRef.current) {
-      const buttonRect = statusBtnRef.current.getBoundingClientRect();
-      const dropdownHeight = dropdownRef.current.offsetHeight;
-      const viewportHeight = window.innerHeight;
-
-      // If there's not enough space below, show above
-      if (buttonRect.bottom + dropdownHeight > viewportHeight) {
-        setDropdownPosition("top");
-      } else {
-        setDropdownPosition("bottom");
-      }
-    }
-  }, [statusDropdownOpen]);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target) &&
-        statusBtnRef.current &&
-        !statusBtnRef.current.contains(event.target)
-      ) {
-        setStatusDropdownOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [dropdownRef]);
+    set(ref(db, `drivers/${driverId}/currentOrder`), orderId);
+  };
 
   return (
     <>
       <tr className="hover:bg-gray-50">
         <td className="px-6 py-4 whitespace-nowrap">
           <div className="text-sm font-medium text-gray-900">#{order.id}</div>
-          <div
-            className="text-xs text-gray-500 truncate max-w-[150px]"
-            title={order.userId}
-          >
-            User: {order.userId.substring(0, 8)}...
-          </div>
         </td>
         <td className="px-6 py-4 whitespace-nowrap">
           <div className="text-sm text-gray-900">
@@ -99,52 +70,16 @@ export default function OrderTableRow({
           </div>
         </td>
         <td className="px-6 py-4 whitespace-nowrap">
-          <div className="flex items-center gap-2">
-            <div className="bg-purple/10 text-purple rounded-full w-7 h-7 flex items-center justify-center font-medium">
-              {order.items.length}
-            </div>
-            <button
-              onClick={() => onToggleExpand(order.id)}
-              className="flex items-center gap-1 text-sm text-purple hover:text-purple-dark transition-colors px-3 py-1 rounded-md hover:bg-purple/5"
-            >
-              {isExpanded ? (
-                <>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 15l7-7 7 7"
-                    />
-                  </svg>
-                  Hide
-                </>
-              ) : (
-                <>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                  Details
-                </>
-              )}
-            </button>
+          <div
+            className="text-xs text-gray-500 truncate max-w-[150px]"
+            title={order.userId}
+          >
+            ID: {order.userId.substring(0, 8)}...
+          </div>
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap">
+          <div className="bg-purple/10 text-purple rounded-full w-7 h-7 flex items-center justify-center font-medium">
+            {order.items.length}
           </div>
         </td>
         <td className="px-6 py-4 whitespace-nowrap">
@@ -153,34 +88,60 @@ export default function OrderTableRow({
           </div>
         </td>
         <td className="px-6 py-4 whitespace-nowrap">
-          <span
-            className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-              statusColors[order.status]
-            }`}
-          >
-            {order.status}
-          </span>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-1 text-xs text-gray-500">
+              <ShoppingBag size={12} className="text-gray-400" />
+              <span>Order:</span>
+              <span
+                className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                  orderStatusColors[order.orderStatus]
+                }`}
+              >
+                {order.orderStatus}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1 text-xs text-gray-500">
+              <CreditCard size={12} className="text-gray-400" />
+              <span>Payment:</span>
+              <span
+                className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                  paymentStatusColors[order.paymentStatus]
+                }`}
+              >
+                {order.paymentStatus}
+              </span>
+            </div>
+          </div>
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-          <StatusDropdown
-            orderId={order.id}
-            currentStatus={order.status}
-            statusTypes={statusTypes}
-          />
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center justify-center gap-1 px-3 py-1.5 bg-purple-50 text-purple hover:bg-purple-light rounded-md text-sm font-medium transition-colors mx-auto"
+          >
+            <Eye size={14} />
+            <span>Details</span>
+          </button>
         </td>
       </tr>
 
-      {isExpanded && (
-        <tr>
-          <td colSpan="6" className="px-0 border-t border-gray-200">
-            <OrderDetailsPanel
-              order={order}
-              onClose={() => onToggleExpand(order.id)}
-              statusColors={statusColors}
-            />
-          </td>
-        </tr>
-      )}
+      {isModalOpen &&
+        ReactDOM.createPortal(
+          <OrderDetailsModal
+            order={order}
+            onClose={() => setIsModalOpen(false)}
+            statusColors={orderStatusColors}
+            paymentStatusColors={paymentStatusColors}
+            availableDrivers={drivers.filter((d) => d.isAvailable)}
+            onAssignDriver={handleAssignDriver}
+            isOrderConfirmed={
+              order.orderStatus !== "Pending" &&
+              order.orderStatus !== "Cancelled"
+            }
+            statusTypes={statusTypes}
+          />,
+          document.body
+        )}
     </>
   );
 }

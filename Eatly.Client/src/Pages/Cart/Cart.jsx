@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import TotalOrder from "../../Components/TotalOrder";
 import { useFetchCart } from "../../Queries/Cart/useFetchCart";
-import OrderCard from "../../components/OrderCard";
 import { useClearCart } from "../../Queries/Cart/useClearCart";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Package } from "lucide-react";
+import CartCard from "../../components/Cards/CartCard";
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -14,13 +15,13 @@ export default function Cart() {
   const [localTotalPrice, setLocalTotalPrice] = useState(0);
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
 
-  const proceedToOrder = () => {
+  const proccedToCheckout = () => {
     if (!cart || cart.cartItems.length === 0) {
       toast.error("Your cart is empty");
       return;
     }
 
-    navigate("/order");
+    navigate("/checkout");
   };
 
   useEffect(() => {
@@ -52,7 +53,7 @@ export default function Cart() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen bg-background-main">
         <span className="loading loading-spinner loading-xl"></span>
       </div>
     );
@@ -60,14 +61,14 @@ export default function Cart() {
 
   if (isError) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen bg-background-main">
         {isError.message}
       </div>
     );
   }
 
   return (
-    <div className="bg-background-main min-h-screen">
+    <div className="bg-background-main">
       <div className="max-w-4xl mx-auto py-16 px-6">
         {showClearConfirmation && (
           <div className="fixed inset-0 bg-white/30 backdrop-blur-md z-50 flex items-center justify-center">
@@ -104,17 +105,33 @@ export default function Cart() {
             </div>
           </div>
         )}
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col">
           {!cart || cart.cartItems.length === 0 ? (
-            <div className="text-center text-2xl font-semibold text-gray-500">
-              Your cart is empty
+            <div className="flex justify-center items-center gap-5">
+              <Link
+                to="/orders"
+                className="border border-purple  px-4 py-2 rounded-xl text-purple hover:bg-purple hover:text-white transition-colors duration-200 text-center font-medium"
+              >
+                <Package className="inline mr-2" />
+                Go to Orders
+              </Link>
+              <div className="text-center text-2xl font-semibold text-gray-500">
+                Your cart is empty
+              </div>
             </div>
           ) : (
             <>
-              <div className="flex justify-end">
+              <div className="flex justify-between items-center mb-8">
+                <Link
+                  to="/orders"
+                  className="border border-purple px-4 py-2 rounded-xl text-purple hover:bg-purple hover:text-white transition-colors duration-200 text-center font-medium"
+                >
+                  <Package className="inline mr-2" />
+                  Go to Orders
+                </Link>
                 <button
                   onClick={handleClearCartClick}
-                  className="border border-[#323142] text-[#323142] hover:bg-[#f0f0f0] transition-colors duration-200 px-4 py-2 rounded-xl font-medium flex items-center gap-2"
+                  className="border border-[#323142] text-[#323142] hover:bg-[#f0f0f0] cursor-pointer transition-colors duration-200 px-4 py-2 rounded-xl font-medium flex items-center gap-2"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -132,21 +149,27 @@ export default function Cart() {
                   Clear Cart
                 </button>
               </div>
-              {cart.cartItems.map((item) => (
-                <OrderCard
-                  key={item.id}
-                  {...item}
-                  onPriceChange={handleItemPriceChange}
-                />
-              ))}
+              <div className="space-y-5">
+                {cart.cartItems.map((item) => (
+                  <CartCard
+                    key={item.id}
+                    {...item}
+                    onPriceChange={handleItemPriceChange}
+                  />
+                ))}
+              </div>
             </>
           )}
-          {/* <ApplyCouponInput /> */}
+
           <TotalOrder price={localTotalPrice} />
           <button
             disabled={cart?.cartItems?.length === 0}
-            onClick={proceedToOrder}
-            className="bg-purple hover:bg-purple-dark mt-5 transition-colors duration-200 cursor-pointer text-white md:w-full text-xl rounded-2xl py-4 font-semibold flex items-center justify-center"
+            onClick={proccedToCheckout}
+            className={`${
+              cart.cartItems.length === 0
+                ? "cursor-not-allowed opacity-80"
+                : "cursor-pointer hover:bg-purple-dark"
+            } bg-purple mt-5 transition-colors duration-200 text-white md:w-full text-xl rounded-2xl py-4 font-semibold flex items-center justify-center`}
           >
             Proceed to Checkout
           </button>

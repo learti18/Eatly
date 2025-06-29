@@ -3,17 +3,13 @@ import {
   LayoutDashboard,
   UtensilsCrossed,
   Inbox,
-  Calendar,
-  Receipt,
   Settings,
   UserCircle,
   ChevronLeft,
-  Store,
-  FileText,
-  Star,
   Car,
   LogOut,
   MessageSquareText,
+  CircleDollarSign,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -54,9 +50,9 @@ export default function RestaurantSidebar({ onLogout }) {
       icon: <Car size={22} />,
     },
     {
-      name: "Reviews",
-      to: "/restaurant-dashboard/reviews",
-      icon: <Star size={22} />,
+      name: "Payments",
+      to: "/restaurant-dashboard/payments",
+      icon: <CircleDollarSign size={22} />,
     },
     {
       name: "Messages",

@@ -3,17 +3,18 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import FoodCard from "../Cards/FoodCard";
-import { foods } from "./../../foods";
+import { useAllFoodsById } from "../../Queries/Foods/useAllFoodsById";
 
 export default function TopDishesSection() {
   const [itemCount, setItemCount] = useState(4);
+  const { data: foods, foodsLoading, foodsError } = useAllFoodsById(2);
 
   useEffect(() => {
     const handleResize = () => {
       setItemCount(window.innerWidth >= 1024 ? 5 : 4);
     };
 
-    handleResize(); // Initial check
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -24,9 +25,23 @@ export default function TopDishesSection() {
           Our Top <span className="text-purple">Dishes</span>
         </h1>
         <div className="grid grid-cols-2 lg:grid-cols-5 mx-auto gap-x-5  md:gap-x-7 gap-y-10 mt-20">
-          {foods.slice(0, itemCount).map((food) => (
-            <FoodCard key={food.id} food={food} />
-          ))}
+          {foodsLoading ? (
+            <div className="col-span-full text-center text-gray-500">
+              <span className="animate-pulse">Loading dishes...</span>
+            </div>
+          ) : foodsError ? (
+            <div className="col-span-full text-center text-red-500">
+              Error loading dishes
+            </div>
+          ) : foods?.length > 0 ? (
+            foods
+              .slice(0, itemCount)
+              .map((food) => <FoodCard key={food.id} food={food} />)
+          ) : (
+            <div className="col-span-full text-center text-gray-500">
+              No dishes available
+            </div>
+          )}
         </div>
         <Link
           to="/restaruants/{id}/dishes"

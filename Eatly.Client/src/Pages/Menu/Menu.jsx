@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from "react";
 import PromoBanner from "../../Components/PromoBanner";
 import Category from "../../Components/Category";
 import Accordion from "../../components/Accordion";
-import TopRestaurantsSection from "../../components/Home/TopRestaurantsSection";
 import RestaurantCard from "../../components/Cards/RestaurantCard";
 import { ArrowRight } from "lucide-react";
 import { useAllRestaurants } from "../../Queries/Restaurants/useAllRestaurants";
@@ -101,10 +100,8 @@ export default function Menu() {
                 <span className="loading loading-spinner loading-xl"></span>
               </div>
             ) : isError ? (
-              <div className="col-span-full text-center">
-                <p className="text-red-500">{isError?.message}</p>
-              </div>
-            ) : restaurants && restaurants.length > 0 ? (
+              <p>{isError?.message}</p>
+            ) :  restaurants && restaurants.length > 0 ? (
               restaurants.map((restaurant) => (
                 <RestaurantCard key={restaurant.id} restaurant={restaurant} />
               ))

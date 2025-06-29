@@ -19,6 +19,9 @@ export default function PublicRoute() {
     if (user?.roles?.includes("Admin")) {
       return <Navigate to="/dashboard" replace />;
     }
+    if (user?.roles?.includes("DeliveryDriver")) {
+      return <Navigate to="/driver-dashboard" replace />;
+    }
   }
 
   return <Outlet />;
