@@ -3,7 +3,6 @@ import PromoBanner from "../../Components/PromoBanner";
 import Category from "../../Components/Category";
 import Accordion from "../../components/Accordion";
 import RestaurantCard from "../../components/Cards/RestaurantCard";
-import { ArrowRight } from "lucide-react";
 import { useAllRestaurants } from "../../Queries/Restaurants/useAllRestaurants";
 import { useRestaurantCategories } from "../../Queries/Restaurants/useRestaurantCategories";
 import { useSearchParams } from "react-router-dom";
@@ -66,7 +65,7 @@ export default function Menu() {
     if (filters.pageNumber && filters.pageNumber !== 1)
       params.set("page", filters.pageNumber.toString());
 
-    setSearchParams(params);
+    setSearchParams(params, { replace: true });
   }, [filters, setSearchParams]);
 
   const handleFiltersChange = useCallback((newFilters) => {

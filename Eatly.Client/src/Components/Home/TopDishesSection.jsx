@@ -43,16 +43,6 @@ export default function TopDishesSection() {
             </div>
           )}
         </div>
-        <Link
-          to="/restaruants/{id}/dishes"
-          className="flex items-center justify-end mt-16 text-lg text-text-lighter group hover:text-text-light transition-colors duration-300 ease-in-out"
-        >
-          view all
-          <ArrowRight
-            className="inline-block ml-2 group-hover:translate-x-1.5 transition-all duration-300 ease-in-out"
-            size={16}
-          />
-        </Link>
       </div>
     </section>
   );

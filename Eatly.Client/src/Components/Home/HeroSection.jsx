@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function HeroSection() {
+  const navigate = useNavigate();
   return (
     <section className="bg-background-main min-h-screen w-full flex items-center py-14">
       <div className="max-w-7xl mx-auto px-5">
@@ -23,10 +25,13 @@ function HeroSection() {
                 <span className="font-medium text-purple">$20 bonus</span>.
               </p>
               <div className="flex justify-center gap-5 mt-14 text-base font-medium tracking-normal">
-                <button className="px-8 py-3.5 bg-purple rounded-xl cursor-pointer text-white hover:bg-purple-dark transition-colors duration-200 ease-in-out">
+                <button
+                  onClick={() => navigate("/menu")}
+                  className="px-8 py-3.5 bg-purple rounded-xl cursor-pointer text-white hover:bg-purple-dark transition-colors duration-200 ease-in-out"
+                >
                   Get Started
                 </button>
-                <button className="px-8 py-3.5 bg-white rounded-xl cursor-pointer text-purple border border-2-purple hover:bg-purple hover:text-white transition-colors duration-200 ease-in-out">
+                <button className="px-8 py-3.5 bg-white rounded-xl cursor-pointer text-purple border border-2-purple hover:bg-purple-50 hover:text-purple-darker transition-colors duration-200 ease-in-out">
                   Go Pro
                 </button>
               </div>

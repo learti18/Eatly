@@ -11,7 +11,7 @@ import { useFetchCart } from "../../Queries/Cart/useFetchCart";
 const publicLinks = [
   { name: "Menu", path: "/menu" },
   { name: "Blogs", path: "/blogs" },
-  { name: "Pricing", path: "/pricing" },
+  // { name: "Pricing", path: "/pricing" },
 ];
 
 const authenticatedLinks = [{ name: "Cart", path: "/cart" }];
