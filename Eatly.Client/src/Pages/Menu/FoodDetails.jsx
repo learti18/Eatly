@@ -9,6 +9,7 @@ import {
   getIngredientEmoji,
   getIngredientBgColor,
 } from "../../utils/ingredients/ingredientUtils";
+import Badge from "../../components/Badges/Badge";
 
 export default function FoodDetails() {
   const { id, foodId } = useParams();
@@ -46,6 +47,8 @@ export default function FoodDetails() {
     );
   }
 
+  const [dollars, cents] = food.price.toFixed(2).split(".");
+
   return (
     <div className="bg-background-main">
       <div className="max-w-7xl mx-auto px-5 py-20">
@@ -60,15 +63,13 @@ export default function FoodDetails() {
               <div className="flex space-x-2 font-medium text-gray-500 mt-3 justify-center lg:justify-start">
                 <span>{food.averagePreparationTime}min</span>
                 <span>•</span>
-                <span className="text-purple-600">★ {food.rating}</span>
+                <span className="text-purple">★ {food.rating}</span>
                 <span>•</span>
                 <span>🔥 456 Kcal</span>
               </div>
 
               <div className="mt-2">
-                <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">
-                  {food.type}
-                </span>
+                <Badge type={food.type} />
               </div>
             </div>
 
@@ -81,6 +82,7 @@ export default function FoodDetails() {
             </div>
 
             <div className="mt-10 flex flex-col lg:flex-row items-center justify-between gap-10">
+              <h2 className="text-2xl font-semibold">Ingridients:</h2>
               <div className="hidden lg:flex items-center gap-4">
                 {food.ingridients && food.ingridients.length > 0 ? (
                   food.ingridients.map((ingredient, index) => (
@@ -110,7 +112,7 @@ export default function FoodDetails() {
             <div className="pt-10 flex flex-row lg:flex-row items-center justify-between gap-10 mt-6">
               <button
                 onClick={handleAddToCart}
-                className="font-medium bg-primary hover:bg-[#6453d0] cursor-pointer transition-all duration-200 rounded-[12.68px] text-white px-8 py-4 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                className="bg-primary hover:bg-purple cursor-pointer transition-all duration-200 rounded-xl text-white px-14 py-3.5 shadow-md hover:shadow-lg hover:-translate-y-0.5"
               >
                 {isPending ? (
                   <span className="loading loading-spinner loading-sm px-5 py-1"></span>
@@ -119,7 +121,8 @@ export default function FoodDetails() {
                 )}
               </button>
               <div className="text-4xl font-semibold text-text-dark">
-                $12<span className="text-sm align-top text-gray-400">.99</span>
+                ${dollars}
+                <span className="text-sm text-gray-400">.{cents}</span>
               </div>
             </div>
           </div>

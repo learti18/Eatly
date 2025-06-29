@@ -21,7 +21,7 @@ export default function RestaurantCard({ restaurant }) {
           <div className="flex items-center gap-1 text-text-light">
             <p>25min •</p>
             <img src="/star1.svg" alt="rating logo star" className="w-6" />
-            <p>{restaurant.rating}</p>
+            <p>4.5</p>
           </div>
           <div className="rounded-full px-[8px] py-[6px] bg-purple-light">
             <img src="/BookMark.svg" alt="bookmark logo" className="w-3" />

@@ -7,8 +7,8 @@ export default function QuantityButton({ text, onClick }) {
     <button
       onClick={onClick}
       disabled={isNumber}
-      className={`w-14 h-14 rounded-[16px] flex items-center justify-center 
-        text-3xl shadow-xl transition-all duration-200 
+      className={`w-13 h-13 rounded-xl flex items-center justify-center 
+        text-2xl shadow-xl transition-all duration-200 
         ${
           isNumber
             ? "bg-gray-100 text-gray-400 shadow-none cursor-default"
