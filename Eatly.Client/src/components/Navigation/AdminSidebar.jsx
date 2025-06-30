@@ -13,6 +13,7 @@ import {
   User,
   LogOut,
   Book,
+  ShoppingBasket,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import useLogout from "./../../Queries/Auth/useLogout";
@@ -42,7 +43,11 @@ export default function Sidebar() {
       to: "/dashboard/restaurants",
       icon: <ForkKnife size={22} />,
     },
-    { name: "Users", to: "/dashboard/users", icon: <User size={22} /> },
+    {
+      name: "Ingridients",
+      to: "/dashboard/ingridients",
+      icon: <ShoppingBasket size={22} />,
+    },
     { name: "Orders", to: "/dashboard/orders", icon: <Inbox size={22} /> },
     {
       name: "Blogs",

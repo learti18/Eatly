@@ -51,11 +51,13 @@ export default function FoodDetails() {
 
   return (
     <div className="bg-background-main">
-      <div className="max-w-7xl mx-auto px-5 py-20">
+      <div className="max-w-7xl mx-auto px-5 py-16">
         <div className="flex flex-col lg:flex-row justify-between gap-10">
           <div className="flex-1">
             <div className="text-center lg:text-left">
-              <h1 className="text-4xl font-bold text-text-dark">{food.name}</h1>
+              <h1 className="text-4xl font-bold text-text-dark capitalize">
+                {food.name}
+              </h1>
               <p className="text-gray-500 font-medium text-xl mt-1">
                 Best Chicken Ever
               </p>
@@ -63,7 +65,7 @@ export default function FoodDetails() {
               <div className="flex space-x-2 font-medium text-gray-500 mt-3 justify-center lg:justify-start">
                 <span>{food.averagePreparationTime}min</span>
                 <span>•</span>
-                <span className="text-purple">★ {food.rating}</span>
+                <span className="text-purple">★ 4.5</span>
                 <span>•</span>
                 <span>🔥 456 Kcal</span>
               </div>
@@ -77,42 +79,62 @@ export default function FoodDetails() {
               <img
                 src={food.imageUrl}
                 alt={food.name}
-                className="rounded-full w-[320px] md:w-[400px] object-cover"
+                className="r w-[320px] md:w-[400px] object-cover"
               />
             </div>
 
-            <div className="mt-10 flex flex-col lg:flex-row items-center justify-between gap-10">
-              <h2 className="text-2xl font-semibold">Ingridients:</h2>
-              <div className="hidden lg:flex items-center gap-4">
-                {food.ingridients && food.ingridients.length > 0 ? (
-                  food.ingridients.map((ingredient, index) => (
-                    <IconButton
-                      key={ingredient.id || index}
-                      bgColor={getIngredientBgColor(index)}
-                      icon={
-                        <span className="text-3xl">
-                          {getIngredientEmoji(ingredient.name || ingredient)}
-                        </span>
-                      }
-                      tooltip={ingredient.name || ingredient}
-                    />
-                  ))
-                ) : (
-                  <></>
-                )}
-              </div>
+            <div className="mt-10">
+              <div className="flex flex-col lg:flex-row lg:justify-between lg:items-end gap-8">
+                <div className="flex-1">
+                  <h3 className="text-xl font-medium text-text-dark mb-3">
+                    Ingredients:
+                  </h3>
+                  <div className="flex items-center gap-4 flex-wrap">
+                    {food.ingridients && food.ingridients.length > 0 ? (
+                      food.ingridients.map((ingredient, index) => (
+                        <IconButton
+                          key={ingredient.id || index}
+                          bgColor={ingredient.backgroundColor}
+                          title={ingredient.name}
+                          icon={
+                            ingredient.imageUrl ? (
+                              <img
+                                src={ingredient.imageUrl}
+                                alt={ingredient.name || ingredient}
+                                className="size-6 md:size-8 object-cover rounded-full m-auto"
+                              />
+                            ) : (
+                              <span className="text-3xl">
+                                {getIngredientEmoji(
+                                  ingredient.name || ingredient
+                                )}
+                              </span>
+                            )
+                          }
+                        />
+                      ))
+                    ) : (
+                      <p className="text-gray-500 text-sm">
+                        No ingredients listed
+                      </p>
+                    )}
+                  </div>
+                </div>
 
-              <div className="flex items-center gap-4">
-                <QuantityButton text="-" onClick={decrement} />
-                <QuantityButton text={quantity} />
-                <QuantityButton text="+" onClick={increment} />
+                <div className="flex justify-center lg:justify-end lg:items-center">
+                  <div className="flex items-center gap-4 lg:flex-shrink-0">
+                    <QuantityButton text="-" onClick={decrement} />
+                    <QuantityButton text={quantity} />
+                    <QuantityButton text="+" onClick={increment} />
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="pt-10 flex flex-row lg:flex-row items-center justify-between gap-10 mt-6">
+            <div className="pt-3 lg:pt-6 flex flex-row lg:flex-row items-center justify-between gap-10 mt-4 lg:mt-6">
               <button
                 onClick={handleAddToCart}
-                className="bg-primary hover:bg-purple cursor-pointer transition-all duration-200 rounded-xl text-white px-14 py-3.5 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                className="bg-primary hover:bg-purple cursor-pointer transition-all duration-200 rounded-xl text-white px-14 py-3.5 md:px-20  shadow-md hover:shadow-lg hover:-translate-y-0.5"
               >
                 {isPending ? (
                   <span className="loading loading-spinner loading-sm px-5 py-1"></span>

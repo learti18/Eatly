@@ -71,7 +71,7 @@ export default function FoodCard({ food }) {
         <img
           src={food.imageUrl}
           alt="food"
-          className="w-44 aspect-square rounded-full"
+          className="w-44 aspect-square rounded-full object-contain"
         />
       </div>
       <Badge type={food.type} />
