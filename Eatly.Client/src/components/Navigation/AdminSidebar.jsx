@@ -54,21 +54,6 @@ export default function Sidebar() {
       to: "/dashboard/blogs",
       icon: <Book size={22} />,
     },
-    {
-      name: "Reimbursements",
-      to: "/dashboard/reimbursements",
-      icon: <Receipt size={20} />,
-    },
-    {
-      name: "Accounts",
-      to: "/dashboard/accounts",
-      icon: <UserCircle size={22} />,
-    },
-    {
-      name: "Settings",
-      to: "/dashboard/settings",
-      icon: <Settings size={22} />,
-    },
   ];
 
   return (

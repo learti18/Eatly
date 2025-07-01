@@ -1,20 +1,21 @@
-import React, { useEffect } from 'react'
-import { useForm } from 'react-hook-form';
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { ChevronLeft } from "lucide-react";
 import DefaultInput from "../../../components/Inputs/DefaultInput";
-import TextAreaInput from "../../../components/Inputs/TextAreaInput";
 import ImageUploader from "../../../components/Inputs/ImageUploader";
 import { useParams } from "react-router-dom";
-import { useEditBlogs } from '../../../Queries/Blogs/useEditBlogs';
-import { useBlogById } from '../../../Queries/Blogs/useBlogById';
+import { useEditBlogs } from "../../../Queries/Blogs/useEditBlogs";
+import { useBlogById } from "../../../Queries/Blogs/useBlogById";
+import "react-quill/dist/quill.snow.css";
+import ReactQuill from "react-quill";
 
 export default function EditBlogs() {
+  const [content, setContent] = useState("");
   const { register, handleSubmit, reset, control } = useForm({
     defaultValues: {
       title: "",
       subtitle: "",
-      content: "",
-      imageFile: ""
+      imageFile: "",
     },
   });
 
@@ -27,9 +28,9 @@ export default function EditBlogs() {
       reset({
         title: blog.title || "",
         subtitle: blog.subtitle || "",
-        content: blog.content || "",
-        imageFile: blog.imageFile || ""
+        imageFile: blog.imageFile || "",
       });
+      setContent(blog.content || "");
     }
   }, [blog, isBlogLoading, reset]);
 
@@ -39,8 +40,8 @@ export default function EditBlogs() {
       formData.append("id", id);
       formData.append("title", data.title);
       formData.append("subtitle", data.subtitle);
-      formData.append("content", data.content);
-      
+      formData.append("content", content);
+
       if (data.imageFile && data.imageFile[0]) {
         formData.append("imageFile", data.imageFile[0]);
       }
@@ -89,7 +90,7 @@ export default function EditBlogs() {
               )}
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
               <label className="block text-gray-800 text-lg font-medium">
@@ -119,12 +120,30 @@ export default function EditBlogs() {
               <label className="block text-gray-800 text-lg font-medium">
                 Blog Content
               </label>
-              <TextAreaInput
-                placeholder="Enter blog content"
-                name="content"
-                register={register}
-                required
-                rows={8}
+              <ReactQuill
+                theme="snow"
+                value={content}
+                onChange={setContent}
+                placeholder="Write your blog content here..."
+                modules={{
+                  toolbar: [
+                    [{ header: [1, 2, 3, false] }],
+                    ["bold", "italic", "underline"],
+                    [{ list: "ordered" }, { list: "bullet" }],
+                    ["link", "image"],
+                    ["clean"],
+                  ],
+                }}
+                formats={[
+                  "header",
+                  "bold",
+                  "italic",
+                  "underline",
+                  "list",
+                  "bullet",
+                  "link",
+                  "image",
+                ]}
               />
             </div>
           </div>

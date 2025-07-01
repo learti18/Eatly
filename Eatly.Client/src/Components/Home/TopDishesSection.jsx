@@ -7,7 +7,8 @@ import { useAllFoodsById } from "../../Queries/Foods/useAllFoodsById";
 
 export default function TopDishesSection() {
   const [itemCount, setItemCount] = useState(4);
-  const { data: foods, foodsLoading, foodsError } = useAllFoodsById(2);
+  const restaurantId = 4;
+  const { data: foods, foodsLoading, foodsError } = useAllFoodsById(4);
 
   useEffect(() => {
     const handleResize = () => {
@@ -36,7 +37,13 @@ export default function TopDishesSection() {
           ) : foods?.length > 0 ? (
             foods
               .slice(0, itemCount)
-              .map((food) => <FoodCard key={food.id} food={food} />)
+              .map((food) => (
+                <FoodCard
+                  key={food.id}
+                  food={food}
+                  restaurantId={restaurantId}
+                />
+              ))
           ) : (
             <div className="col-span-full text-center text-gray-500">
               No dishes available

@@ -23,6 +23,8 @@ export default function FoodsListing() {
           { key: "category", label: "Type" },
           { key: "price", label: "Price" },
           { key: "prepTime", label: "Prep Time" },
+          { key: "slogan", label: "Slogan" },
+          { key: "calories", label: "Calories" },
           { key: "actions", label: "Actions", width: "120px" },
         ]}
         isLoading={isLoading}
@@ -31,7 +33,7 @@ export default function FoodsListing() {
           ? foods.map((food) => <FoodTableRow key={food.id} food={food} />)
           : !isLoading && (
               <tr>
-                <td colSpan="6" className="text-center py-4">
+                <td colSpan="8" className="text-center py-4">
                   No foods found for this restaurant
                 </td>
               </tr>

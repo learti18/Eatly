@@ -59,7 +59,7 @@ export default function FoodDetails() {
                 {food.name}
               </h1>
               <p className="text-gray-500 font-medium text-xl mt-1">
-                Best Chicken Ever
+                {food.slogan}
               </p>
 
               <div className="flex space-x-2 font-medium text-gray-500 mt-3 justify-center lg:justify-start">
@@ -67,7 +67,7 @@ export default function FoodDetails() {
                 <span>•</span>
                 <span className="text-purple">★ 4.5</span>
                 <span>•</span>
-                <span>🔥 456 Kcal</span>
+                <span>🔥 {food.calories} Kcal</span>
               </div>
 
               <div className="mt-2">
@@ -160,7 +160,7 @@ export default function FoodDetails() {
                 ) : foodsError ? (
                   <p className="text-red-500 text-sm">{foodsError.message}</p>
                 ) : (
-                  foods.map((food) => (
+                  foods.slice(0, 6).map((food) => (
                     <Link
                       to={`/menu/${id}/food/${food.id}`}
                       key={food.id}

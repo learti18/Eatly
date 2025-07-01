@@ -1,8 +1,9 @@
-import React from 'react';
-import { useAllBlogs } from '../../../Queries/Blogs/useAllBlogs';
-import Table from '../../../components/Table/Table';
-import { Link } from 'react-router-dom';
-import BlogTableRow from '../../../components/Table/BlogTableRow';
+import React from "react";
+import { useAllBlogs } from "../../../Queries/Blogs/useAllBlogs";
+import Table from "../../../components/Table/Table";
+import { Link } from "react-router-dom";
+import BlogTableRow from "../../../components/Table/BlogTableRow";
+import { Plus } from "lucide-react";
 
 export default function BlogListing() {
   const { data: blogs, isLoading, isError } = useAllBlogs();
@@ -10,9 +11,15 @@ export default function BlogListing() {
   return (
     <div className="py-12">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold text-gray-800">Blog Posts</h1>
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl font-bold text-gray-800">Blog Posts</h1>
+          <p>Add blogs to keep users updated</p>
+        </div>
         <Link to="add">
-          <button className="btn btn-primary">Add Blog Post</button>
+          <button className="flex items-center gap-2 bg-purple text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-dark transition-colors w-fit">
+            <Plus size={20} />
+            Add Blog Post
+          </button>
         </Link>
       </div>
       <Table

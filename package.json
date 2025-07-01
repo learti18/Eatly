@@ -2,6 +2,7 @@
   "dependencies": {
     "@react-google-maps/api": "^2.20.6",
     "mapbox-gl": "^3.12.0",
-    "react-map-gl": "^7.0.17"
+    "react-map-gl": "^7.0.17",
+    "react-quill": "^2.0.0"
   }
 }

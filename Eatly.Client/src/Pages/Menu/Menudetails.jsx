@@ -13,27 +13,29 @@ export default function Menudetails() {
   const { id } = useParams();
   const { isAuthenticated } = useAuth();
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
-  
+
   const {
     data: restaurant,
     isLoading: restaurantLoading,
     isError: isRestaurantError,
   } = useRestaurantById(id);
-  
+
   const { data: foods, isLoading, isError } = useAllFoodsById(id);
 
   // Filter foods based on favorites toggle
   const displayedFoods = useMemo(() => {
     if (!foods) return [];
-    
+
     if (showFavoritesOnly) {
-      return foods.filter(food => food.isFavorite);
+      return foods.filter((food) => food.isFavorite);
     }
-    
+
     return foods;
   }, [foods, showFavoritesOnly]);
 
-  const favoritesCount = foods ? foods.filter(food => food.isFavorite).length : 0;
+  const favoritesCount = foods
+    ? foods.filter((food) => food.isFavorite).length
+    : 0;
 
   return (
     <div className=" bg-background-main ">
@@ -52,7 +54,7 @@ export default function Menudetails() {
             <h2 className="text-3xl pt-20 font-semibold ">
               Popular <span role="img">🔥</span>
             </h2>
-            
+
             {isAuthenticated && (
               <div className="pt-20">
                 <FavoriteFilterButton
@@ -63,7 +65,7 @@ export default function Menudetails() {
               </div>
             )}
           </div>
-          
+
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-y-15 gap-5 pb-20">
             {isLoading ? (
               <span className="loading loading-spinner loading-xl"></span>
@@ -87,22 +89,28 @@ export default function Menudetails() {
                     />
                   </svg>
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-600 mb-2">No Favorites Yet</h3>
-                    <p className="text-gray-500">Start adding foods to your favorites by clicking the heart icon!</p>
+                    <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                      No Favorites Yet
+                    </h3>
+                    <p className="text-gray-500">
+                      Start adding foods to your favorites by clicking the heart
+                      icon!
+                    </p>
                   </div>
                 </div>
               </div>
             ) : (
-              displayedFoods.map((food) => <FoodCard key={food.id} food={food} />)
+              displayedFoods.map((food) => (
+                <FoodCard key={food.id} food={food} restaurantId={id} />
+              ))
             )}
           </div>
         </div>
 
-
         <div className="pb-20 ">
           <Accordion />
         </div>
-        
+
         {restaurant && (
           <FloatingChat
             restaurantId={restaurant.id}

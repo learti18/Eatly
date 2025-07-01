@@ -27,7 +27,7 @@ export default function Blogdetails() {
 
   return (
     <div className="bg-background-main min-h-screen">
-      <div className="py-16 px-4 sm:px-6 md:px-20 max-w-7xl mx-auto">
+      <div className="py-14 px-4 sm:px-6 md:px-20 max-w-7xl mx-auto">
         <BlogdetailsHero
           blogTitle={blog.title}
           user={formatUsername(blog.username)}
@@ -35,7 +35,7 @@ export default function Blogdetails() {
         />
 
         <div className="flex flex-col md:flex-row w-full mt-18">
-          <div className="flex-grow pr-8">
+          <div className="flex-grow md:pr-8">
             <BlogdetailsContent
               content={blog.content}
               subtitle={blog.subtitle}

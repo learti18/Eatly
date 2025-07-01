@@ -21,7 +21,7 @@ export default function RestaurantCard({ restaurant }) {
         </h1>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1 text-text-light">
-            <p>{restaurant.averagePreparationTime}min •</p>
+            <p>{Math.ceil(restaurant.averagePreparationTime)}min •</p>
             <img src="/star1.svg" alt="rating logo star" className="w-6" />
             <p>4.5</p>
           </div>

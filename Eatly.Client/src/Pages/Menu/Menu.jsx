@@ -99,12 +99,12 @@ export default function Menu() {
           />
         </div>
 
-        <div className="pt-16 flex flex-col">
+        <div className="pt-20 flex flex-col">
           <h1 className="text-5xl text-gray-900 font-bold text-center">
             Our Top <span className="text-purple">Restaurants</span>
           </h1>
 
-          <div className="grid grid-cols-1 max-md:max-w-2xl max-md:self-center md:grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-12 mt-20">
+          <div className="grid grid-cols-1 max-md:max-w-2xl max-md:self-center md:grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-12 mt-16">
             {isLoading ? (
               <div className="col-span-full flex justify-center">
                 <span className="loading loading-spinner loading-xl"></span>
