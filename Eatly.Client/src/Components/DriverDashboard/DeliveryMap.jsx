@@ -18,6 +18,7 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
   const [routeDuration, setRouteDuration] = useState(null);
   const [isTrackingLocation, setIsTrackingLocation] = useState(false);
   const lastFetchTimeRef = useRef(null);
+  const mapRef = useRef(null);
 
   useEffect(() => {
     if (orderData?.latitude && orderData?.longitude) {
@@ -33,7 +34,6 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
     if (!currentPosition || !orderData?.latitude || !orderData?.longitude)
       return;
 
-    // Throttle requests to prevent infinite loop - only fetch if 5 seconds have passed
     const now = Date.now();
     if (lastFetchTimeRef.current && now - lastFetchTimeRef.current < 5000) {
       return;
@@ -51,17 +51,20 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
         setRouteDuration(data.routes[0].duration);
         setShowDirections(true);
 
-        setViewState((prevViewState) => ({
-          ...prevViewState,
-          zoom: 12,
-        }));
+        // Only adjust zoom if not tracking location
+        if (!isTrackingLocation) {
+          setViewState((prevViewState) => ({
+            ...prevViewState,
+            zoom: 12,
+          }));
+        }
         lastFetchTimeRef.current = now;
       }
     } catch (error) {
       console.error("Error fetching directions:", error);
       toast.error("Could not get directions. Please try again.");
     }
-  }, [currentPosition, orderData, mapboxToken]);
+  }, [currentPosition, orderData, mapboxToken, isTrackingLocation]);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -74,14 +77,16 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
           setCurrentPosition(newPosition);
 
           if (isTrackingLocation) {
-            setViewState({
+            setViewState((prevState) => ({
+              ...prevState,
               longitude: newPosition.lng,
               latitude: newPosition.lat,
-              zoom: 16,
-            });
+              zoom: prevState.zoom >= 14 ? prevState.zoom : 16,
+              transitionDuration: 800,
+              transitionInterpolator: null,
+            }));
           }
 
-          // Update Firebase location
           const db = getDatabase();
           set(ref(db, `drivers/${orderData.driverId}/location`), {
             latitude: newPosition.lat,
@@ -96,9 +101,8 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
 
       return () => navigator.geolocation.clearWatch(watchId);
     }
-  }, [isTrackingLocation, orderData?.driverId]); // Removed getDirections from dependencies
+  }, [isTrackingLocation, orderData?.driverId]);
 
-  // Separate effect to handle directions updates with throttling
   useEffect(() => {
     if (
       currentPosition &&
@@ -137,13 +141,29 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
     setIsTrackingLocation((prev) => !prev);
 
     if (!isTrackingLocation && currentPosition) {
-      setViewState({
+      setViewState((prevState) => ({
+        ...prevState,
         longitude: currentPosition.lng,
         latitude: currentPosition.lat,
-        zoom: 16,
-      });
+        zoom: prevState.zoom >= 12 ? prevState.zoom : 16,
+        transitionDuration: 1200,
+        transitionInterpolator: null,
+      }));
     }
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (mapRef.current) {
+        mapRef.current.resize();
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    setTimeout(handleResize, 100);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const routeLayer = {
     id: "route",
@@ -186,110 +206,124 @@ export default function DeliveryMap({ orderData, mapboxToken }) {
         </div>
       )}
 
-      <div className="relative h-[350px] w-full rounded-lg overflow-hidden border border-gray-300">
+      <div
+        className="relative w-full h-[350px] rounded-lg overflow-hidden border border-gray-300"
+        style={{ minWidth: "100%" }}
+      >
         {orderData?.latitude && orderData?.longitude ? (
-          <Map
-            mapboxAccessToken={mapboxToken}
-            mapStyle="mapbox://styles/mapbox/streets-v11"
-            style={{ width: "100%", height: "100%" }}
-            {...viewState}
-            onMove={(evt) => {
-              if (!isTrackingLocation) {
-                setViewState(evt.viewState);
-              }
-            }}
-          >
-            <NavigationControl position="top-right" />
-
-            {/* Destination marker */}
-            <Marker
-              longitude={orderData.longitude}
-              latitude={orderData.latitude}
-              anchor="bottom"
+          <div className="w-full h-full">
+            <Map
+              ref={mapRef}
+              mapboxAccessToken={mapboxToken}
+              mapStyle="mapbox://styles/mapbox/streets-v11"
+              style={{ width: "100%", height: "100%" }}
+              {...viewState}
+              onMove={(evt) => {
+                if (!isTrackingLocation) {
+                  setViewState(evt.viewState);
+                }
+              }}
+              onLoad={() => {
+                // Ensure map resizes properly on load
+                setTimeout(() => {
+                  if (mapRef.current) {
+                    mapRef.current.resize();
+                  }
+                }, 50);
+              }}
             >
-              <div className="text-purple">
-                <svg
-                  width="23"
-                  height="29"
-                  viewBox="0 0 37 45"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M11.2959 19.1442C11.2959 15.2631 14.4422 12.1167 18.3234 12.1167C22.2045 12.1167 25.3509 15.2631 25.3509 19.1442C25.3509 23.0254 22.2045 26.1717 18.3234 26.1717C14.4422 26.1717 11.2959 23.0254 11.2959 19.1442Z"
-                    fill="currentColor"
-                  />
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M0.535256 16.7168C1.27831 7.70229 8.81133 0.764648 17.8564 0.764648H18.7904C27.8355 0.764648 35.3685 7.70229 36.1116 16.7168C36.5117 21.5703 35.0124 26.3897 31.9297 30.1597L21.5657 42.8347C19.8899 44.8841 16.7569 44.8841 15.0812 42.8347L4.71712 30.1597C1.63441 26.3897 0.13519 21.5703 0.535256 16.7168ZM18.3234 8.87329C12.6509 8.87329 8.05242 13.4718 8.05242 19.1442C8.05242 24.8167 12.6509 29.4152 18.3234 29.4152C23.9959 29.4152 28.5943 24.8167 28.5943 19.1442C28.5943 13.4718 23.9959 8.87329 18.3234 8.87329Z"
-                    fill="currentColor"
-                  />
-                </svg>
-              </div>
-            </Marker>
+              <NavigationControl position="top-right" />
 
-            {/* Current location marker */}
-            {currentPosition && (
+              {/* Destination marker */}
               <Marker
-                longitude={currentPosition.lng}
-                latitude={currentPosition.lat}
-                anchor="center"
+                longitude={orderData.longitude}
+                latitude={orderData.latitude}
+                anchor="bottom"
               >
-                <div className="bg-blue-500 w-4 h-4 rounded-full border-2 border-white shadow-md"></div>
+                <div className="text-purple">
+                  <svg
+                    width="23"
+                    height="29"
+                    viewBox="0 0 37 45"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M11.2959 19.1442C11.2959 15.2631 14.4422 12.1167 18.3234 12.1167C22.2045 12.1167 25.3509 15.2631 25.3509 19.1442C25.3509 23.0254 22.2045 26.1717 18.3234 26.1717C14.4422 26.1717 11.2959 23.0254 11.2959 19.1442Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M0.535256 16.7168C1.27831 7.70229 8.81133 0.764648 17.8564 0.764648H18.7904C27.8355 0.764648 35.3685 7.70229 36.1116 16.7168C36.5117 21.5703 35.0124 26.3897 31.9297 30.1597L21.5657 42.8347C19.8899 44.8841 16.7569 44.8841 15.0812 42.8347L4.71712 30.1597C1.63441 26.3897 0.13519 21.5703 0.535256 16.7168ZM18.3234 8.87329C12.6509 8.87329 8.05242 13.4718 8.05242 19.1442C8.05242 24.8167 12.6509 29.4152 18.3234 29.4152C23.9959 29.4152 28.5943 24.8167 28.5943 19.1442C28.5943 13.4718 23.9959 8.87329 18.3234 8.87329Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
               </Marker>
-            )}
 
-            {/* Directions route line */}
-            {showDirections && directionsData && (
-              <Source
-                id="route-source"
-                type="geojson"
-                data={{
-                  type: "Feature",
-                  properties: {},
-                  geometry: directionsData,
-                }}
-              >
-                <Layer {...routeLayer} />
-              </Source>
-            )}
-
-            {/* Map controls */}
-            <div className="absolute top-4 left-4 bg-white p-2 rounded shadow-md flex flex-col gap-2">
-              <button
-                onClick={() => setShowDirections(!showDirections)}
-                className={`p-2 rounded ${
-                  showDirections
-                    ? "bg-purple text-white"
-                    : "bg-gray-100 text-gray-700"
-                }`}
-                title={showDirections ? "Hide route" : "Show route"}
-              >
-                <Layers size={16} />
-              </button>
-
+              {/* Current location marker */}
               {currentPosition && (
+                <Marker
+                  longitude={currentPosition.lng}
+                  latitude={currentPosition.lat}
+                  anchor="center"
+                >
+                  <div className="bg-blue-500 w-4 h-4 rounded-full border-2 border-white shadow-md"></div>
+                </Marker>
+              )}
+
+              {/* Directions route line */}
+              {showDirections && directionsData && (
+                <Source
+                  id="route-source"
+                  type="geojson"
+                  data={{
+                    type: "Feature",
+                    properties: {},
+                    geometry: directionsData,
+                  }}
+                >
+                  <Layer {...routeLayer} />
+                </Source>
+              )}
+
+              {/* Map controls */}
+              <div className="absolute top-4 left-4 bg-white p-2 rounded shadow-md flex flex-col gap-2">
                 <button
-                  onClick={toggleLocationTracking}
-                  className={`p-2 rounded ${
-                    isTrackingLocation
-                      ? "bg-blue-500 text-white"
+                  onClick={() => setShowDirections(!showDirections)}
+                  className={`p-2 rounded transition-colors ${
+                    showDirections
+                      ? "bg-purple text-white"
                       : "bg-gray-100 text-gray-700"
                   }`}
-                  title={
-                    isTrackingLocation
-                      ? "Stop following my location"
-                      : "Follow my location"
-                  }
+                  title={showDirections ? "Hide route" : "Show route"}
                 >
-                  <Navigation size={16} />
+                  <Layers size={16} />
                 </button>
-              )}
-            </div>
-          </Map>
+
+                {currentPosition && (
+                  <button
+                    onClick={toggleLocationTracking}
+                    className={`p-2 rounded transition-colors ${
+                      isTrackingLocation
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-100 text-gray-700"
+                    }`}
+                    title={
+                      isTrackingLocation
+                        ? "Stop following my location"
+                        : "Follow my location"
+                    }
+                  >
+                    <Navigation size={16} />
+                  </button>
+                )}
+              </div>
+            </Map>
+          </div>
         ) : (
-          <div className="bg-gray-100 h-full flex items-center justify-center">
+          <div className="bg-gray-100 h-full w-full flex items-center justify-center">
             <p className="text-gray-500">No location information available</p>
           </div>
         )}

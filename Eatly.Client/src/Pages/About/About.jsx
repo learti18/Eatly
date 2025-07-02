@@ -84,7 +84,7 @@ export default function About() {
       {/* Hero Section */}
       <section className="py-20 px-5">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-bold text-text-dark mb-6">
+          <h1 className="text-5xl md:text-6xl font-bold text-text-dark mb-6">
             About <span className="text-purple">Eatly</span>
           </h1>
           <p className="text-xl md:text-2xl text-text-medium max-w-4xl mx-auto leading-relaxed">
@@ -101,7 +101,7 @@ export default function About() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <h3 className="text-4xl md:text-5xl font-bold text-white mb-2">
+                <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">
                   {stat.number}
                 </h3>
                 <p className="text-purple-light text-lg">{stat.label}</p>
@@ -139,14 +139,14 @@ export default function About() {
                 </p>
               </div>
             </div>
-            <div className="relative">
+            <div className="relative h-96">
               <img
-                src="/restaurant.png"
+                src="/restaurant3.jpg"
                 alt="Restaurant interior"
-                className="w-full h-96 object-cover rounded-2xl shadow-xl"
+                className="w-full h-full object-cover rounded-2xl shadow-xl"
               />
-              <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-purple rounded-2xl flex items-center justify-center">
-                <Heart className="w-16 h-16 text-white" />
+              <div className="absolute -bottom-4 -right-10 w-20 h-20 bg-purple rounded-2xl flex items-center justify-center">
+                <Heart className="size-10 text-white" />
               </div>
             </div>
           </div>
@@ -219,12 +219,6 @@ export default function About() {
             >
               Browse Restaurants
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              to="/contact"
-              className="inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-purple font-semibold py-4 px-8 rounded-xl border-2 border-purple transition-colors"
-            >
-              Get in Touch
             </Link>
           </div>
         </div>

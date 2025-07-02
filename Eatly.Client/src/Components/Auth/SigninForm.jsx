@@ -9,6 +9,7 @@ export default function SigninForm({
   handleSubmit,
   onSubmit,
   errors,
+  loginMutation,
 }) {
   return (
     <div className="w-full md:w-3/6 mx-auto mt-10 md:mt-20 p-6 items-center">
@@ -81,11 +82,21 @@ export default function SigninForm({
             </p>
           </div>
 
+          {/* Backend Error Display */}
+          {loginMutation?.error && (
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+              {loginMutation.error?.response?.data?.message ||
+                loginMutation.error?.message ||
+                "An error occurred during sign in. Please try again."}
+            </div>
+          )}
+
           <button
             type="submit"
-            className="py-4 bg-primary hover:bg-[#5b4fa9] text-white w-full rounded-lg cursor-pointer transition-colors duration-200"
+            disabled={loginMutation?.isLoading}
+            className="py-4 bg-primary hover:bg-[#5b4fa9] disabled:bg-gray-400 disabled:cursor-not-allowed text-white w-full rounded-lg cursor-pointer transition-colors duration-200"
           >
-            Sign In
+            {loginMutation?.isLoading ? "Signing In..." : "Sign In"}
           </button>
 
           <div className="text-sm text-center text-[#606060]">

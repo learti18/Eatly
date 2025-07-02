@@ -26,7 +26,6 @@ export default function DriversListing() {
           { key: "email", label: "Email" },
           { key: "phone", label: "Phone" },
           { key: "status", label: "Status" },
-          { key: "actions", label: "Actions", width: "120px" },
         ]}
         isLoading={isLoading}
       >

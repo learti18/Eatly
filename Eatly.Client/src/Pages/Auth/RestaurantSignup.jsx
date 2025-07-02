@@ -29,9 +29,9 @@ export default function RestaurantSignup() {
   return (
     <div className="flex relative h-screen">
       <Link to={"/"}>
-        <img 
-          src="Logo.svg" 
-          className="absolute top-7 left-10 hidden md:block" 
+        <img
+          src="Logo.svg"
+          className="absolute top-7 left-10 hidden md:block"
         />
       </Link>
       <SignupForm
@@ -40,6 +40,8 @@ export default function RestaurantSignup() {
         onSubmit={onSubmit}
         errors={errors}
         signupType="restaurant"
+        backendError={registerMutation.error}
+        isLoading={registerMutation.isPending}
       />
       <AuthHero className="hidden lg:block" />
     </div>
