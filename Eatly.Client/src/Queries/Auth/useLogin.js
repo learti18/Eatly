@@ -54,8 +54,6 @@ const useLogin = () => {
         onError: (error) => {
             console.error("Login failed: ",error)
             setAuthenticationStatus(STATUS.FAILED)
-
-            alert(error?.response?.data?.error?.message || "Login failed - please try again");
         }
    })
 };

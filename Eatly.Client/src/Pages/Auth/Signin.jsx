@@ -39,6 +39,7 @@ export default function Signin() {
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
         errors={errors}
+        loginMutation={loginMutation}
       />
       <AuthHero className="hidden lg:block" />
     </div>

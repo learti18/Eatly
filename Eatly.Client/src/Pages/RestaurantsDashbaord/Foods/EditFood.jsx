@@ -21,6 +21,8 @@ export default function EditFood() {
       averagePreparationTime: "",
       imageFile: "",
       type: "",
+      slogan: "",
+      calories: "",
       ingredients: [],
     },
   });
@@ -41,6 +43,8 @@ export default function EditFood() {
         averagePreparationTime: food.averagePreparationTime || "",
         imageFile: food.imageFile || "",
         type: food.type || "",
+        slogan: food.slogan || "",
+        calories: food.calories || "",
         ingredients: ingredientIds,
       });
     }
@@ -57,6 +61,8 @@ export default function EditFood() {
         formData.append("imageFile", data.imageFile[0]);
       }
       formData.append("type", data.type);
+      formData.append("slogan", data.slogan);
+      formData.append("calories", data.calories);
 
       if (data.ingredients && Array.isArray(data.ingredients)) {
         const filteredIngredients = data.ingredients.filter((id) => id);
@@ -158,6 +164,29 @@ export default function EditFood() {
                 placeholder="Select food type"
                 name="type"
                 control={control}
+              />
+            </div>
+
+            <div className="space-y-3">
+              <label className="block text-gray-800 text-lg font-medium">
+                Slogan
+              </label>
+              <DefaultInput
+                placeholder="Enter food slogan"
+                name="slogan"
+                register={register}
+              />
+            </div>
+
+            <div className="space-y-3">
+              <label className="block text-gray-800 text-lg font-medium">
+                Calories
+              </label>
+              <DefaultInput
+                placeholder="Enter calories"
+                name="calories"
+                register={register}
+                type="number"
               />
             </div>
 

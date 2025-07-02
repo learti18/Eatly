@@ -1,9 +1,8 @@
 import { ChevronLeft } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import DefaultInput from "../../../components/Inputs/DefaultInput";
 import { useForm } from "react-hook-form";
 import DropdownSelect from "../../../components/Inputs/DropdownSelect";
-import TextAreaInput from "../../../components/Inputs/TextAreaInput";
 import { useFoodTypes } from "./../../../Queries/Foods/useFoodTypes";
 import { useAllIngridients } from "../../../Queries/Ingridients/useAllIngridients";
 import ImageUploader from "../../../components/Inputs/ImageUploader";
@@ -17,9 +16,12 @@ export default function AddFood() {
       averagePreparationTime: "",
       imageFile: "",
       type: "",
+      slogan: "",
+      calories: "",
       ingredients: [],
     },
   });
+  const [uploadError, setUploadError] = useState("");
   const { data: foodTypes, isLoading } = useFoodTypes();
   const { data: ingridients } = useAllIngridients();
   const { mutate: addFood, isPending, isError } = useAddFood();
@@ -27,11 +29,21 @@ export default function AddFood() {
   const onSubmit = (data) => {
     try {
       const formData = new FormData();
+      const file = data.imageFile?.[0];
+      if (file && file.size > 10 * 1024 * 1024) {
+        setUploadError("Image is too large. Max file size is 10MB.");
+        return;
+      }
       formData.append("name", data.name);
       formData.append("price", data.price);
       formData.append("averagePreparationTime", data.averagePreparationTime);
-      formData.append("imageFile", data.imageFile[0]);
+      if (file) {
+        formData.append("imageFile", file);
+      }
+
       formData.append("type", data.type);
+      formData.append("slogan", data.slogan);
+      formData.append("calories", data.calories);
 
       if (data.ingredients && Array.isArray(data.ingredients)) {
         const filteredIngredients = data.ingredients.filter((id) => id);
@@ -40,6 +52,9 @@ export default function AddFood() {
           formData.append("IngridientIds", id);
         });
       }
+
+      setUploadError("");
+
       addFood(formData);
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -121,6 +136,29 @@ export default function AddFood() {
               />
             </div>
 
+            <div className="space-y-3">
+              <label className="block text-gray-800 text-lg font-medium">
+                Slogan
+              </label>
+              <DefaultInput
+                placeholder="Enter food slogan"
+                name="slogan"
+                register={register}
+              />
+            </div>
+
+            <div className="space-y-3">
+              <label className="block text-gray-800 text-lg font-medium">
+                Calories
+              </label>
+              <DefaultInput
+                placeholder="Enter calories"
+                name="calories"
+                register={register}
+                type="number"
+              />
+            </div>
+
             <div className="space-y-3 md:col-span-2">
               <label className="block text-gray-800 text-lg font-medium mb-3">
                 Choose Ingredients
@@ -155,6 +193,11 @@ export default function AddFood() {
           </div>
 
           <div className="flex justify-end mt-8">
+            {uploadError && (
+              <div className="text-red-600 mt-4 font-medium mr-5">
+                {uploadError}
+              </div>
+            )}
             <button
               type="submit"
               className="bg-purple  text-white py-3 px-8 rounded-lg font-medium hover:bg-purple-dark cursor-pointer transition-colors duration-300"

@@ -14,7 +14,6 @@ export default function OrderTableRow({ order, statusTypes }) {
   const { data: drivers = [], isLoading: isLoadingDrivers } = useDrivers();
   const { mutate: assignDriver } = useAssignDriver();
 
-  // Order status colors
   const orderStatusColors = {
     Pending: "bg-gray-100 text-gray-800",
     InPreparation: "bg-yellow-100 text-yellow-800",
@@ -25,7 +24,6 @@ export default function OrderTableRow({ order, statusTypes }) {
     Cancelled: "bg-red-100 text-red-800",
   };
 
-  // Payment status colors
   const paymentStatusColors = {
     Unpaid: "bg-red-100 text-red-800",
     AwaitingPayment: "bg-yellow-100 text-yellow-800",

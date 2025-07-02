@@ -64,11 +64,6 @@ export default function RestaurantSidebar({ onLogout }) {
       to: "/restaurant-dashboard/account",
       icon: <UserCircle size={22} />,
     },
-    {
-      name: "Settings",
-      to: "/restaurant-dashboard/settings",
-      icon: <Settings size={22} />,
-    },
   ];
 
   return (

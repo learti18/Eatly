@@ -1,19 +1,14 @@
 import React from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import UserDeliveryMap from "../../components/UserDashboard/UserDeliveryMap";
-import {
-  ChevronLeft,
-  Package,
-  ShoppingBag,
-  Clock,
-  MapPin,
-  Home,
-  UtensilsCrossed,
-  Check,
-} from "lucide-react";
+import { ChevronLeft, UtensilsCrossed } from "lucide-react";
 import { formatDate } from "../../utils/dateFormatter";
-import { paymentStatusColors } from "../../constants/statuses";
 import { useFetchUserOrderById } from "../../Queries/Order/useFetchUserOrderById";
+import PendingOrderCard from "../../components/Order/OrderStatusCards/PendingOrderCard";
+import InPreparationOrderCard from "../../components/Order/OrderStatusCards/InPreparationOrderCard";
+import ReadyForPickupOrderCard from "../../components/Order/OrderStatusCards/ReadyForPickupOrderCard";
+import CanceledOrderCard from "../../components/Order/OrderStatusCards/CanceledOrderCard";
+import CompletedOrderCard from "../../components/Order/OrderStatusCards/CompletedOrderCard";
 
 const MAPBOX_TOKEN =
   import.meta.env.VITE_APP_MAPBOX_TOKEN || "your_mapbox_token_here";
@@ -31,6 +26,9 @@ export default function OrderDetails() {
     order?.orderStatus === "Pending" && !order.driverId;
   const shouldShowCompletedState =
     order?.orderStatus === "Completed" || order?.orderStatus === "Delivered";
+  const shouldShowInPreparation = order?.orderStatus === "InPreparation";
+  const shouldShowCanceled = order?.orderStatus === "Canceled";
+  const shouldShowReadyForPickup = order?.orderStatus === "ReadyForPickup";
 
   return (
     <div className="bg-background-main min-h-screen py-8 px-4 sm:px-6">
@@ -81,107 +79,16 @@ export default function OrderDetails() {
               )}
             </div>
 
-            {/* Show waiting for driver state */}
-            {shouldShowWaitingForDriver && (
-              <div className="mb-8 max-w-md mx-auto">
-                <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-                  <div className="bg-purple-lighter text-white px-6 py-4 flex items-center justify-between">
-                    <h2 className="flex items-center gap-2 font-semibold text-white">
-                      <Clock size={18} />
-                      Waiting for Delivery Driver
-                    </h2>
-                    <span className="bg-white text-purple-darker px-3 py-1 rounded-full text-sm font-semibold shadow-sm">
-                      {order.orderStatus}
-                    </span>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex flex-col items-center text-center">
-                      <div className="bg-purple-lighter p-4 rounded-full mb-4">
-                        <ShoppingBag size={32} className="text-purple-darker" />
-                      </div>
-                      <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                        Please wait while we prepare your order
-                      </h3>
-                      <p className="text-gray-600 mb-6 leading-relaxed">
-                        Once the order is ready, we will assign a delivery
-                        driver. You'll see real-time tracking once a driver is
-                        assigned.
-                      </p>
-                      <div className="bg-gray-50 rounded-lg p-4 w-full">
-                        <div className="flex items-center gap-2 text-sm text-gray-700 mb-1">
-                          <MapPin size={16} className="text-purple" />
-                          <span className="font-medium">Delivering to:</span>
-                        </div>
-                        <div className="text-sm text-gray-800 ml-6">
-                          <p>{order.streetAddress}</p>
-                          {order.city && order.state && (
-                            <p>
-                              {order.city}, {order.state} {order.zipCode}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {/* Show different status cards based on order status */}
+            {shouldShowWaitingForDriver && <PendingOrderCard order={order} />}
+            {shouldShowInPreparation && (
+              <InPreparationOrderCard order={order} />
             )}
-
-            {/* Show completed/delivered state */}
-            {shouldShowCompletedState && (
-              <div className="mb-8 max-w-md mx-auto">
-                <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
-                  <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-4 flex items-center justify-between">
-                    <h2 className="flex items-center gap-2 font-semibold text-white">
-                      <Package size={18} />
-                      Order {order.orderStatus}
-                    </h2>
-                    <span className="bg-white text-green-600 px-3 py-1 rounded-full text-sm font-semibold shadow-sm">
-                      {order.orderStatus}
-                    </span>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex flex-col items-center text-center">
-                      <div className="bg-green-50 border-2 border-green-200 p-4 rounded-full mb-4">
-                        <Check className="text-green-600" />
-                      </div>
-                      <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                        {order.orderStatus === "Completed"
-                          ? "Your order has been completed!"
-                          : "Your order has been delivered!"}
-                      </h3>
-                      <p className="text-gray-600 mb-6 leading-relaxed">
-                        Thank you for choosing us! We hope you enjoyed your
-                        meal. Don't forget to rate your experience.
-                      </p>
-                      <div className="bg-gray-50 rounded-lg p-4 w-full">
-                        <div className="flex items-center gap-2 text-sm text-gray-700 mb-1">
-                          <MapPin size={16} className="text-green-600" />
-                          <span className="font-medium">Delivered to:</span>
-                        </div>
-                        <div className="text-sm text-gray-800 ml-6">
-                          <p>{order.streetAddress}</p>
-                          {order.city && order.state && (
-                            <p>
-                              {order.city}, {order.state} {order.zipCode}
-                            </p>
-                          )}
-                        </div>
-                        {order.deliveredAt && (
-                          <div className="mt-3 pt-3 border-t border-gray-200">
-                            <div className="flex items-center gap-2 text-sm text-gray-700">
-                              <Clock size={16} className="text-green-600" />
-                              <span className="font-medium">Delivered on:</span>
-                              <span>{formatDate(order.deliveredAt)}</span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {shouldShowReadyForPickup && (
+              <ReadyForPickupOrderCard order={order} />
             )}
+            {shouldShowCanceled && <CanceledOrderCard order={order} />}
+            {shouldShowCompletedState && <CompletedOrderCard order={order} />}
 
             {/* Show delivery map if order is out for delivery */}
             {shouldShowDeliveryMap && (
@@ -194,7 +101,7 @@ export default function OrderDetails() {
                 {order.items.map((item) => (
                   <div
                     key={item.id}
-                    className="flex flex-row items-center justify-between bg-white p-4 rounded-2xl shadow-xl"
+                    className="flex flex-row items-center justify-between bg-white p-4 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-200"
                   >
                     <div className="flex space-x-4">
                       <img

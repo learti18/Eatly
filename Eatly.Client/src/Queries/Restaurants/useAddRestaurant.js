@@ -13,13 +13,11 @@ export const useAddRestaurant = () => {
       return response.data;
     },
     onSuccess: async (data) => {
-      // Invalidate and refetch both queries to ensure fresh data
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["restaurant", "me"] }),
         queryClient.invalidateQueries({ queryKey: ["restaurantByUserId"] })
       ]);
       
-      // Update the cache with the new restaurant data
       queryClient.setQueryData(["restaurantByUserId"], data);
       
       toast.success("Restaurant created successfully!");

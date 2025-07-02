@@ -1,18 +1,19 @@
-import React from 'react'
-import { useAddBlogs } from '../../../Queries/Blogs/useAddBlogs';
-import { useForm } from 'react-hook-form';
+import React, { useState } from "react";
+import { useAddBlogs } from "../../../Queries/Blogs/useAddBlogs";
+import { useForm } from "react-hook-form";
 import { ChevronLeft } from "lucide-react";
 import DefaultInput from "../../../components/Inputs/DefaultInput";
-import TextAreaInput from "../../../components/Inputs/TextAreaInput";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import ImageUploader from "../../../components/Inputs/ImageUploader";
 
 export default function AddBlogs() {
+  const [content, setContent] = useState("");
   const { register, handleSubmit, control } = useForm({
     defaultValues: {
       title: "",
       subtitle: "",
-      content: "",
-      imageFile: ""
+      imageFile: "",
     },
   });
   const { mutate: addBlogs, isPending, isError } = useAddBlogs();
@@ -22,7 +23,7 @@ export default function AddBlogs() {
       const formData = new FormData();
       formData.append("title", data.title);
       formData.append("subtitle", data.subtitle);
-      formData.append("content", data.content);
+      formData.append("content", content);
       formData.append("imageFile", data.imageFile[0]);
 
       addBlogs(formData);
@@ -55,7 +56,7 @@ export default function AddBlogs() {
               <ImageUploader register={register} name="imageFile" />
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
               <label className="block text-gray-800 text-lg font-medium">
@@ -85,12 +86,30 @@ export default function AddBlogs() {
               <label className="block text-gray-800 text-lg font-medium">
                 Blog Content
               </label>
-              <TextAreaInput
-                placeholder="Enter blog content"
-                name="content"
-                register={register}
-                required
-                rows={8}
+              <ReactQuill
+                theme="snow"
+                value={content}
+                onChange={setContent}
+                placeholder="Write your blog content here..."
+                modules={{
+                  toolbar: [
+                    [{ header: [1, 2, 3, false] }],
+                    ["bold", "italic", "underline"],
+                    [{ list: "ordered" }, { list: "bullet" }],
+                    ["link", "image"],
+                    ["clean"],
+                  ],
+                }}
+                formats={[
+                  "header",
+                  "bold",
+                  "italic",
+                  "underline",
+                  "list",
+                  "bullet",
+                  "link",
+                  "image",
+                ]}
               />
             </div>
           </div>

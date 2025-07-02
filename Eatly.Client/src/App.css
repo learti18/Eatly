@@ -108,3 +108,28 @@
   margin: 0 auto;
   padding: 0 1rem;
 }
+
+.blog-content {
+  font-family: "Poppins", sans-serif;
+}
+.blog-content h1 {
+  @apply text-2xl sm:text-3xl md:text-4xl font-semibold mb-4 text-[#252525];
+}
+
+.blog-content h2 {
+  @apply text-xl  sm:text-2xl md:text-3xl font-medium mb-4 text-[#252525];
+}
+
+.blog-content h3 {
+  @apply text-lg sm:text-xl md:text-2xl font-medium mb-4 text-[#252525];
+}
+
+.blog-content p {
+  @apply mb-4 leading-7 text-[#252525];
+}
+.blog-content li {
+  @apply mb-1 ml-6 text-[#252525];
+}
+.blog-content ul {
+  @apply list-disc list-inside mb-4;
+}

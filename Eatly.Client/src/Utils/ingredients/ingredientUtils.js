@@ -50,6 +50,17 @@ export const getIngredientEmoji = (name) => {
  * @returns {string} - Tailwind CSS class for background color
  */
 export const getIngredientBgColor = (index) => {
-  const colors = ["pink", "orange", "red", "green", "blue", "yellow"];
-  return `bg-${colors[index % colors.length]}-200`;
+  const colors = [
+    "bg-pink-200",
+    "bg-orange-200", 
+    "bg-red-200",
+    "bg-green-200",
+    "bg-blue-200",
+    "bg-yellow-200",
+    "bg-purple-200",
+    "bg-indigo-200",
+    "bg-teal-200",
+    "bg-cyan-200"
+  ];
+  return colors[index % colors.length];
 };

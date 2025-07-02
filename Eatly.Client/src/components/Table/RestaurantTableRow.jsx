@@ -1,25 +1,27 @@
-import React from "react";
-import { Check, X, Eye } from "lucide-react";
-import { useVerifyRestaurant } from "../../Queries/Admin/useVerifyRestaurant";
+import React, { useState } from "react";
+import { Trash2, Eye, X, Check } from "lucide-react";
+import RestaurantDetailsModal from "../Modals/RestaurantDetailsModal";
+import { useDeleteRestaurant } from "../../Queries/Restaurants/useDeleteRestaurant";
 
 export default function RestaurantTableRow({ restaurant }) {
   const { id, name, description, address, imageUrl, isVerified, category } =
     restaurant;
-  const verifyMutation = useVerifyRestaurant();
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const deleteRestaurantMutation = useDeleteRestaurant();
 
-  const handleVerify = () => {
-    try {
-      verifyMutation.mutate({ id, isVerified: true });
-    } catch (error) {}
+  const handleView = () => {
+    setShowDetailsModal(true);
   };
 
-  const handleCancelVerification = () => {
-    try {
-      verifyMutation.mutate({ id, isVerified: false });
-    } catch (error) {}
+  const handleRemove = () => {
+    if (
+      window.confirm(
+        `Are you sure you want to remove ${name}? This action cannot be undone.`
+      )
+    ) {
+      deleteRestaurantMutation.mutate(id);
+    }
   };
-
-  const handleView = () => {};
 
   return (
     <tr className="border-b border-gray-200">
@@ -72,37 +74,44 @@ export default function RestaurantTableRow({ restaurant }) {
       </td>
 
       <td className="p-4">
-        <div className="flex space-x-2">
-          {isVerified ? (
-            <button
-              onClick={handleView}
-              className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-gray-50 text-gray-600 hover:bg-gray-100 rounded-md text-sm font-medium transition-colors"
-              title="View details"
-            >
-              <Eye size={16} />
-              <span>View Details</span>
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={handleVerify}
-                className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-600 hover:bg-green-100 rounded-md text-sm font-medium transition-colors"
-              >
-                <Check size={16} />
-                <span>Verify</span>
-              </button>
+        <div className="flex flex-col gap-2">
+          <button
+            onClick={handleView}
+            className="flex items-center justify-center gap-0.5 px-3 py-1.5 bg-gray-50 text-gray-600 hover:bg-gray-100 rounded-md text-sm  transition-colors"
+            title="View details"
+          >
+            <Eye size={16} />
+            <span>View Details</span>
+          </button>
 
-              <button
-                onClick={handleCancelVerification}
-                className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-600 hover:bg-amber-100 rounded-md text-sm font-medium transition-colors"
-              >
-                <X size={16} />
-                <span>Cancel</span>
-              </button>
-            </>
-          )}
+          <button
+            onClick={handleRemove}
+            disabled={deleteRestaurantMutation.isPending}
+            className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-md text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Remove restaurant"
+          >
+            {deleteRestaurantMutation.isPending ? (
+              <>
+                <span className="loading loading-spinner loading-xs"></span>
+                <span>Removing...</span>
+              </>
+            ) : (
+              <>
+                <Trash2 size={15} />
+                <span>Remove</span>
+              </>
+            )}
+          </button>
         </div>
       </td>
+
+      {/* Restaurant Details Modal */}
+      {showDetailsModal && (
+        <RestaurantDetailsModal
+          restaurant={restaurant}
+          onClose={() => setShowDetailsModal(false)}
+        />
+      )}
     </tr>
   );
 }

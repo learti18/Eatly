@@ -28,7 +28,7 @@ export default function DashboardRestaurants() {
         >
           {!isLoading &&
             restaurants &&
-            restaurants.map((restaurant) => (
+            restaurants.items.map((restaurant) => (
               <RestaurantTableRow key={restaurant.id} restaurant={restaurant} />
             ))}
         </Table>

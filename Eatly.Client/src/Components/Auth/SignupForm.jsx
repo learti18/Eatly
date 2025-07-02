@@ -1,5 +1,4 @@
 import React from "react";
-import UsernameInput from "../Inputs/UsernameInput";
 import PasswordInput from "../Inputs/PasswordInput";
 import { Link } from "react-router-dom";
 import EmailInput from "../Inputs/EmailInput";
@@ -11,6 +10,8 @@ export default function SignupForm({
   onSubmit,
   errors,
   signupType,
+  backendError,
+  isLoading,
 }) {
   return (
     <div className="w-full md:w-3/6 mx-auto mt-10 md:mt-20 p-6 items-center">
@@ -54,11 +55,21 @@ export default function SignupForm({
             name="confirmPassword"
           />
 
+          {/* Backend Error Display */}
+          {backendError && (
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+              {backendError?.response?.data?.message ||
+                backendError?.message ||
+                "An error occurred during sign up. Please try again."}
+            </div>
+          )}
+
           <button
             type="submit"
-            className="py-4 bg-primary hover:bg-[#5b4fa9] text-white border-none w-full rounded-lg cursor-pointer transition-colors duration-200"
+            disabled={isLoading}
+            className="py-4 bg-primary hover:bg-[#5b4fa9] disabled:bg-gray-400 disabled:cursor-not-allowed text-white border-none w-full rounded-lg cursor-pointer transition-colors duration-200"
           >
-            Sign Up
+            {isLoading ? "Signing Up..." : "Sign Up"}
           </button>
 
           <div className="text-sm text-center text-[#606060]">

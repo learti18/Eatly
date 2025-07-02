@@ -2,13 +2,13 @@ import React from "react";
 
 export default function Accordion() {
   return (
-    <div className=" bg-transparent  w-full pt-14 border-t-2 border-t-gray-200">
-      <div className=" py-16 px-6 md:px-20 max-w-7xl mx-auto flex flex-col items-center relative">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-text-dark">
+    <div className="bg-transparent  w-full pt-24 border-t-2 border-t-gray-200">
+      <div className="max-w-7xl mx-auto flex flex-col items-center relative">
+        <h2 className="relative text-3xl md:text-4xl font-semibold text-center mb-16 text-text-dark">
           Frequently Asked <br />
           <span className="text-purple">Questions</span>
+          <img className="absolute left-1/2 ml-56 -top-7" src="/icon.svg" />
         </h2>
-        <img className="absolute left-1/2 ml-40 top-9 " src="/icon.svg" />
       </div>
 
       <div className="collapse collapse-plus  custom-collapse border-b border-b-gray-300 rounded-none">

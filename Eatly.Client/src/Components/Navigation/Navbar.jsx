@@ -10,8 +10,9 @@ import { useFetchCart } from "../../Queries/Cart/useFetchCart";
 // Separate links based on authentication requirements
 const publicLinks = [
   { name: "Menu", path: "/menu" },
+  { name: "About", path: "/about" },
   { name: "Blogs", path: "/blogs" },
-  { name: "Pricing", path: "/pricing" },
+  // { name: "Pricing", path: "/pricing" },
 ];
 
 const authenticatedLinks = [{ name: "Cart", path: "/cart" }];
@@ -38,6 +39,8 @@ export default function Navbar() {
     const path = location.pathname;
     if (path.includes("/menu")) {
       setActiveLink("Menu");
+    } else if (path.includes("/about")) {
+      setActiveLink("About");
     } else if (path.includes("/blogs")) {
       setActiveLink("Blogs");
     } else if (path.includes("/pricing")) {

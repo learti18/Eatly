@@ -39,6 +39,8 @@ export default function Signup() {
         onSubmit={onSubmit}
         errors={errors}
         signupType="client"
+        backendError={registerMutation.error}
+        isLoading={registerMutation.isPending}
       />
       <AuthHero className="hidden lg:block" />
     </div>

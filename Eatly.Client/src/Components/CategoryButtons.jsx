@@ -14,8 +14,8 @@ export default function CategoryButtons({
       onClick={() => onClick?.(value)}
       className={`${className} flex flex-col flex-1 w-16 md:w-20 max-w-24 justify-between items-center rounded-xl py-4 px-3 transition-all duration-200 ${
         isActive
-          ? `border-2 ${activeClassName}`
-          : "border-2 border-transparent hover:transform hover:scale-105 hover:shadow-md"
+          ? `border-3 ${activeClassName}`
+          : "border-3 border-transparent hover:transform hover:scale-105 hover:shadow-md"
       }`}
     >
       <img className="w-full" src={icon} />

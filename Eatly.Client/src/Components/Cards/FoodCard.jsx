@@ -8,7 +8,7 @@ import { useAuth } from "../../Hooks/useAuth";
 import { toast } from "sonner";
 import { Heart } from "lucide-react";
 
-export default function FoodCard({ food }) {
+export default function FoodCard({ food, restaurantId }) {
   const [dollars, cents] = food.price.toFixed(2).split(".");
   const [isFavorite, setIsFavorite] = useState(food.isFavorite || false);
   const { mutate: addToCart, isPending } = useAddToCart();
@@ -47,7 +47,7 @@ export default function FoodCard({ food }) {
 
   return (
     <Link
-      to={`food/${food.id}`}
+      to={`/menu/${restaurantId || food.restaurantId}/food/${food.id}`}
       style={{ boxShadow: "0px 60px 35px rgba(0, 0, 0, 0.08)" }}
       className="relative bg-white rounded-[34.58px] py-2 px-4 md:px-5 hover:drop-shadow-xl transition-all duration-300 ease-in-out cursor-pointer"
     >
@@ -71,7 +71,7 @@ export default function FoodCard({ food }) {
         <img
           src={food.imageUrl}
           alt="food"
-          className="w-44 aspect-square rounded-full"
+          className="w-44 aspect-square rounded-full object-contain"
         />
       </div>
       <Badge type={food.type} />
@@ -79,7 +79,7 @@ export default function FoodCard({ food }) {
         {food.name}
       </h1>
       <div className="flex items-center gap-1.5 text-text-light">
-        <p>{food.averagePreparationTime}min •</p>
+        <p>{Math.ceil(food.averagePreparationTime)}min •</p>
         <img src="/star1.svg" alt="rating logo star" className="w-6" />
         <p>4.5</p>
       </div>

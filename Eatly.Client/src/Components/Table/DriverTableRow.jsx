@@ -21,35 +21,6 @@ export default function DriverTableRow({ driver }) {
           </span>
         )}
       </td>
-      <td className="py-3 px-4">
-        <div className="flex flex-col space-y-2 items-center">
-          <Link
-            to={`edit/${id}`}
-            className="flex items-center justify-center cursor-pointer w-full gap-1 px-2 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-md text-sm font-medium transition-colors"
-            title="Edit driver"
-          >
-            <Pencil size={14} />
-            <span>Edit</span>
-          </Link>
-
-          <button
-            className="flex items-center justify-center cursor-pointer w-full gap-1 px-2 py-1 bg-red-50 text-red-600 hover:bg-red-100 rounded-md text-sm font-medium transition-colors"
-            title={isAvailable ? "Deactivate driver" : "Activate driver"}
-          >
-            {isAvailable ? (
-              <>
-                <XCircle size={14} />
-                <span>Deactivate</span>
-              </>
-            ) : (
-              <>
-                <CheckCircle size={14} />
-                <span>Activate</span>
-              </>
-            )}
-          </button>
-        </div>
-      </td>
     </tr>
   );
 }

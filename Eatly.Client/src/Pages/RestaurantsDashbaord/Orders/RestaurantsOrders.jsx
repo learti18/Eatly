@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Filter, Package, X, ChevronDown } from "lucide-react";
 import OrderTableRow from "../../../components/Table/OrderTableRow";
-import { useFetchAllOrders } from "../../../Queries/Order/useFetchAllOrders";
+import { useFetchResturantOrders } from "../../../Queries/Order/useFetchResturantOrders";
 import { useFetchStatusTypes } from "../../../Queries/Order/useFetchStatusTypes";
 import useOrderFiltering from "../../../Hooks/useOrderFiltering";
 import Pagination from "../../../components/Shared/Pagination";
@@ -45,7 +45,7 @@ export default function RestaurantsOrders() {
     data: orderData,
     isLoading,
     isError,
-  } = useFetchAllOrders({
+  } = useFetchResturantOrders({
     pageNumber: currentPage,
     pageSize,
     orderStatus: orderStatusFilter !== "All" ? orderStatusFilter : undefined,

@@ -5,7 +5,16 @@ import { Link } from "react-router-dom";
 import { useDeleteFood } from "../../Queries/Foods/useDeleteFood";
 
 export default function FoodTableRow({ food }) {
-  const { id, name, price, imageUrl, averagePreparationTime, type } = food;
+  const {
+    id,
+    name,
+    price,
+    imageUrl,
+    averagePreparationTime,
+    type,
+    slogan,
+    calories,
+  } = food;
   const { mutate: deleteFood } = useDeleteFood();
 
   const handleView = () => {
@@ -58,6 +67,18 @@ export default function FoodTableRow({ food }) {
       <td className="p-4">
         <div className="text-gray-700">
           <span>{averagePreparationTime} min</span>
+        </div>
+      </td>
+
+      <td className="p-4">
+        <div className="text-gray-700">
+          <span>{slogan || "No slogan"}</span>
+        </div>
+      </td>
+
+      <td className="p-4">
+        <div className="text-gray-700">
+          <span>{calories ? `${calories} cal` : "N/A"}</span>
         </div>
       </td>
 

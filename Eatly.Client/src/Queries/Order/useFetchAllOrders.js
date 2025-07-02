@@ -11,7 +11,7 @@ export const useFetchAllOrders = (options = { pageNumber: 1, pageSize: 10 }) => 
       if (orderStatus) queryParams += `&orderStatus=${orderStatus}`;
       if (paymentStatus) queryParams += `&paymentStatus=${paymentStatus}`;
       
-      const response = await api.get(`/restaurant/orders?${queryParams}`);
+      const response = await api.get(`/orders?${queryParams}`);
       return response.data;
     },
     staleTime: 1000 * 60 * 5, 

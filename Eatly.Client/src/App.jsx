@@ -8,6 +8,7 @@ import Layout from "./components/Layouts/Layout";
 import Pricing from "./Pages/Pricing/Pricing";
 import Menu from "./Pages/Menu/Menu";
 import Contact from "./Pages/Contact/Contact";
+import About from "./Pages/About/About";
 import Blogdetails from "./Pages/Blogs/Blogdetails";
 import ScrollToTop from "./Hooks/ScrollToTop";
 import Menudetails from "./Pages/Menu/Menudetails";
@@ -20,7 +21,6 @@ import RestaurantDashboard from "./Pages/RestaurantsDashbaord/RestaurantDashboar
 import PublicRoute from "./Routes/PublicRoute";
 import AdminDashboardLayout from "./components/Layouts/AdminDashboardLayout";
 import Admin from "./Pages/AdminDashboard/Admin";
-import Users from "./Pages/AdminDashboard/Users";
 import DashboardRestaurants from "./Pages/AdminDashboard/DashboardRestaurants";
 import Orders from "./Pages/AdminDashboard/Orders";
 import AdminRoute from "./Routes/AdminRoute";
@@ -56,6 +56,7 @@ import GuestRoute from "./Routes/GuestRoute";
 import Signin from "./Pages/Auth/Signin";
 import Signup from "./Pages/Auth/Signup";
 import ForgetPassword from "./Pages/Auth/ForgetPassword";
+import Ingridients from "./Pages/AdminDashboard/Ingridients";
 
 const queryClient = new QueryClient();
 
@@ -88,6 +89,7 @@ function App() {
                 <Route element={<PublicRoute />}>
                   <Route path="/" element={<Home />} />
                   <Route path="/blogs" element={<Blogs />} />
+                  <Route path="/about" element={<About />} />
                   <Route path="/pricing" element={<Pricing />} />
                   <Route path="/menu" element={<Menu />} />
                   <Route path="/contact" element={<Contact />} />
@@ -114,7 +116,7 @@ function App() {
               <Route element={<AdminRoute />}>
                 <Route path="/dashboard" element={<AdminDashboardLayout />}>
                   <Route index element={<Admin />} />
-                  <Route path="users" element={<Users />} />
+                  <Route path="ingridients" element={<Ingridients />} />
                   <Route
                     path="restaurants"
                     element={<DashboardRestaurants />}

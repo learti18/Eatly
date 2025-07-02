@@ -8,19 +8,16 @@ export default function BlogCard({
   user,
   date,
   userImg,
-  size = "default", // Add size prop with default value
+  size = "default",
 }) {
-  // Different styling based on size
   const isSm = size === "sm";
 
-  // Format the date using built-in JavaScript Date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = { month: "short", day: "numeric", year: "numeric" };
     return date.toLocaleDateString("en-US", options);
   };
 
-  // Extract username from email (everything before @)
   const formatUsername = (email) => {
     if (!email) return "";
     return email.split("@")[0];
@@ -32,47 +29,43 @@ export default function BlogCard({
   return (
     <Link
       to={`/blogs/${id}`}
-      className={`bg-white rounded-xl shadow-xl w-full ${
-        isSm
-          ? "max-w-[280px] pt-4 pb-5 pl-4 pr-4"
-          : "max-w-xs pt-5 pb-7 pl-5 pr-5"
+      className={`bg-white rounded-xl w-full shadow-[0_8px_25px_-5px_rgba(0,0,0,0.12)] hover:shadow-[0_12px_35px_-5px_rgba(0,0,0,0.18)] transition-shadow duration-200 ${
+        isSm ? "max-w-[280px] px-4 py-5" : "max-w-xs px-4 py-5"
       }`}
     >
       <div className="overflow-hidden rounded-xl">
         <img
           src={blogImage}
-          className={`w-full ${isSm ? "h-52" : "h-60"} object-cover rounded-lg`}
+          className={`w-full ${isSm ? "h-54" : "h-64"} object-cover rounded-lg`}
         />
       </div>
 
       <h2
-        className={`${
+        className={`leading-tight font-semibold text-text-darker overflow-hidden text-ellipsis whitespace-nowrap ${
           isSm ? "pt-3 pb-2 text-base" : "pt-4 pb-2 text-lg"
         } font-semibold text-text-darker`}
       >
         {blogTitle}
       </h2>
 
-      <div className={`flex flex-col justify-center ${isSm ? "pt-2" : "pt-2"}`}>
+      <div className={`flex flex-col justify-center ${isSm ? "pt-2" : "pt-4"}`}>
         <div className="flex items-center gap-3">
-          <img
-            src={"/users/user1.jpg"}
-            alt={user}
-            className={`${
-              isSm ? "w-9 h-9" : "w-10 h-10"
-            } rounded-full object-cover`}
-          />
+          <div className="bg-[#F29DB0] rounded-full w-10 h-10 flex items-center justify-center font-medium text-lg text-white">
+            {user ? user.charAt(0).toUpperCase() : "U"}
+          </div>
           <div className="flex flex-col flex-1">
-            <p className="text-xs text-gray-600">written by</p>
+            <p className="text-xs text-[#8D8D8D]">Written By</p>
             <div className="flex justify-between w-full">
               <p
                 className={`${
                   isSm ? "text-sm" : "text-base"
-                } font-semibold text-black`}
+                } font-medium text-black`}
               >
                 {formattedUsername}
               </p>
-              <span className="text-xs text-gray-400">{formattedDate}</span>
+              <span className="text-sm text-gray-400 uppercase">
+                {formattedDate}
+              </span>
             </div>
           </div>
         </div>
