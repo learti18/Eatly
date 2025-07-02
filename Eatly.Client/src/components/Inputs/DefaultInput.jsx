@@ -14,11 +14,7 @@ export default function DefaultInput({ register, error, name, placeholder }) {
           {...register(name)}
         />
       </div>
-      {error && (
-        <label className="label">
-          <span className="label-text-alt text-error">{error.message}</span>
-        </label>
-      )}
+      {error && <p className="text-red-500 text-xs mt-1">{error.message}</p>}
     </div>
   );
 }

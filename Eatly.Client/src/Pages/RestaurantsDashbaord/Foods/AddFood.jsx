@@ -2,6 +2,8 @@ import { ChevronLeft } from "lucide-react";
 import React, { useState } from "react";
 import DefaultInput from "../../../components/Inputs/DefaultInput";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { AddFoodSchema } from "../../../Schemas/Food/FoodSchema";
 import DropdownSelect from "../../../components/Inputs/DropdownSelect";
 import { useFoodTypes } from "./../../../Queries/Foods/useFoodTypes";
 import { useAllIngridients } from "../../../Queries/Ingridients/useAllIngridients";
@@ -9,7 +11,13 @@ import ImageUploader from "../../../components/Inputs/ImageUploader";
 import { useAddFood } from "../../../Queries/Foods/useAddFood";
 
 export default function AddFood() {
-  const { register, handleSubmit, control } = useForm({
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(AddFoodSchema),
     defaultValues: {
       name: "",
       price: "",
@@ -83,7 +91,11 @@ export default function AddFood() {
                 We recommend uploading a high-quality <strong>svg</strong> or{" "}
                 <strong>png</strong> image of the food.
               </p>
-              <ImageUploader register={register} name="imageFile" />
+              <ImageUploader
+                register={register}
+                name="imageFile"
+                error={errors.imageFile}
+              />
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -95,6 +107,7 @@ export default function AddFood() {
                 placeholder="Enter food name"
                 name="name"
                 register={register}
+                error={errors.name}
                 required
               />
             </div>
@@ -107,6 +120,7 @@ export default function AddFood() {
                 placeholder="Enter food price"
                 name="price"
                 register={register}
+                error={errors.price}
                 required
                 type="number"
               />
@@ -120,6 +134,7 @@ export default function AddFood() {
                 placeholder="Enter preparation time"
                 name="averagePreparationTime"
                 register={register}
+                error={errors.averagePreparationTime}
                 type="number"
               />
             </div>
@@ -133,6 +148,7 @@ export default function AddFood() {
                 placeholder="Select food type"
                 name="type"
                 control={control}
+                error={errors.type}
               />
             </div>
 
@@ -144,6 +160,7 @@ export default function AddFood() {
                 placeholder="Enter food slogan"
                 name="slogan"
                 register={register}
+                error={errors.slogan}
               />
             </div>
 
@@ -155,6 +172,7 @@ export default function AddFood() {
                 placeholder="Enter calories"
                 name="calories"
                 register={register}
+                error={errors.calories}
                 type="number"
               />
             </div>

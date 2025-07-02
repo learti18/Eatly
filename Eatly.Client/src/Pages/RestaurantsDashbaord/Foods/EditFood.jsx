@@ -2,6 +2,8 @@ import { ChevronLeft } from "lucide-react";
 import React, { useEffect } from "react";
 import DefaultInput from "../../../components/Inputs/DefaultInput";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { EditFoodSchema } from "../../../Schemas/Food/FoodSchema";
 import DropdownSelect from "../../../components/Inputs/DropdownSelect";
 import TextAreaInput from "../../../components/Inputs/TextAreaInput";
 import { useFoodTypes } from "./../../../Queries/Foods/useFoodTypes";
@@ -14,7 +16,16 @@ import CheckboxInput from "../../../components/Inputs/CheckBoxInput";
 import { useEditFood } from "../../../Queries/Foods/useEditFood";
 
 export default function EditFood() {
-  const { register, handleSubmit, reset, control, setValue, watch } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(EditFoodSchema),
     defaultValues: {
       name: "",
       price: "",
@@ -113,6 +124,7 @@ export default function EditFood() {
                   register={register}
                   name="imageFile"
                   initialImage={food.imageUrl}
+                  error={errors.imageFile}
                 />
               )}
             </div>
@@ -126,6 +138,7 @@ export default function EditFood() {
                 placeholder="Enter food name"
                 name="name"
                 register={register}
+                error={errors.name}
                 required
               />
             </div>
@@ -138,6 +151,7 @@ export default function EditFood() {
                 placeholder="Enter food price"
                 name="price"
                 register={register}
+                error={errors.price}
                 required
                 type="number"
               />
@@ -151,6 +165,7 @@ export default function EditFood() {
                 placeholder="Enter preparation time"
                 name="averagePreparationTime"
                 register={register}
+                error={errors.averagePreparationTime}
                 type="number"
               />
             </div>
@@ -164,6 +179,7 @@ export default function EditFood() {
                 placeholder="Select food type"
                 name="type"
                 control={control}
+                error={errors.type}
               />
             </div>
 
@@ -175,6 +191,7 @@ export default function EditFood() {
                 placeholder="Enter food slogan"
                 name="slogan"
                 register={register}
+                error={errors.slogan}
               />
             </div>
 
@@ -186,6 +203,7 @@ export default function EditFood() {
                 placeholder="Enter calories"
                 name="calories"
                 register={register}
+                error={errors.calories}
                 type="number"
               />
             </div>

@@ -5,6 +5,11 @@ import { useAddIngredient } from "../../Queries/Ingridients/useAddIngredient";
 import { useEditIngredient } from "../../Queries/Ingridients/useEditIngredient";
 import { useDeleteIngredient } from "../../Queries/Ingridients/useDeleteIngredient";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  AddIngredientSchema,
+  EditIngredientSchema,
+} from "../../Schemas/Admin/IngredientSchema";
 import DefaultInput from "../../components/Inputs/DefaultInput";
 import ImageUploader from "../../components/Inputs/ImageUploader";
 import ColorPicker from "../../components/Inputs/ColorPicker";
@@ -29,6 +34,7 @@ export default function Ingridients() {
     setValue,
     formState: { errors },
   } = useForm({
+    resolver: yupResolver(AddIngredientSchema),
     defaultValues: {
       name: "",
       imageFile: "",
@@ -43,7 +49,9 @@ export default function Ingridients() {
     reset: editReset,
     setValue: editSetValue,
     formState: { errors: editErrors },
-  } = useForm();
+  } = useForm({
+    resolver: yupResolver(EditIngredientSchema),
+  });
 
   const onSubmit = (data) => {
     try {
@@ -162,13 +170,9 @@ export default function Ingridients() {
                       placeholder="Enter ingredient name"
                       name="name"
                       register={register}
+                      error={errors.name}
                       required="Ingredient name is required"
                     />
-                    {errors.name && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.name.message}
-                      </p>
-                    )}
                   </div>
 
                   <div>

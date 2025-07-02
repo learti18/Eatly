@@ -5,6 +5,8 @@ import { toast } from "sonner";
 import { loadStripe } from "@stripe/stripe-js";
 import api from "../../Services/Api";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { AddressSchema } from "../../Schemas/Address/AddressSchema";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import EmptyCart from "../../components/Cart/EmptyCart";
 import DeliveryOptions from "../../components/Order/ClientUi/DeliveryOptions";
@@ -29,6 +31,7 @@ export default function Checkout() {
     setValue,
     getValues,
   } = useForm({
+    resolver: yupResolver(AddressSchema),
     defaultValues: {
       streetAddress: "",
       city: "",

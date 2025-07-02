@@ -20,7 +20,7 @@ try {
   if (error.code !== 'app/duplicate-app') {
     throw error;
   }
-  app = getApp(); // Get the existing app if it was already initialized
+  app = getApp(); 
 }
 
 const auth = getAuth(app);
@@ -70,7 +70,7 @@ export const createChatRoom = async (participantIds, roomName = '') => {
     name: roomName,
     participants,
     lastMessage: null,
-    clientId: user.uid // Add clientId to identify the client's room
+    clientId: user.uid
   };
 
   console.log('Setting room data:', roomData);
@@ -142,27 +142,51 @@ export const subscribeToMessages = (roomId, callback) => {
     console.log('Waiting for authentication...');
     return () => {};
   }
-  console.log('Subscribing to messages for room:', roomId);
-
-  const messagesRef = ref(db, `chats/${roomId}/messages`);
-  return onValue(messagesRef, (snapshot) => {
-    const messages = [];
-    if (snapshot.exists()) {
-      console.log('Processing messages for room:', roomId);
-      snapshot.forEach((childSnapshot) => {
-        const message = childSnapshot.val();
-        messages.push({
-          id: childSnapshot.key,
-          ...message,
-          timestamp: message.timestamp || Date.now()
-        });
-      });
-      messages.sort((a, b) => a.timestamp - b.timestamp);
-      console.log(`Found ${messages.length} messages for room:`, roomId);
+  console.log('Subscribing to messages for room:', roomId, 'user:', user.uid);
+  
+  // First verify the user has access to this room
+  const roomRef = ref(db, `chats/${roomId}`);
+  get(roomRef).then((roomSnapshot) => {
+    if (!roomSnapshot.exists()) {
+      console.error('Room does not exist:', roomId);
+      callback([]);
+      return;
     }
-    callback(messages);
-  }, (error) => {
-    console.error('Error subscribing to messages:', error);
+    
+    const room = roomSnapshot.val();
+    if (!room.participants || !room.participants[user.uid]) {
+      console.error('User does not have access to room:', roomId);
+      callback([]);
+      return;
+    }
+    
+    // User has access, proceed with subscription
+    const messagesRef = ref(db, `chats/${roomId}/messages`);
+    return onValue(messagesRef, (snapshot) => {
+      const messages = [];
+      if (snapshot.exists()) {
+        console.log('Processing messages for room:', roomId);
+        snapshot.forEach((childSnapshot) => {
+          const message = childSnapshot.val();
+          // Additional security: only include messages from valid participants
+          if (room.participants[message.senderId]) {
+            messages.push({
+              id: childSnapshot.key,
+              ...message,
+              timestamp: message.timestamp || Date.now()
+            });
+          }
+        });
+        messages.sort((a, b) => a.timestamp - b.timestamp);
+        console.log(`Found ${messages.length} messages for room:`, roomId);
+      }
+      callback(messages);
+    }, (error) => {
+      console.error('Error subscribing to messages:', error);
+      callback([]);
+    });
+  }).catch((error) => {
+    console.error('Error checking room access:', error);
     callback([]);
   });
 };
@@ -182,27 +206,34 @@ export const subscribeToUserRooms = (callback) => {
       console.log('Processing rooms data');
       snapshot.forEach((childSnapshot) => {
         const room = childSnapshot.val();
-        // Only include rooms where the current user is a participant
         if (room.participants && room.participants[user.uid]) {
-          const processedRoom = {
-            id: childSnapshot.key,
-            ...room,
-            createdAt: room.createdAt || Date.now(),
-            lastMessage: room.lastMessage ? {
-              ...room.lastMessage,
-              timestamp: room.lastMessage.timestamp || Date.now()
-            } : null
-          };
-          console.log('Found room for user:', processedRoom.id);
-          rooms.push(processedRoom);
+          // Additional validation: ensure the room belongs to this restaurant user
+          const isRestaurantRoom = room.createdBy === user.uid || 
+                                  (room.participants && Object.keys(room.participants).includes(user.uid));
+          
+          if (isRestaurantRoom) {
+            const processedRoom = {
+              id: childSnapshot.key,
+              ...room,
+              createdAt: room.createdAt || Date.now(),
+              lastMessage: room.lastMessage ? {
+                ...room.lastMessage,
+                timestamp: room.lastMessage.timestamp || Date.now()
+              } : null,
+              // Add restaurant context for additional security
+              restaurantUserId: user.uid
+            };
+            console.log('Found room for restaurant user:', processedRoom.id);
+            rooms.push(processedRoom);
+          }
         }
       });
-
-      // Sort rooms by last message timestamp or creation time
+      
+      // Sort rooms by last message timestamp
       rooms.sort((a, b) => {
-        const aTime = a.lastMessage?.timestamp || a.createdAt;
-        const bTime = b.lastMessage?.timestamp || b.createdAt;
-        return bTime - aTime;
+        const timeA = a.lastMessage?.timestamp || a.createdAt || 0;
+        const timeB = b.lastMessage?.timestamp || b.createdAt || 0;
+        return timeB - timeA;
       });
     }
     console.log('Final processed rooms:', rooms);
