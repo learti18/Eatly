@@ -3,7 +3,11 @@ import { useAuth } from "../../../Hooks/useAuth";
 import { getCurrentUser } from "../../../Utils/UserStore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { STATUS } from "../../../Utils/AuthStatus";
-import { subscribeToMessages, subscribeToUserRooms, sendMessage } from "../../../Services/FirebaseService";
+import {
+  subscribeToMessages,
+  subscribeToUserRooms,
+  sendMessage,
+} from "../../../Services/FirebaseService";
 
 export default function RestaurantChat() {
   const [selectedRoomId, setSelectedRoomId] = useState(null);
@@ -15,7 +19,7 @@ export default function RestaurantChat() {
   const [messageLoading, setMessageLoading] = useState(false);
   const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
-  
+
   const { status, isAuthenticated } = useAuth();
   const currentUser = getCurrentUser();
   const firebaseAuth = getAuth();
@@ -37,9 +41,12 @@ export default function RestaurantChat() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
-      console.log('Firebase auth state changed:', user ? 'authenticated' : 'not authenticated');
+      console.log(
+        "Firebase auth state changed:",
+        user ? "authenticated" : "not authenticated"
+      );
       if (user) {
-        console.log('Restaurant user ID:', user.uid);
+        console.log("Restaurant user ID:", user.uid);
       }
       setIsFirebaseReady(!!user);
     });
@@ -49,65 +56,79 @@ export default function RestaurantChat() {
 
   // Subscribe to messages when a room is selected
   useEffect(() => {
-    if (!selectedRoomId || !isFirebaseReady || !firebaseAuth.currentUser) return;
+    if (!selectedRoomId || !isFirebaseReady || !firebaseAuth.currentUser)
+      return;
 
-    console.log('Setting up message subscription for room:', selectedRoomId);
+    console.log("Setting up message subscription for room:", selectedRoomId);
     setMessageLoading(true);
-    setMessages([]); // Clear messages when changing rooms
-    
+    setMessages([]);
+
+    let unsubscribe;
+
     try {
-      const unsubscribe = subscribeToMessages(selectedRoomId, (updatedMessages) => {
-        console.log('Received messages for room:', selectedRoomId, 'count:', updatedMessages.length);
+      unsubscribe = subscribeToMessages(selectedRoomId, (updatedMessages) => {
+        console.log(
+          "Received messages for room:",
+          selectedRoomId,
+          "count:",
+          updatedMessages.length
+        );
         setMessages(updatedMessages);
         setMessageLoading(false);
       });
-
-      return () => {
-        console.log('Cleaning up message subscription for room:', selectedRoomId);
-        unsubscribe();
-        setMessages([]);
-      };
     } catch (err) {
-      console.error('Error subscribing to messages:', err);
+      console.error("Error subscribing to messages:", err);
       setError(err.message);
       setMessageLoading(false);
     }
+
+    return () => {
+      console.log("Cleaning up message subscription for room:", selectedRoomId);
+      if (unsubscribe && typeof unsubscribe === "function") {
+        unsubscribe();
+      }
+      setMessages([]);
+    };
   }, [selectedRoomId, isFirebaseReady]);
 
   // Subscribe to rooms
   useEffect(() => {
     if (!isFirebaseReady || !firebaseAuth.currentUser) return;
 
-    console.log('Setting up rooms subscription');
+    console.log("Setting up rooms subscription");
     setLoading(true);
-    
+
+    let unsubscribe;
+
     try {
-      const unsubscribe = subscribeToUserRooms((updatedRooms) => {
-        console.log('Received rooms update, count:', updatedRooms.length);
+      unsubscribe = subscribeToUserRooms((updatedRooms) => {
+        console.log("Received rooms update, count:", updatedRooms.length);
         setRooms(updatedRooms);
         setLoading(false);
       });
-
-      return () => {
-        console.log('Cleaning up rooms subscription');
-        unsubscribe();
-      };
     } catch (err) {
-      console.error('Error subscribing to rooms:', err);
+      console.error("Error subscribing to rooms:", err);
       setError(err.message);
       setLoading(false);
     }
+
+    return () => {
+      console.log("Cleaning up rooms subscription");
+      if (unsubscribe && typeof unsubscribe === "function") {
+        unsubscribe();
+      }
+    };
   }, [isFirebaseReady]);
 
   const handleSendMessage = async (content) => {
     if (!selectedRoomId || !content.trim() || !firebaseAuth.currentUser) return;
-    
+
     try {
-      console.log('Sending message to room:', selectedRoomId);
+      console.log("Sending message to room:", selectedRoomId);
       await sendMessage(selectedRoomId, content);
     } catch (err) {
-      console.error('Error sending message:', err);
-      setError('Failed to send message');
+      console.error("Error sending message:", err);
+      setError("Failed to send message");
     }
   };
 
@@ -155,7 +176,9 @@ export default function RestaurantChat() {
               ) : error ? (
                 <div className="text-red-500 text-center p-4">{error}</div>
               ) : rooms.length === 0 ? (
-                <div className="text-center text-gray-500 p-4">No chats available</div>
+                <div className="text-center text-gray-500 p-4">
+                  No chats available
+                </div>
               ) : (
                 rooms.map((room) => (
                   <div
@@ -163,27 +186,42 @@ export default function RestaurantChat() {
                     onClick={() => setSelectedRoomId(room.id)}
                     className={`p-3 cursor-pointer rounded-lg transition-colors ${
                       selectedRoomId === room.id
-                        ? 'bg-purple text-white'
-                        : 'hover:bg-gray-100'
+                        ? "bg-purple text-white"
+                        : "hover:bg-gray-100"
                     }`}
                   >
                     <div className="font-semibold">
                       {room.name}
-                      {room.createdBy === firebaseAuth.currentUser?.uid ? ' (You)' : ''}
+                      {room.createdBy === firebaseAuth.currentUser?.uid
+                        ? " (You)"
+                        : ""}
                     </div>
                     {room.lastMessage && (
-                      <div className={`text-sm ${
-                        selectedRoomId === room.id ? 'text-white opacity-75' : 'text-gray-600'
-                      } truncate`}>
-                        {room.lastMessage.senderId === firebaseAuth.currentUser?.uid ? 'You: ' : ''}
+                      <div
+                        className={`text-sm ${
+                          selectedRoomId === room.id
+                            ? "text-white opacity-75"
+                            : "text-gray-600"
+                        } truncate`}
+                      >
+                        {room.lastMessage.senderId ===
+                        firebaseAuth.currentUser?.uid
+                          ? "You: "
+                          : ""}
                         {room.lastMessage.content}
                       </div>
                     )}
                     {room.lastMessage && room.lastMessage.timestamp && (
-                      <div className={`text-xs ${
-                        selectedRoomId === room.id ? 'text-white opacity-60' : 'text-gray-500'
-                      }`}>
-                        {new Date(room.lastMessage.timestamp).toLocaleTimeString()}
+                      <div
+                        className={`text-xs ${
+                          selectedRoomId === room.id
+                            ? "text-white opacity-60"
+                            : "text-gray-500"
+                        }`}
+                      >
+                        {new Date(
+                          room.lastMessage.timestamp
+                        ).toLocaleTimeString()}
                       </div>
                     )}
                   </div>
@@ -192,7 +230,7 @@ export default function RestaurantChat() {
             </div>
           </div>
         </div>
-        
+
         <div className="flex-grow h-screen p-2 rounded-md">
           {selectedRoomId ? (
             <div className="flex flex-col h-full bg-white border-l border-gray-300">
@@ -212,18 +250,24 @@ export default function RestaurantChat() {
                     {messages.map((msg) => (
                       <div
                         key={msg.id}
-                        className={`flex ${msg.senderId === firebaseAuth.currentUser?.uid ? 'justify-end' : 'justify-start'}`}
+                        className={`flex ${
+                          msg.senderId === firebaseAuth.currentUser?.uid
+                            ? "justify-end"
+                            : "justify-start"
+                        }`}
                       >
                         <div
                           className={`max-w-xs rounded-xl p-3 ${
                             msg.senderId === firebaseAuth.currentUser?.uid
-                              ? 'bg-purple text-white'
-                              : 'bg-gray-200 text-gray-800'
+                              ? "bg-purple text-white"
+                              : "bg-gray-200 text-gray-800"
                           }`}
                         >
                           <p className="break-words">{msg.content}</p>
                           <span className="text-xs opacity-75 mt-1 block">
-                            {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}
+                            {msg.timestamp
+                              ? new Date(msg.timestamp).toLocaleTimeString()
+                              : ""}
                           </span>
                         </div>
                       </div>
@@ -232,14 +276,16 @@ export default function RestaurantChat() {
                   </>
                 )}
               </div>
-              
+
               <div className="p-4 border-t">
-                <form onSubmit={(e) => {
-                  e.preventDefault();
-                  const input = e.target.elements.message;
-                  handleSendMessage(input.value);
-                  input.value = '';
-                }}>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const input = e.target.elements.message;
+                    handleSendMessage(input.value);
+                    input.value = "";
+                  }}
+                >
                   <div className="flex space-x-2">
                     <input
                       type="text"
@@ -252,8 +298,8 @@ export default function RestaurantChat() {
                       type="submit"
                       className={`px-4 py-2 rounded-lg transition-colors ${
                         messageLoading
-                          ? 'bg-gray-300 cursor-not-allowed'
-                          : 'bg-purple text-white hover:bg-purple-dark'
+                          ? "bg-gray-300 cursor-not-allowed"
+                          : "bg-purple text-white hover:bg-purple-dark"
                       }`}
                       disabled={messageLoading}
                     >
