@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { useFetchCart } from "../../Queries/Cart/useFetchCart";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { loadStripe } from "@stripe/stripe-js";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { loadStripe } from "@stripe/stripe-js";
-import api from "../../Services/Api";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { AddressSchema } from "../../Schemas/Address/AddressSchema";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import EmptyCart from "../../components/Cart/EmptyCart";
-import DeliveryOptions from "../../components/Order/ClientUi/DeliveryOptions";
 import AddressForm from "../../components/Order/ClientUi/AddressForm";
+import DeliveryOptions from "../../components/Order/ClientUi/DeliveryOptions";
 import OrderSummary from "../../components/Order/ClientUi/OrderSummary";
+import { useFetchCart } from "../../Queries/Cart/useFetchCart";
+import { AddressSchema } from "../../Schemas/Address/AddressSchema";
+import api from "../../Services/Api";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -59,7 +59,6 @@ export default function Checkout() {
             setSelectedAddressId(response.data[0].id);
           }
         } else {
-          // No addresses found, prompt user to add one
           setIsAddingNewAddress(true);
         }
       } catch (error) {
