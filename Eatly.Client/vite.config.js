@@ -10,11 +10,10 @@ export default defineConfig({
   ],
   build: {
     // Optimize for production
-    minify: 'terser',
+    minify: 'esbuild',
     sourcemap: process.env.NODE_ENV === 'development',
     rollupOptions: {
       output: {
-        // Manual chunks for better caching and loading performance
         manualChunks: {
           vendor: ['react', 'react-dom'],
           routing: ['react-router-dom'],
@@ -29,15 +28,12 @@ export default defineConfig({
         }
       }
     },
-    // Increase chunk size warning limit
     chunkSizeWarningLimit: 1000,
-    // Optimize dependencies
     commonjsOptions: {
       include: [/node_modules/],
       transformMixedEsModules: true
     }
   },
-  // Define environment variables
   define: {
     __DEV__: process.env.NODE_ENV === 'development',
   },
