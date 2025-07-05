@@ -3,14 +3,32 @@ import { getAuth, signInWithCustomToken } from 'firebase/auth';
 import { getDatabase, ref, onValue, push, set, serverTimestamp, get } from 'firebase/database';
 
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyB-nSAGhmWg2WAzNw-mK8RbGNFS3SVS6GE",
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "eatly-eae0e.firebaseapp.com",
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "eatly-eae0e",
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "eatly-eae0e.appspot.com",
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "808319531419",
-    appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:808319531419:web:6aaa83b6e587832194893e",
-    databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL || "https://eatly-eae0e-default-rtdb.europe-west1.firebasedatabase.app"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL
   };
+
+// Validate required Firebase environment variables
+const requiredEnvVars = [
+  'VITE_FIREBASE_API_KEY',
+  'VITE_FIREBASE_AUTH_DOMAIN',
+  'VITE_FIREBASE_PROJECT_ID',
+  'VITE_FIREBASE_STORAGE_BUCKET',
+  'VITE_FIREBASE_MESSAGING_SENDER_ID',
+  'VITE_FIREBASE_APP_ID',
+  'VITE_FIREBASE_DATABASE_URL'
+];
+
+const missingEnvVars = requiredEnvVars.filter(varName => !import.meta.env[varName]);
+
+if (missingEnvVars.length > 0) {
+  console.error('Missing required Firebase environment variables:', missingEnvVars);
+  throw new Error(`Missing required Firebase environment variables: ${missingEnvVars.join(', ')}`);
+}
 
 // Initialize Firebase
 let app;
