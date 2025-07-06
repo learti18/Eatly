@@ -3,7 +3,7 @@ import Navbar from "../Navigation/Navbar";
 import { Outlet, useLocation } from "react-router-dom";
 import { Footer } from "./index";
 
-export default function Layout() {
+function Layout() {
   const location = useLocation().pathname;
   const [isAuthPage, setIsAuthPage] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -36,3 +36,5 @@ export default function Layout() {
     </div>
   );
 }
+
+export default Layout;

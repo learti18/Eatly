@@ -46,12 +46,6 @@ import EditBlogs from "./Pages/AdminDashboard/Blogs/EditBlogs";
 import Payments from "./Pages/RestaurantsDashbaord/Payments/Payments";
 import DriverRoute from "./Routes/DriverRoute";
 import DriverDashboard from "./Pages/DriverDashboard/DriverDashboard";
-import {
-  AdminDashboardLayout,
-  DriverDashboardLayout,
-  RestaurantDashboardLayout,
-  Layout,
-} from "./components/Layouts";
 import OrderDetails from "./Pages/Order/OrderDetails";
 import UserOrders from "./Pages/Order/UserOrders";
 import GuestRoute from "./Routes/GuestRoute";
@@ -59,6 +53,10 @@ import Signin from "./Pages/Auth/Signin";
 import Signup from "./Pages/Auth/Signup";
 import ForgetPassword from "./Pages/Auth/ForgetPassword";
 import Ingridients from "./Pages/AdminDashboard/Ingridients";
+import Layout from "./components/Layouts/Layout";
+import AdminDashboardLayout from "./components/Layouts/AdminDashboardLayout";
+import RestaurantDashboardLayout from "./components/Layouts/RestaurantDashboardLayout";
+import DriverDashboardLayout from "./components/Layouts/DriverDashboardLayout";
 
 const queryClient = new QueryClient();
 
