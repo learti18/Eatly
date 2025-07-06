@@ -7,7 +7,7 @@ import AddressAutocomplete from "./AddressAutocomplete";
 import MapControls from "./MapControls";
 import AddressMap from "./AddressMap";
 import FormActions from "./FormActions";
-import useAddressSuggestions from "../../../hooks/useAddressSuggestions";
+import useAddressSuggestions from "../../../Hooks/useAddressSuggestions";
 
 export default function AddressForm({
   register,
