@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
-import { formatCurrency } from "../../utils/currencyFormatter";
-import { formatDate } from "../../utils/dateFormatter";
+import { formatCurrency } from "../../Utils/currencyFormatter";
+import { formatDate } from "../../Utils/dateFormatter";
 import { Eye, ShoppingBag, CreditCard } from "lucide-react";
 import { useDrivers } from "../../Queries/Drivers/useDrivers";
 import { useAssignDriver } from "../../Queries/Order/useAssignDriver";

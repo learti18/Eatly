@@ -1,6 +1,6 @@
 import React from "react";
 import { X, Clock } from "lucide-react";
-import { formatDate } from "../../../utils/dateFormatter";
+import { formatDate } from "../../../Utils/dateFormatter";
 
 export default function CanceledOrderCard({ order }) {
   return (

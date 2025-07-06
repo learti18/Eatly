@@ -15,8 +15,8 @@ import { useFetchResturantOrders } from "../../Queries/Order/useFetchResturantOr
 import { useAllFoods } from "../../Queries/Foods/useAllFoods";
 import { useDrivers } from "../../Queries/Drivers/useDrivers";
 import { useRestaurant } from "../../Contexts/RestaurantContext";
-import { formatCurrency } from "../../utils/currencyFormatter";
-import { formatDate } from "../../utils/dateFormatter";
+import { formatCurrency } from "../../Utils/currencyFormatter";
+import { formatDate } from "../../Utils/dateFormatter";
 import { QuickActionCard } from "../../components/Cards/QuickActionCard";
 import { StatCard } from "../../components/Cards/StatCard";
 

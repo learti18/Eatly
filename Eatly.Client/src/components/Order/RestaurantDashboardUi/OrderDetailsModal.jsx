@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { formatCurrency } from "../../../utils/currencyFormatter";
-import { formatDate } from "../../../utils/dateFormatter";
+import { formatCurrency } from "../../../Utils/currencyFormatter";
+import { formatDate } from "../../../Utils/dateFormatter";
 import { XCircle, Package } from "lucide-react";
 import OrderStatusManager from "./OrderStatusManager";
 import DriverAssignment from "./DriverAssignment";

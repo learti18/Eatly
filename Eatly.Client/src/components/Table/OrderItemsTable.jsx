@@ -1,12 +1,10 @@
 import React from "react";
-import { formatCurrency } from "../../utils/currencyFormatter";
+import { formatCurrency } from "../../Utils/currencyFormatter";
 
 export default function OrderItemsTable({ order }) {
   return (
     <div className="p-6">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800">
-        Order Items
-      </h3>
+      <h3 className="text-lg font-semibold mb-4 text-gray-800">Order Items</h3>
       <div className="overflow-x-auto rounded-lg shadow">
         <table className="min-w-full divide-y divide-gray-200 border border-gray-100">
           <thead>
@@ -79,10 +77,7 @@ export default function OrderItemsTable({ order }) {
                 Subtotal
               </td>
               <td className="px-6 py-3 text-right text-sm font-semibold text-gray-800">
-                $
-                {formatCurrency(
-                  order.totalPrice - (order.deliveryFee || 0)
-                )}
+                ${formatCurrency(order.totalPrice - (order.deliveryFee || 0))}
               </td>
             </tr>
             <tr className="bg-gray-50">

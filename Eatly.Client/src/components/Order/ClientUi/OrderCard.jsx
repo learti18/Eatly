@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { formatDate } from "../../../utils/dateFormatter";
-import { formatCurrency } from "../../../utils/currencyFormatter";
+import { formatDate } from "../../../Utils/dateFormatter";
+import { formatCurrency } from "../../../Utils/currencyFormatter";
 import {
   ChevronDown,
   ChevronUp,

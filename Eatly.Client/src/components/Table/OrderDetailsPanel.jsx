@@ -1,6 +1,6 @@
 import React from "react";
-import { formatCurrency } from "../../utils/currencyFormatter";
-import { formatDate } from "../../utils/dateFormatter";
+import { formatCurrency } from "../../Utils/currencyFormatter";
+import { formatDate } from "../../Utils/dateFormatter";
 
 export default function OrderDetailsPanel({ order, onClose, statusColors }) {
   return (

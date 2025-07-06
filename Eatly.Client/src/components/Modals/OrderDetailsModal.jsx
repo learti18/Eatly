@@ -1,6 +1,6 @@
 import React from "react";
 import { X, Calendar, User, MapPin, CreditCard, Package } from "lucide-react";
-import { formatDate } from "../../utils/dateFormatter";
+import { formatDate } from "../../Utils/dateFormatter";
 import {
   orderStatusColors,
   paymentStatusColors,

@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import UserDeliveryMap from "../../components/UserDashboard/UserDeliveryMap";
 import { ChevronLeft, UtensilsCrossed } from "lucide-react";
-import { formatDate } from "../../utils/dateFormatter";
+import { formatDate } from "../../Utils/dateFormatter";
 import { useFetchUserOrderById } from "../../Queries/Order/useFetchUserOrderById";
 import PendingOrderCard from "../../components/Order/OrderStatusCards/PendingOrderCard";
 import InPreparationOrderCard from "../../components/Order/OrderStatusCards/InPreparationOrderCard";

@@ -8,8 +8,8 @@ import {
 } from "../../constants/statuses";
 import { useFetchUserOrders } from "../../Queries/Order/useFetchUserOrders";
 import Pagination from "../../components/Shared/Pagination";
-import { formatCurrency } from "../../utils/currencyFormatter";
-import { formatDate } from "../../utils/dateFormatter";
+import { formatCurrency } from "../../Utils/currencyFormatter";
+import { formatDate } from "../../Utils/dateFormatter";
 import useOrderFiltering from "../../Hooks/useOrderFiltering";
 import OrderFilters from "../../components/Order/ClientUi/OrderFilters";
 

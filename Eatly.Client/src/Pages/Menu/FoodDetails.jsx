@@ -5,7 +5,7 @@ import { useFoodByRestaurantId } from "../../Queries/Foods/useFoodByRestaurantId
 import { Link, useParams } from "react-router-dom";
 import { useAddToCart } from "../../Queries/Cart/useAddToCart";
 import { useAllFoodsById } from "../../Queries/Foods/useAllFoodsById";
-import { getIngredientEmoji } from "../../utils/ingredients/ingredientUtils";
+import { getIngredientEmoji } from "../../Utils/ingredients/ingredientUtils";
 import Badge from "../../components/Badges/Badge";
 
 export default function FoodDetails() {

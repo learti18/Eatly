@@ -1,5 +1,5 @@
 import React from "react";
-import { formatCurrency } from "../../utils/currencyFormatter";
+import { formatCurrency } from "../../Utils/currencyFormatter";
 
 export default function OrderItems({ orderData }) {
   return (
