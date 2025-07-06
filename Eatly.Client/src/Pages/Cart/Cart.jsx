@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import TotalOrder from "../../Components/TotalOrder";
+import TotalOrder from "../../components/TotalOrder";
 import { useFetchCart } from "../../Queries/Cart/useFetchCart";
 import { useClearCart } from "../../Queries/Cart/useClearCart";
 import { toast } from "sonner";

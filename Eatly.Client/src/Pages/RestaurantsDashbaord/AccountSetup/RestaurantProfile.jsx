@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigate } from "react-router-dom"; // Add this import
+import { useNavigate } from "react-router-dom";
 import DefaultInput from "../../../components/Inputs/DefaultInput";
 import { AddRestaurantProfileSchema } from "../../../Schemas/Restaurant/RestaurantProfileSchema";
 import Logo from "../../../components/Shared/Logo";

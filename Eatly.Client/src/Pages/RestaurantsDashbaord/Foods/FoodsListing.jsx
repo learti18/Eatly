@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import Table from "../../../components/Table/Table";
 import FoodTableRow from "../../../components/Table/FoodTableRow";
 import { useAllFoods } from "../../../Queries/Foods/useAllFoods";
-import { useRestaurant } from "../../../Contexts/RestaurantContext";
 import { Link } from "react-router-dom";
 
 export default function FoodsListing() {

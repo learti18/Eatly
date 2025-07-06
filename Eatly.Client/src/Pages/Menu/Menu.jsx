@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
-import PromoBanner from "../../Components/PromoBanner";
-import Category from "../../Components/Category";
+import PromoBanner from "../../components/PromoBanner";
+import Category from "../../components/Category";
 import Accordion from "../../components/Accordion";
 import RestaurantCard from "../../components/Cards/RestaurantCard";
 import { useAllRestaurants } from "../../Queries/Restaurants/useAllRestaurants";

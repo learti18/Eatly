@@ -11,7 +11,6 @@ import {
   Shield,
   Truck,
 } from "lucide-react";
-import { motion } from "framer-motion";
 
 export default function About() {
   const stats = [

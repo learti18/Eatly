@@ -2,12 +2,11 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ChevronLeft, CheckCircle } from "lucide-react";
-import { useRestaurant } from "../../../Contexts/RestaurantContext";
 import DefaultInput from "../../../components/Inputs/DefaultInput";
-import EmailInput from "../../../Components/Inputs/EmailInput";
 import { useAddDriver } from "../../../Queries/Drivers/useAddDriver";
 import { driverSchema } from "../../../Schemas/Driver/DriverSchema";
-import PasswordInput from "../../../Components/Inputs/PasswordInput";
+import EmailInput from "../../../components/Inputs/EmailInput";
+import PasswordInput from "../../../components/Inputs/PasswordInput";
 
 export default function AddDriver() {
   const { mutate: addDriver, isPending: isCreating } = useAddDriver();

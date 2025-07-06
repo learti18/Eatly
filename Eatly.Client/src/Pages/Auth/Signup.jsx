@@ -1,6 +1,6 @@
 import React from "react";
-import SignupForm from "../../Components/Auth/SignupForm";
-import AuthHero from "../../Components/Auth/AuthHero";
+import SignupForm from "../../components/Auth/SignupForm";
+import AuthHero from "../../components/Auth/AuthHero";
 import { SignUpSchema } from "./../../Schemas/SignUpSchema";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";

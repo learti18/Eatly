@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../Navigation/Navbar";
 import { Outlet, useLocation } from "react-router-dom";
-import { Footer } from "./index";
+import Footer from "./Footer";
 
 function Layout() {
   const location = useLocation().pathname;

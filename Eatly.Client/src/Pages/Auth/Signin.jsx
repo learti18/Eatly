@@ -2,8 +2,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SignInSchema } from "../../Schemas/SignInSchema";
-import SigninForm from "../../Components/Auth/SigninForm";
-import AuthHero from "../../Components/Auth/AuthHero";
+import SigninForm from "../../components/Auth/SigninForm";
+import AuthHero from "../../components/Auth/AuthHero";
 import { Link } from "react-router-dom";
 import useLogin from "../../Queries/Auth/useLogin";
 

@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { useRestaurantById } from "../../Queries/Restaurants/useRestaurantById";
 import { useAllFoodsById } from "../../Queries/Foods/useAllFoodsById";
 import FloatingChat from "../../components/Chat/FloatingChat";
-import FavoriteFilterButton from "../../Components/Buttons/FavoriteFilterButton";
+import FavoriteFilterButton from "../../components/Buttons/FavoriteFilterButton";
 import { useAuth } from "../../Hooks/useAuth";
 
 export default function Menudetails() {
