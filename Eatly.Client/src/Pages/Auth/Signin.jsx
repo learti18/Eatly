@@ -22,8 +22,7 @@ export default function Signin() {
   const loginMutation = useLogin();
 
   const onSubmit = async (data) => {
-    console.log(data);
-    await loginMutation.mutateAsync(data);
+    loginMutation.mutate(data);
   };
 
   return (

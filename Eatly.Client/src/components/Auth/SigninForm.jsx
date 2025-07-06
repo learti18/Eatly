@@ -93,10 +93,10 @@ export default function SigninForm({
 
           <button
             type="submit"
-            disabled={loginMutation?.isLoading}
+            disabled={loginMutation?.isPending}
             className="py-4 bg-primary hover:bg-[#5b4fa9] disabled:bg-gray-400 disabled:cursor-not-allowed text-white w-full rounded-lg cursor-pointer transition-colors duration-200"
           >
-            {loginMutation?.isLoading ? "Signing In..." : "Sign In"}
+            {loginMutation?.isPending ? "Signing In..." : "Sign In"}
           </button>
 
           <div className="text-sm text-center text-[#606060]">

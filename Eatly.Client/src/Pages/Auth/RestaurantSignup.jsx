@@ -23,7 +23,7 @@ export default function RestaurantSignup() {
   const registerMutation = useRegister();
 
   const onSubmit = async (data) => {
-    await registerMutation.mutateAsync({ ...data, role: "Restaurant" });
+    registerMutation.mutate({ ...data, role: "Restaurant" });
   };
 
   return (

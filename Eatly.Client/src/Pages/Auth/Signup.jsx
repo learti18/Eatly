@@ -23,7 +23,7 @@ export default function Signup() {
   const registerMutation = useRegister();
 
   const onSubmit = async (data) => {
-    await registerMutation.mutateAsync(data);
+    registerMutation.mutate(data);
   };
   return (
     <div className="flex relative h-screen">

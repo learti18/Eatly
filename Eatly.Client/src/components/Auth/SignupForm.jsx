@@ -11,7 +11,7 @@ export default function SignupForm({
   errors,
   signupType,
   backendError,
-  isLoading,
+  isPending,
 }) {
   return (
     <div className="w-full md:w-3/6 mx-auto mt-10 md:mt-20 p-6 items-center">
@@ -66,10 +66,10 @@ export default function SignupForm({
 
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isPending}
             className="py-4 bg-primary hover:bg-[#5b4fa9] disabled:bg-gray-400 disabled:cursor-not-allowed text-white border-none w-full rounded-lg cursor-pointer transition-colors duration-200"
           >
-            {isLoading ? "Signing Up..." : "Sign Up"}
+            {isPending ? "Signing Up..." : "Sign Up"}
           </button>
 
           <div className="text-sm text-center text-[#606060]">
