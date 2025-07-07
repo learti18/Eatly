@@ -59,7 +59,7 @@ export default function FoodCard({ food, restaurantId }) {
       >
         <Heart
           size={30}
-          className={`transition-colors ${
+          className={` ${
             isFavorite
               ? "text-purple fill-purple"
               : "text-gray-700 group-hover:text-purple"
