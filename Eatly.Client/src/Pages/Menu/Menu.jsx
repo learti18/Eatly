@@ -87,7 +87,7 @@ export default function Menu() {
   return (
     <div className="bg-background-main">
       <div className="max-w-7xl mx-auto py-16 px-6">
-        <div className="flex flex-col lg:flex-row gap-16 bg-background-main">
+        <div className="flex flex-col lg:flex-row gap-10 md:gap-16 bg-background-main">
           <PromoBanner
             searchValue={searchInput}
             onSearchChange={handleSearchChange}

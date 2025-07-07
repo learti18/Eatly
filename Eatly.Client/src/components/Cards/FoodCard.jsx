@@ -6,7 +6,7 @@ import { useAddToFavorites } from "../../Queries/Favorites/useAddToFavorites";
 import { useRemoveFromFavorites } from "../../Queries/Favorites/useRemoveFromFavorites";
 import { useAuth } from "../../Hooks/useAuth";
 import { toast } from "sonner";
-import { Heart } from "lucide-react";
+import { Heart } from "phosphor-react";
 
 export default function FoodCard({ food, restaurantId }) {
   const [dollars, cents] = food.price.toFixed(2).split(".");
@@ -49,7 +49,7 @@ export default function FoodCard({ food, restaurantId }) {
     <Link
       to={`/menu/${restaurantId || food.restaurantId}/food/${food.id}`}
       style={{ boxShadow: "0px 60px 35px rgba(0, 0, 0, 0.08)" }}
-      className="relative bg-white rounded-[34.58px] py-2 px-4 md:px-5 hover:drop-shadow-xl transition-all duration-300 ease-in-out cursor-pointer"
+      className="relative bg-white rounded-4xl py-2 px-4 md:px-5 hover:drop-shadow-xl transition-all duration-300 ease-in-out cursor-pointer border border-gray-100"
     >
       <div
         onClick={handleFavoriteClick}
@@ -58,20 +58,20 @@ export default function FoodCard({ food, restaurantId }) {
         }`}
       >
         <Heart
-          size={28}
-          className={`transition-colors duration-300 ${
+          size={30}
+          className={`transition-colors ${
             isFavorite
               ? "text-purple fill-purple"
               : "text-gray-700 group-hover:text-purple"
           }`}
-          fill={isFavorite ? "currentColor" : "none"}
+          weight={isFavorite ? "fill" : "regular"}
         />
       </div>
-      <div className="mt-8 mb-2 max-w-[300px] flex justify-center items-center mx-auto">
+      <div className="mt-8 max-w-[300px] flex justify-center items-center mx-auto">
         <img
           src={food.imageUrl}
           alt="food"
-          className="w-44 aspect-square rounded-full object-contain"
+          className="w-40 md:w-44 aspect-square rounded-full object-contain"
         />
       </div>
       <Badge type={food.type} />
@@ -83,14 +83,14 @@ export default function FoodCard({ food, restaurantId }) {
         <img src="/star1.svg" alt="rating logo star" className="w-6" />
         <p>4.5</p>
       </div>
-      <div className="flex items-center justify-between mt-3 pb-6">
+      <div className="flex items-center justify-between mt-3 pb-4">
         <p className="text-gray-900 text-xl md:text-2xl font-semibold">
           ${dollars}
-          <span className="text-text-light text-lg">.{cents}</span>
+          <span className="text-text-light text-base md:text-lg">.{cents}</span>
         </p>
         <button
           onClick={handleAddToCart}
-          className="cursor-pointer bg-text-dark text-white text-2xl md:text-3xl px-2 rounded-[9px] hover:bg-gray-900 transition-colors duration-300 ease-in-out"
+          className="cursor-pointer bg-text-dark text-white text-2xl md:text-3xl px-2 rounded-lg hover:bg-gray-900 transition-colors duration-300 ease-in-out"
         >
           +
         </button>

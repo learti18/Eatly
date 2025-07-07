@@ -39,7 +39,7 @@ export default function Menudetails() {
 
   return (
     <div className=" bg-background-main ">
-      <div className="max-w-7xl mx-auto px-5 py-20">
+      <div className="max-w-7xl mx-auto px-5 py-16">
         <div className="pb-10  ">
           {restaurantLoading ? (
             <span className="loading loading-spinner loading-xl"></span>
@@ -51,7 +51,7 @@ export default function Menudetails() {
         </div>
         <div className="">
           <div className="flex items-center justify-between mb-10">
-            <h2 className="text-3xl pt-20 font-semibold ">
+            <h2 className="text-4xl pt-20 font-semibold ">
               Popular <span role="img">🔥</span>
             </h2>
 
@@ -66,7 +66,7 @@ export default function Menudetails() {
             )}
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-y-15 gap-5 pb-20">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-y-15 gap-6 pb-20">
             {isLoading ? (
               <span className="loading loading-spinner loading-xl"></span>
             ) : isError ? (

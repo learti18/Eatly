@@ -107,7 +107,7 @@ export default function OrderDetails() {
                       <img
                         src={item.foodImageUrl}
                         alt={item.foodName}
-                        className="w-20 h-20 rounded-full object-cover"
+                        className="w-20 h-20 rounded-full object-contain"
                       />
                       <div>
                         <h3 className="text-lg font-medium text-gray-800">
@@ -150,7 +150,7 @@ export default function OrderDetails() {
           </div>
         )}
       </div>
-      <p className="text-xs text-gray-500 mt-10">
+      {/* <p className="text-xs text-gray-500 mt-10">
         ©{" "}
         <a href="https://www.mapbox.com/about/maps/" target="_blank">
           Mapbox
@@ -159,7 +159,7 @@ export default function OrderDetails() {
         <a href="https://www.openstreetmap.org/about/" target="_blank">
           OpenStreetMap
         </a>
-      </p>
+      </p> */}
     </div>
   );
 }

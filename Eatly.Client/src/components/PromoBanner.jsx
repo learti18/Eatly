@@ -7,7 +7,7 @@ export default function PromoBanner({
   searchPlaceholder = "Search restaurants by name, cuisine, or location...",
 }) {
   return (
-    <div className="flex flex-col justify-between w-full">
+    <div className="flex flex-col justify-between w-full flex-1">
       <div className="w-full">
         <div>
           <div className="flex flex-col justify-center w-full relative md:pl-10 gap-5 bg-purple rounded-4xl p-6 min-h-[200px] md:min-h-[280px] bg-[url('/foodicons.svg')] bg-no-repeat bg-cover bg-center">

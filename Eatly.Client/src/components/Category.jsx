@@ -15,23 +15,23 @@ export default function Category({ onFiltersChange, initialFilters = {} }) {
   const categoryConfig = {
     Vegan: {
       icon: "vegan.svg",
-      className: "bg-[#38AD68] text-[#00732F]",
-      activeClassName: "border-[#00732F]",
+      className: "bg-[#D8EBDF] text-[#00732F]",
+      activeClassName: "border-[#00732F]/50",
     },
     FastFood: {
       icon: "burger.svg",
       className: "bg-[#F7C5BA] text-[#FB471D]",
-      activeClassName: "border-[#FB471D]",
+      activeClassName: "border-[#FB471D]/50",
     },
     Dessert: {
       icon: "sweet.svg",
-      className: "bg-[#EDB66B] text-[#E28B14]",
-      activeClassName: "border-[#E28B14]",
+      className: "bg-[rgb(246,221,186)] text-[#E28B14]",
+      activeClassName: "border-[#E28B14]/50",
     },
     Asian: {
       icon: "sushi.svg",
-      className: "bg-[#5A85FF] text-[#002073]",
-      activeClassName: "border-[#002073]",
+      className: "bg-[#C5D4FF] text-[#002073]",
+      activeClassName: "border-[#002073]/50",
     },
   };
 
@@ -103,9 +103,9 @@ export default function Category({ onFiltersChange, initialFilters = {} }) {
   }
 
   return (
-    <div className="flex flex-col rounded-xl border-white p-5 shadow-2xl bg-white">
-      <h1 className="font-semibold text-xl">Category</h1>
-      <div className="flex flex-row justify-center gap-2 md:gap-3 my-5">
+    <div className="flex flex-col rounded-3xl border-white px-6 md:px-8 py-9 shadow-2xl bg-white">
+      <h1 className="font-semibold text-2xl">Category</h1>
+      <div className="grid grid-cols-4 gap-2 md:gap-3 mt-4 mb-6">
         {categories.map((category) => (
           <CategoryButtons
             key={category.value}
@@ -120,14 +120,14 @@ export default function Category({ onFiltersChange, initialFilters = {} }) {
         ))}
       </div>
 
-      <h1 className="font-semibold text-xl">Sort by</h1>
+      <h1 className="font-semibold text-2xl mt-2">Sort by</h1>
       <div className="flex justify-between">
-        <div className="flex flex-col items-start mt-5 mb-20">
+        <div className="flex flex-col items-start mt-3 mb-12">
           {sortOptions.map((option) => (
             <button
               key={option.value}
               onClick={() => handleSortChange(option.value)}
-              className={`font-medium mb-5 transition-colors ${
+              className={`font-medium mb-3 transition-colors ${
                 sortBy === option.value ? "text-purple" : "text-[#ACADB9]"
               }`}
             >
@@ -147,13 +147,13 @@ export default function Category({ onFiltersChange, initialFilters = {} }) {
         {hasActiveFilters ? (
           <button
             onClick={clearAllFilters}
-            className="flex-1 bg-gray-200 text-gray-700 rounded-lg py-3 hover:bg-gray-300 transition-colors"
+            className="flex-1 bg-gray-200 text-gray-700 rounded-xl py-4 hover:bg-gray-300 transition-colors"
           >
             Clear Filters
           </button>
         ) : (
-          <button className="flex-1 bg-purple text-white rounded-lg py-3 hover:bg-purple-dark transition-colors">
-            Apply Filters
+          <button className="flex-1 bg-purple text-white rounded-xl py-4 hover:bg-purple-dark transition-colors font-">
+            Apply
           </button>
         )}
       </div>

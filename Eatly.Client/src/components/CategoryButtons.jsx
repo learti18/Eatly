@@ -12,14 +12,14 @@ export default function CategoryButtons({
   return (
     <button
       onClick={() => onClick?.(value)}
-      className={`${className} flex flex-col flex-1 w-16 md:w-20 max-w-24 justify-between items-center rounded-xl py-4 px-3 transition-all duration-200 ${
+      className={`${className} flex flex-col shadow-xm justify-between items-center rounded-2xl py-2.5 transition-all duration-200 ${
         isActive
-          ? `border-3 ${activeClassName}`
-          : "border-3 border-transparent hover:transform hover:scale-105 hover:shadow-md"
+          ? `border-4 ${activeClassName}`
+          : "border-4 border-transparent hover:transform hover:scale-105"
       }`}
     >
-      <img className="w-full" src={icon} />
-      <h3 className="text-sm font-medium px-1 text-center">{title}</h3>
+      <img className="size-10 md:size-12" src={icon} />
+      <h3 className="text-sm font-medium mt-3.5 text-center">{title}</h3>
     </button>
   );
 }

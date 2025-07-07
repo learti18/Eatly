@@ -7,7 +7,7 @@ export default function Accordion() {
         <h2 className="relative text-3xl md:text-4xl font-semibold text-center mb-16 text-text-dark">
           Frequently Asked <br />
           <span className="text-purple">Questions</span>
-          <img className="absolute left-1/2 ml-56 -top-7" src="/icon.svg" />
+          <img className="absolute -right-10 -top-6" src="/icon.svg" />
         </h2>
       </div>
 

@@ -4,9 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home";
 import Blogs from "./Pages/Blogs/Blogs";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Pricing from "./Pages/Pricing/Pricing";
 import Menu from "./Pages/Menu/Menu";
-import Contact from "./Pages/Contact/Contact";
 import About from "./Pages/About/About";
 import Blogdetails from "./Pages/Blogs/Blogdetails";
 import ScrollToTop from "./Hooks/ScrollToTop";
@@ -90,9 +88,7 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/blogs" element={<Blogs />} />
                   <Route path="/about" element={<About />} />
-                  <Route path="/pricing" element={<Pricing />} />
                   <Route path="/menu" element={<Menu />} />
-                  <Route path="/contact" element={<Contact />} />
                   <Route path="blogs/:id" element={<Blogdetails />} />
                   <Route path="menu/:id" element={<Menudetails />} />
                   <Route

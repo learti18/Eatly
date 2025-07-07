@@ -31,8 +31,11 @@ function HeroSection() {
                 >
                   Get Started
                 </button>
-                <button className="px-8 py-3.5 bg-white rounded-xl cursor-pointer text-purple border border-2-purple hover:bg-purple-50 hover:text-purple-darker transition-colors duration-200 ease-in-out">
-                  Go Pro
+                <button
+                  onClick={() => navigate("/aboute")}
+                  className="px-8 py-3.5 bg-white rounded-xl cursor-pointer text-purple border border-2-purple hover:bg-purple-50 hover:text-purple-darker transition-colors duration-200 ease-in-out"
+                >
+                  About us
                 </button>
               </div>
               <div className="flex justify-center lg:justify-start items-center gap-2 mt-10">

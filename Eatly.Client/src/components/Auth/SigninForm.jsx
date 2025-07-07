@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import UsernameInput from "../Inputs/UsernameInput";
 import PasswordInput from "../Inputs/PasswordInput";
 import EmailInput from "../Inputs/EmailInput";
+import { motion } from "framer-motion";
 
 export default function SigninForm({
   register,
@@ -96,7 +97,47 @@ export default function SigninForm({
             disabled={loginMutation?.isPending}
             className="py-4 bg-primary hover:bg-[#5b4fa9] disabled:bg-gray-400 disabled:cursor-not-allowed text-white w-full rounded-lg cursor-pointer transition-colors duration-200"
           >
-            {loginMutation?.isPending ? "Signing In..." : "Sign In"}
+            {loginMutation?.isPending ? (
+              <span className="flex items-center justify-center gap-1">
+                Signing In
+                <span className="flex gap-1 ml-1">
+                  <motion.span
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{
+                      duration: 0.6,
+                      repeat: Infinity,
+                      repeatDelay: 0.3,
+                    }}
+                  >
+                    •
+                  </motion.span>
+                  <motion.span
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{
+                      duration: 0.6,
+                      repeat: Infinity,
+                      repeatDelay: 0.3,
+                      delay: 0.1,
+                    }}
+                  >
+                    •
+                  </motion.span>
+                  <motion.span
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{
+                      duration: 0.6,
+                      repeat: Infinity,
+                      repeatDelay: 0.3,
+                      delay: 0.2,
+                    }}
+                  >
+                    •
+                  </motion.span>
+                </span>
+              </span>
+            ) : (
+              "Sign In"
+            )}
           </button>
 
           <div className="text-sm text-center text-[#606060]">

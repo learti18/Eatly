@@ -144,8 +144,8 @@ export default function About() {
                 alt="Restaurant interior"
                 className="w-full h-full object-cover rounded-2xl shadow-xl"
               />
-              <div className="absolute -bottom-4 -right-10 w-20 h-20 bg-purple rounded-2xl flex items-center justify-center">
-                <Heart className="size-10 text-white" />
+              <div className="absolute bottom-4 left-4 px-3.5 py-3 bg-purple rounded-2xl flex items-center justify-center shadow-xl">
+                <Heart className="size-9 text-white" />
               </div>
             </div>
           </div>
