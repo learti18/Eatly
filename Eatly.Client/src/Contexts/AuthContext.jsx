@@ -88,6 +88,7 @@ export const AuthProvider = ({ children }) => {
       const storedEmail = getCurrentEmail();
       const hasSession = hasAuthenticatedSession();
 
+      // If no stored session indicators, don't attempt auth
       if (!storedEmail && !hasSession) {
         setAuthenticationStatus(STATUS.IDLE);
         return;
@@ -96,7 +97,7 @@ export const AuthProvider = ({ children }) => {
       setAuthenticationStatus(STATUS.PENDING);
 
       // Add a small delay to ensure cookies are available
-      await new Promise((resolve) => setTimeout(resolve, 25));
+      await new Promise((resolve) => setTimeout(resolve, 50));
 
       try {
         const response = await authenticateWithStoredCredentials(storedEmail);
