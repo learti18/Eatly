@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../Hooks/useAuth";
 import useLogout from "../../Queries/Auth/useLogout";
 import { useFetchCart } from "../../Queries/Cart/useFetchCart";
+import { STATUS } from "../../Utils/AuthStatus";
 
 // Separate links based on authentication requirements
 const publicLinks = [
@@ -21,7 +22,7 @@ export default function Navbar() {
   const location = useLocation();
   const [activeLink, setActiveLink] = useState();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, status } = useAuth();
   const logoutMutation = useLogout();
 
   // Only fetch cart if authenticated
@@ -97,7 +98,9 @@ export default function Navbar() {
           </div>
 
           <div className="ml-auto hidden md:flex items-center">
-            {isAuthenticated ? (
+            {status === STATUS.PENDING ? (
+              <div className="w-20 h-10 bg-gray-200 animate-pulse rounded-lg"></div>
+            ) : isAuthenticated ? (
               <button
                 onClick={handleLogout}
                 className="font-medium bg-primary hover:bg-[#6453d0] cursor-pointer transition-all duration-200 rounded-[12.68px] text-white px-6 py-2.5 ml-4 hover:shadow-lg hover:-translate-y-0.5"
@@ -216,7 +219,9 @@ export default function Navbar() {
 
           {/* Authentication section for mobile menu */}
           <div className="flex flex-col gap-3 px-6 py-6 border-t border-gray-200 bg-gray-50">
-            {isAuthenticated ? (
+            {status === STATUS.PENDING ? (
+              <div className="w-full h-12 bg-gray-200 animate-pulse rounded-xl"></div>
+            ) : isAuthenticated ? (
               <button
                 onClick={() => {
                   handleLogout();

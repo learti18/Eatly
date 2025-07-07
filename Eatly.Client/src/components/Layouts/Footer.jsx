@@ -4,9 +4,8 @@ import { Link } from "react-router-dom";
 
 const links = [
   { name: "Blog", path: "/blog" },
-  { name: "Pricing", path: "/pricing" },
+  { name: "Menu", path: "/menu" },
   { name: "About Us", path: "/about" },
-  { name: "Contact", path: "/contact" },
 ];
 
 export default function Footer() {

@@ -39,17 +39,15 @@ export const AuthProvider = ({ children }) => {
 
   const login = useCallback(async (user, token, expiresAt, firebaseToken) => {
     setAccessToken(token);
-    
-    // Initialize Firebase auth if we have a Firebase token
+
     if (firebaseToken) {
       try {
         await initializeFirebaseAuth(firebaseToken);
       } catch (error) {
-        console.error('Failed to initialize Firebase auth:', error);
-        // Continue with regular auth even if Firebase fails
+        console.error("Failed to initialize Firebase auth:", error);
       }
     }
-    
+
     dispatch({ type: "login", payload: { user, token, expiresAt } });
   }, []);
 
@@ -95,6 +93,9 @@ export const AuthProvider = ({ children }) => {
 
       setAuthenticationStatus(STATUS.PENDING);
 
+      // Add a small delay to ensure cookies are available
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
       try {
         const response = await authenticateWithStoredCredentials(storedEmail);
         const { data } = response;
@@ -106,7 +107,12 @@ export const AuthProvider = ({ children }) => {
           setCurrentUser(data);
         }
 
-        login(formatUserData(data), data.token, data.expiresAt, data.firebaseToken);
+        login(
+          formatUserData(data),
+          data.token,
+          data.expiresAt,
+          data.firebaseToken
+        );
       } catch (error) {
         console.error("Initial authentication failed", error);
         setAuthenticationStatus(STATUS.FAILED);
@@ -124,7 +130,12 @@ export const AuthProvider = ({ children }) => {
     const tokenRefreshTimer = setTimeout(async () => {
       try {
         const { data } = await refreshAuthToken();
-        login(formatUserData(data), data.token, data.expiresAt, data.firebaseToken);
+        login(
+          formatUserData(data),
+          data.token,
+          data.expiresAt,
+          data.firebaseToken
+        );
       } catch (error) {
         console.error("Token refresh failed", error);
         logout();

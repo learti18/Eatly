@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../Navigation/Navbar";
 import { Outlet, useLocation } from "react-router-dom";
 import Footer from "./Footer";
+import { useAuth } from "../../Hooks/useAuth";
+import { STATUS } from "../../Utils/AuthStatus";
 
 function Layout() {
   const location = useLocation().pathname;
   const [isAuthPage, setIsAuthPage] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const { status } = useAuth();
 
   useEffect(() => {
     const isSignIn = location.includes("sign-in");
@@ -18,7 +21,7 @@ function Layout() {
     setMounted(true);
   }, [location]);
 
-  if (!mounted) return null;
+  if (!mounted || status === STATUS.PENDING) return null;
 
   return (
     <div className="min-h-screen flex flex-col">
