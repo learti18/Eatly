@@ -76,7 +76,7 @@ export default function FoodDetails() {
               <img
                 src={food.imageUrl}
                 alt={food.name}
-                className="r w-[320px] md:w-[400px] object-cover"
+                className="r w-[260px] md:w-[400px] object-cover"
               />
             </div>
 
