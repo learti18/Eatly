@@ -15,6 +15,8 @@ import {
   hasAuthenticatedSession,
   setCurrentUser,
   setCurrentEmail,
+  clearCurrentEmail,
+  clearCurrentUser,
 } from "../Utils/UserStore";
 import { STATUS } from "../Utils/AuthStatus";
 import {
@@ -94,7 +96,7 @@ export const AuthProvider = ({ children }) => {
       setAuthenticationStatus(STATUS.PENDING);
 
       // Add a small delay to ensure cookies are available
-      await new Promise((resolve) => setTimeout(resolve, 50));
+      await new Promise((resolve) => setTimeout(resolve, 25));
 
       try {
         const response = await authenticateWithStoredCredentials(storedEmail);
@@ -115,7 +117,18 @@ export const AuthProvider = ({ children }) => {
         );
       } catch (error) {
         console.error("Initial authentication failed", error);
-        setAuthenticationStatus(STATUS.FAILED);
+
+        // If it's a refresh token issue, clean up and set to idle
+        if (
+          error.message === "REFRESH_TOKEN_MISSING" ||
+          error.message === "REFRESH_TOKEN_INVALID"
+        ) {
+          clearCurrentEmail();
+          clearCurrentUser();
+          setAuthenticationStatus(STATUS.IDLE);
+        } else {
+          setAuthenticationStatus(STATUS.FAILED);
+        }
       }
     };
 
