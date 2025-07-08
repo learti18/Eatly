@@ -55,7 +55,12 @@ export default function Navbar() {
   }, [location]);
 
   return (
-    <div className="bg-background-main top-0 z-[1000] px-5 fixed top-0 w-full">
+    <motion.div
+      className="bg-background-main top-0 z-[1000] px-5 fixed top-0 w-full"
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
       <div className="max-w-7xl mx-auto relative">
         <div className="flex items-center py-4 border-b-2 border-b-gray-200 drop-shadow-md">
           <Logo />
@@ -260,6 +265,6 @@ export default function Navbar() {
           />
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

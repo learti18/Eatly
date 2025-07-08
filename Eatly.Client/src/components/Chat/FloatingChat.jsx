@@ -36,7 +36,6 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
 
   const { data: restaurant, isLoading: isLoadingRestaurant } =
     useRestaurantById(restaurantId);
-
   const {
     messages,
     loading: messagesLoading,
@@ -56,7 +55,6 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
         }
       }
     };
-
     markAsRead();
   }, [isOpen, roomId, firebaseAuth.currentUser]);
 
@@ -95,61 +93,55 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
     };
 
     const handleViewportChange = () => {
-      const newHeight = window.innerHeight;
-      setViewportHeight(newHeight);
+      const height = window.visualViewport?.height || window.innerHeight;
+      setViewportHeight(height);
 
       if (isMobile) {
-        const heightDiff = window.screen.height - newHeight;
-        if (heightDiff > 150) {
-          setKeyboardHeight(heightDiff);
-        } else {
-          setKeyboardHeight(0);
-        }
+        const heightDiff = window.screen.height - height;
+        setKeyboardHeight(heightDiff > 150 ? heightDiff : 0);
       }
     };
 
     checkMobile();
     handleViewportChange();
 
-    window.addEventListener("resize", () => {
-      checkMobile();
-      handleViewportChange();
-    });
-
-    const handleOrientationChange = () => {
-      setTimeout(() => {
-        checkMobile();
-        handleViewportChange();
-      }, 100);
-    };
-
-    window.addEventListener("orientationchange", handleOrientationChange);
+    window.addEventListener("resize", checkMobile);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", handleViewportChange);
+    }
 
     return () => {
-      window.removeEventListener("resize", () => {
-        checkMobile();
-        handleViewportChange();
-      });
-      window.removeEventListener("orientationchange", handleOrientationChange);
+      window.removeEventListener("resize", checkMobile);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener(
+          "resize",
+          handleViewportChange
+        );
+      }
     };
   }, [isMobile]);
+
+  useEffect(() => {
+    if (isMobile && isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobile, isOpen]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
       setFirebaseUser(user);
     });
-
-    return () => {
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, []);
 
-  // Handle room creation/finding
   useEffect(() => {
     const findOrCreateRoom = async () => {
-      if (!isOpen || !restaurant || !firebaseUser) {
-        return;
-      }
+      if (!isOpen || !restaurant || !firebaseUser) return;
 
       setIsLoadingRoom(true);
       try {
@@ -157,14 +149,12 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
           firebaseUser.uid,
           restaurant.userId
         );
-
         if (existingRoomId) {
           setRoomId(existingRoomId);
         } else {
-          // Create new room for new client
           const newRoomId = await createChatRoom(
             [firebaseUser.uid, restaurant.userId],
-            ` ${user?.email || currentUser?.email || "Anonymous User"}`
+            `${user?.email || currentUser?.email || "Anonymous User"}`
           );
           setRoomId(newRoomId);
         }
@@ -190,7 +180,6 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!message.trim() || !roomId || !firebaseAuth.currentUser) return;
-
     try {
       await sendNewMessage(message);
       setMessage("");
@@ -200,8 +189,9 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
   };
 
   const handleInputFocus = () => {
-    // Simple focus handling - no special behavior needed
-    // since we're using CSS-based positioning
+    setTimeout(() => {
+      scrollToBottom();
+    }, 300);
   };
 
   useEffect(() => {
@@ -212,15 +202,11 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
     status === STATUS.PENDING ||
     !authChecked ||
     !firebaseUser ||
-    isLoadingRestaurant
-  ) {
+    isLoadingRestaurant ||
+    !isAuthenticated ||
+    !firebaseAuth.currentUser
+  )
     return null;
-  }
-
-  // Don't show chat if not authenticated
-  if (!isAuthenticated || !firebaseAuth.currentUser) {
-    return null;
-  }
 
   return (
     <div
