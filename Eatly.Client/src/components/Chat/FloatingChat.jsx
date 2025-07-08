@@ -199,6 +199,11 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
     }
   };
 
+  const handleInputFocus = () => {
+    // Simple focus handling - no special behavior needed
+    // since we're using CSS-based positioning
+  };
+
   useEffect(() => {
     setIsMobileChatOpen(isMobile && isOpen);
   }, [isMobile, isOpen, setIsMobileChatOpen]);

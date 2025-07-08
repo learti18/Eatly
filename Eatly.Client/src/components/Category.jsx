@@ -143,18 +143,20 @@ export default function Category({ onFiltersChange, initialFilters = {} }) {
         </button>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex flex-col gap-3">
         {hasActiveFilters ? (
-          <button
-            onClick={clearAllFilters}
-            className="flex-1 bg-gray-200 text-gray-700 rounded-xl py-4 hover:bg-gray-300 transition-colors"
-          >
-            Clear Filters
-          </button>
+          <>
+            <button
+              onClick={clearAllFilters}
+              className="w-full bg-gray-200 text-gray-700 rounded-xl py-3 hover:bg-gray-300 transition-colors"
+            >
+              Clear All Filters
+            </button>
+          </>
         ) : (
-          <button className="flex-1 bg-purple text-white rounded-xl py-4 hover:bg-purple-dark transition-colors font-">
-            Apply
-          </button>
+          <div className="text-center py-4 px-2 text-white text-sm bg-purple rounded-xl">
+            Sort or filter Restaurants
+          </div>
         )}
       </div>
     </div>
