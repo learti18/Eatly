@@ -21,6 +21,7 @@ import DashboardRestaurants from "./Pages/AdminDashboard/DashboardRestaurants";
 import Orders from "./Pages/AdminDashboard/Orders";
 import AdminRoute from "./Routes/AdminRoute";
 import { RestaurantProvider } from "./Contexts/RestaurantContext";
+import { MobileChatProvider } from "./Contexts/MobileChatContext";
 import FoodsListing from "./Pages/RestaurantsDashbaord/Foods/FoodsListing";
 import RestaurantAccount from "./Pages/RestaurantsDashbaord/Account/RestaurantAccount";
 import DriversListing from "./Pages/RestaurantsDashbaord/Drivers/DriversListing";
@@ -63,119 +64,124 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <Toaster richColors />
-          <BrowserRouter>
-            <ScrollToTop />
-            <Routes>
-              <Route path="/unauthorized" element={<Unauthorized />} />
+          <MobileChatProvider>
+            <Toaster richColors />
+            <BrowserRouter>
+              <ScrollToTop />
+              <Routes>
+                <Route path="/unauthorized" element={<Unauthorized />} />
 
-              {/* Guest-only routes (auth pages) with Layout */}
-              <Route element={<Layout />}>
-                <Route element={<GuestRoute />}>
-                  <Route path="/sign-in" element={<Signin />} />
-                  <Route path="/sign-up" element={<Signup />} />
-                  <Route
-                    path="/restaurant-signup"
-                    element={<RestaurantSignup />}
-                  />
-                  <Route path="/forget-password" element={<ForgetPassword />} />
-                </Route>
-              </Route>
-
-              {/* Public routes with Layout */}
-              <Route element={<Layout />}>
-                <Route element={<PublicRoute />}>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/blogs" element={<Blogs />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/menu" element={<Menu />} />
-                  <Route path="blogs/:id" element={<Blogdetails />} />
-                  <Route path="menu/:id" element={<Menudetails />} />
-                  <Route
-                    path="menu/:id/food/:foodId"
-                    element={<FoodDetails />}
-                  />
-                </Route>
-              </Route>
-
-              <Route element={<ProtectedRoute />}>
+                {/* Guest-only routes (auth pages) with Layout */}
                 <Route element={<Layout />}>
-                  <Route path="/cart" element={<Cart />} />
-                  <Route path="/orders" element={<UserOrders />} />
-                  <Route path="/orders/:id" element={<OrderDetails />} />
-                  <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/checkout/success" element={<OrderStatus />} />
-                </Route>
-              </Route>
-
-              {/* Admin routes with sidebarlayout */}
-              <Route element={<AdminRoute />}>
-                <Route path="/dashboard" element={<AdminDashboardLayout />}>
-                  <Route index element={<Admin />} />
-                  <Route path="ingridients" element={<Ingridients />} />
-                  <Route
-                    path="restaurants"
-                    element={<DashboardRestaurants />}
-                  />
-                  <Route path="blogs" element={<BlogListing />} />
-                  <Route path="blogs/add" element={<AddBlogs />} />
-                  <Route path="blogs/edit/:id" element={<EditBlogs />} />
-                  <Route path="orders" element={<Orders />} />
-                </Route>
-              </Route>
-
-              {/* Restaurant routes */}
-              <Route element={<RestaurantProvider />}>
-                <Route element={<RestaurantRoute />}>
-                  {/* Initial setup routes */}
-                  <Route
-                    path="/restaurant-profile"
-                    element={<RestaurantSetup />}
-                  />
-                  <Route
-                    path="refresh/:connectedAccountId"
-                    element={<Refresh />}
-                  />
-                  <Route
-                    path="return/:connectedAccountId"
-                    element={<Return />}
-                  />
-
-                  {/* Dashboard routes - only accessible after verification */}
-                  <Route element={<VerifiedRestaurantRoute />}>
+                  <Route element={<GuestRoute />}>
+                    <Route path="/sign-in" element={<Signin />} />
+                    <Route path="/sign-up" element={<Signup />} />
                     <Route
-                      path="/restaurant-dashboard"
-                      element={<RestaurantDashboardLayout />}
-                    >
-                      <Route index element={<RestaurantDashboard />} />
-                      <Route path="foods" element={<FoodsListing />} />
-                      <Route path="foods/add" element={<AddFood />} />
-                      <Route path="foods/edit/:id" element={<EditFood />} />
-                      <Route path="orders" element={<RestaurantsOrders />} />
+                      path="/restaurant-signup"
+                      element={<RestaurantSignup />}
+                    />
+                    <Route
+                      path="/forget-password"
+                      element={<ForgetPassword />}
+                    />
+                  </Route>
+                </Route>
+
+                {/* Public routes with Layout */}
+                <Route element={<Layout />}>
+                  <Route element={<PublicRoute />}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/blogs" element={<Blogs />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/menu" element={<Menu />} />
+                    <Route path="blogs/:id" element={<Blogdetails />} />
+                    <Route path="menu/:id" element={<Menudetails />} />
+                    <Route
+                      path="menu/:id/food/:foodId"
+                      element={<FoodDetails />}
+                    />
+                  </Route>
+                </Route>
+
+                <Route element={<ProtectedRoute />}>
+                  <Route element={<Layout />}>
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/orders" element={<UserOrders />} />
+                    <Route path="/orders/:id" element={<OrderDetails />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/checkout/success" element={<OrderStatus />} />
+                  </Route>
+                </Route>
+
+                {/* Admin routes with sidebarlayout */}
+                <Route element={<AdminRoute />}>
+                  <Route path="/dashboard" element={<AdminDashboardLayout />}>
+                    <Route index element={<Admin />} />
+                    <Route path="ingridients" element={<Ingridients />} />
+                    <Route
+                      path="restaurants"
+                      element={<DashboardRestaurants />}
+                    />
+                    <Route path="blogs" element={<BlogListing />} />
+                    <Route path="blogs/add" element={<AddBlogs />} />
+                    <Route path="blogs/edit/:id" element={<EditBlogs />} />
+                    <Route path="orders" element={<Orders />} />
+                  </Route>
+                </Route>
+
+                {/* Restaurant routes */}
+                <Route element={<RestaurantProvider />}>
+                  <Route element={<RestaurantRoute />}>
+                    {/* Initial setup routes */}
+                    <Route
+                      path="/restaurant-profile"
+                      element={<RestaurantSetup />}
+                    />
+                    <Route
+                      path="refresh/:connectedAccountId"
+                      element={<Refresh />}
+                    />
+                    <Route
+                      path="return/:connectedAccountId"
+                      element={<Return />}
+                    />
+
+                    {/* Dashboard routes - only accessible after verification */}
+                    <Route element={<VerifiedRestaurantRoute />}>
                       <Route
-                        path="account"
-                        element={<RestaurantAccount />}
-                      />{" "}
-                      <Route path="drivers" element={<DriversListing />} />
-                      <Route path="drivers/add" element={<AddDriver />} />
-                      <Route path="payments" element={<Payments />} />
-                      <Route path="chat" element={<RestaurantChat />} />
+                        path="/restaurant-dashboard"
+                        element={<RestaurantDashboardLayout />}
+                      >
+                        <Route index element={<RestaurantDashboard />} />
+                        <Route path="foods" element={<FoodsListing />} />
+                        <Route path="foods/add" element={<AddFood />} />
+                        <Route path="foods/edit/:id" element={<EditFood />} />
+                        <Route path="orders" element={<RestaurantsOrders />} />
+                        <Route
+                          path="account"
+                          element={<RestaurantAccount />}
+                        />{" "}
+                        <Route path="drivers" element={<DriversListing />} />
+                        <Route path="drivers/add" element={<AddDriver />} />
+                        <Route path="payments" element={<Payments />} />
+                        <Route path="chat" element={<RestaurantChat />} />
+                      </Route>
                     </Route>
                   </Route>
                 </Route>
-              </Route>
 
-              {/* Driver Routes */}
-              <Route element={<DriverRoute />}>
-                <Route
-                  path="/driver-dashboard"
-                  element={<DriverDashboardLayout />}
-                >
-                  <Route index element={<DriverDashboard />} />
+                {/* Driver Routes */}
+                <Route element={<DriverRoute />}>
+                  <Route
+                    path="/driver-dashboard"
+                    element={<DriverDashboardLayout />}
+                  >
+                    <Route index element={<DriverDashboard />} />
+                  </Route>
                 </Route>
-              </Route>
-            </Routes>
-          </BrowserRouter>
+              </Routes>
+            </BrowserRouter>
+          </MobileChatProvider>
         </AuthProvider>
       </QueryClientProvider>
     </>

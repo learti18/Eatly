@@ -27,13 +27,13 @@ function HeroSection() {
               <div className="flex justify-center gap-5 mt-14 text-base font-medium tracking-normal">
                 <button
                   onClick={() => navigate("/menu")}
-                  className="px-8 py-3.5 bg-purple rounded-xl cursor-pointer text-white hover:bg-purple-dark transition-colors duration-200 ease-in-out"
+                  className="px-8 py-3.5 bg-purple rounded-xl cursor-pointer text-white hover:bg-purple-dark active:bg-purple-darker transition-colors duration-200 ease-in-out"
                 >
                   Get Started
                 </button>
                 <button
-                  onClick={() => navigate("/aboute")}
-                  className="px-8 py-3.5 bg-white rounded-xl cursor-pointer text-purple border border-2-purple hover:bg-purple-50 hover:text-purple-darker transition-colors duration-200 ease-in-out"
+                  onClick={() => navigate("/about")}
+                  className="px-8 py-3.5 bg-white rounded-xl cursor-pointer text-purple border border-2-purple hover:bg-purple-50 active:bg-purple-50 hover:text-purple-darker transition-colors duration-200 ease-in-out"
                 >
                   About us
                 </button>

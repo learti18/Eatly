@@ -10,6 +10,7 @@ import {
   markRoomAsReadInFirebase,
 } from "../../Services/FirebaseService";
 import { useFirebaseUnreadMessages } from "../../Hooks/useFirebaseUnreadMessages";
+import { useMobileChat } from "../../Contexts/MobileChatContext";
 
 export default function FloatingChat({ restaurantId, restaurantName }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +19,10 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
   const [isLoadingRoom, setIsLoadingRoom] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   const [firebaseUser, setFirebaseUser] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+  const { setIsMobileChatOpen } = useMobileChat();
   const {
     totalUnreadCount,
     unreadCounts,
@@ -27,8 +32,8 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
   const currentUser = getCurrentUser();
   const firebaseAuth = getAuth();
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
 
-  // Fetch restaurant data to get the user ID
   const { data: restaurant, isLoading: isLoadingRestaurant } =
     useRestaurantById(restaurantId);
 
@@ -41,7 +46,6 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
     rooms,
   } = useChat(roomId);
 
-  // Mark room as read when chat is opened and room is available
   useEffect(() => {
     const markAsRead = async () => {
       if (isOpen && roomId && firebaseAuth.currentUser) {
@@ -57,21 +61,20 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
   }, [isOpen, roomId, firebaseAuth.currentUser]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
-  // Scroll to bottom when messages update
   useEffect(() => {
-    scrollToBottom();
+    if (messages.length > 0) {
+      scrollToBottom();
+    }
   }, [messages]);
 
-  // Scroll to bottom when chat is first opened
   useEffect(() => {
     if (isOpen && messages.length > 0) {
-      // Use a small delay to ensure the chat container is fully rendered
-      setTimeout(() => {
-        scrollToBottom();
-      }, 100);
+      scrollToBottom();
     }
   }, [isOpen]);
 
@@ -81,19 +84,62 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
     }
   }, [status]);
 
-  // Handle Firebase authentication state
   useEffect(() => {
-    console.log("Setting up Firebase auth listener");
-    const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
-      console.log(
-        "Firebase auth state changed:",
-        user ? "authenticated" : "not authenticated"
+    const checkMobile = () => {
+      setIsMobile(
+        window.innerWidth <= 768 ||
+          /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent
+          )
       );
+    };
+
+    const handleViewportChange = () => {
+      const newHeight = window.innerHeight;
+      setViewportHeight(newHeight);
+
+      if (isMobile) {
+        const heightDiff = window.screen.height - newHeight;
+        if (heightDiff > 150) {
+          setKeyboardHeight(heightDiff);
+        } else {
+          setKeyboardHeight(0);
+        }
+      }
+    };
+
+    checkMobile();
+    handleViewportChange();
+
+    window.addEventListener("resize", () => {
+      checkMobile();
+      handleViewportChange();
+    });
+
+    const handleOrientationChange = () => {
+      setTimeout(() => {
+        checkMobile();
+        handleViewportChange();
+      }, 100);
+    };
+
+    window.addEventListener("orientationchange", handleOrientationChange);
+
+    return () => {
+      window.removeEventListener("resize", () => {
+        checkMobile();
+        handleViewportChange();
+      });
+      window.removeEventListener("orientationchange", handleOrientationChange);
+    };
+  }, [isMobile]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
       setFirebaseUser(user);
     });
 
     return () => {
-      console.log("Cleaning up Firebase auth listener");
       unsubscribe();
     };
   }, []);
@@ -102,33 +148,24 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
   useEffect(() => {
     const findOrCreateRoom = async () => {
       if (!isOpen || !restaurant || !firebaseUser) {
-        console.log("Waiting for conditions:", {
-          isOpen,
-          hasRestaurant: !!restaurant,
-          hasFirebaseUser: !!firebaseUser,
-        });
         return;
       }
 
       setIsLoadingRoom(true);
       try {
-        // First try to find an existing room for this client
         const existingRoomId = await findExistingRoom(
           firebaseUser.uid,
           restaurant.userId
         );
 
         if (existingRoomId) {
-          console.log("Using existing room:", existingRoomId);
           setRoomId(existingRoomId);
         } else {
           // Create new room for new client
-          console.log("Creating new room for client:", firebaseUser.uid);
           const newRoomId = await createChatRoom(
             [firebaseUser.uid, restaurant.userId],
             ` ${user?.email || currentUser?.email || "Anonymous User"}`
           );
-          console.log("Created new room:", newRoomId);
           setRoomId(newRoomId);
         }
       } catch (err) {
@@ -162,7 +199,10 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
     }
   };
 
-  // Don't show anything while checking authentication or loading restaurant data
+  useEffect(() => {
+    setIsMobileChatOpen(isMobile && isOpen);
+  }, [isMobile, isOpen, setIsMobileChatOpen]);
+
   if (
     status === STATUS.PENDING ||
     !authChecked ||
@@ -178,11 +218,19 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 sm:max-w-sm max-w-[calc(100vw-2rem)]">
+    <div
+      className={`${
+        isMobile && isOpen
+          ? "fixed inset-0 z-50 bg-white"
+          : "fixed z-50 bottom-4 right-4 sm:max-w-sm max-w-[calc(100vw-2rem)]"
+      }`}
+    >
       {!isOpen ? (
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-purple text-white p-3 sm:p-4 rounded-full shadow-lg hover:bg-purple-dark transition-colors relative"
+          className={`bg-purple text-white p-4 rounded-full shadow-lg hover:bg-purple-dark transition-colors relative ${
+            isMobile ? "fixed bottom-4 right-4" : ""
+          }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -209,9 +257,28 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
           )}
         </button>
       ) : (
-        <div className="bg-white rounded-lg shadow-xl w-full sm:w-80 max-h-[60vh] sm:max-h-[400px] flex flex-col">
+        <div
+          className={`bg-white shadow-xl flex flex-col ${
+            isMobile
+              ? "h-full w-full"
+              : "rounded-lg sm:w-80 w-full max-h-[60vh] sm:max-h-[400px]"
+          }`}
+          style={
+            isMobile
+              ? {
+                  height: `${viewportHeight - keyboardHeight}px`,
+                  maxHeight: `${viewportHeight - keyboardHeight}px`,
+                  paddingTop: "env(safe-area-inset-top)",
+                }
+              : {}
+          }
+        >
           {/* Header */}
-          <div className="p-3 sm:p-4 border-b flex justify-between items-center bg-purple text-white rounded-t-lg">
+          <div
+            className={`p-4 border-b flex justify-between items-center bg-purple text-white ${
+              isMobile ? "pt-safe-top" : "rounded-t-lg"
+            }`}
+          >
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold text-sm sm:text-base truncate">
                 {restaurantName}
@@ -239,7 +306,16 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 scrollbar-hide min-h-0">
+          <div
+            className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 scrollbar-hide min-h-0"
+            style={
+              isMobile && keyboardHeight > 0
+                ? {
+                    paddingBottom: "80px", // Extra padding to account for fixed input
+                  }
+                : {}
+            }
+          >
             {isLoadingRoom || messagesLoading ? (
               <div className="flex items-center justify-center h-full min-h-[200px]">
                 <span className="loading loading-spinner loading-lg"></span>
@@ -287,16 +363,32 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
           {/* Input */}
           <form
             onSubmit={handleSendMessage}
-            className="p-3 sm:p-4 border-t border-gray-300"
+            className={`p-3 sm:p-4 border-t border-gray-300 ${
+              isMobile ? "flex-shrink-0" : ""
+            }`}
+            style={
+              isMobile && keyboardHeight > 0
+                ? {
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    backgroundColor: "white",
+                  }
+                : {}
+            }
           >
             <div className="flex space-x-2">
               <input
+                ref={inputRef}
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                onFocus={handleInputFocus}
                 placeholder="Type a message..."
                 className="flex-1 rounded-lg px-3 py-2 text-sm focus:outline-none border-2 focus:border-purple border-gray-300"
                 disabled={isLoadingRoom || messagesLoading}
+                autoComplete="off"
               />
               <button
                 type="submit"
