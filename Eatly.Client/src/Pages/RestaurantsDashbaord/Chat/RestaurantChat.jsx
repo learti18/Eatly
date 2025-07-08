@@ -7,6 +7,8 @@ import {
   subscribeToMessages,
   subscribeToUserRooms,
   sendMessage,
+  markRoomAsReadInFirebase,
+  subscribeToUnreadCounts,
 } from "../../../Services/FirebaseService";
 
 export default function RestaurantChat() {
@@ -18,6 +20,7 @@ export default function RestaurantChat() {
   const [loading, setLoading] = useState(true);
   const [messageLoading, setMessageLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [unreadMessages, setUnreadMessages] = useState({});
   const messagesEndRef = useRef(null);
 
   const { status, isAuthenticated } = useAuth();
@@ -28,7 +31,104 @@ export default function RestaurantChat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Scroll to bottom when messages update
+  const selectRoom = (roomId) => {
+    setSelectedRoomId(roomId);
+
+    setUnreadMessages((prev) => ({
+      ...prev,
+      [roomId]: 0,
+    }));
+
+    if (firebaseAuth.currentUser) {
+      markRoomAsReadInFirebase(roomId, firebaseAuth.currentUser.uid).catch(
+        (err) => {
+          console.error("Error marking room as read:", err);
+          setUnreadMessages((prev) => ({
+            ...prev,
+            [roomId]: 1,
+          }));
+        }
+      );
+    }
+  };
+
+  const getUnreadCount = (roomId) => {
+    return unreadMessages[roomId] || 0;
+  };
+
+  const showNewMessageNotification = (roomName, messageContent) => {
+    const totalUnread =
+      Object.values(unreadMessages).reduce((total, count) => total + count, 0) +
+      1;
+    document.title = `(${totalUnread}) Restaurant Chat - Eatly`;
+
+    try {
+      const audio = new Audio(
+        "data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmMUAy6Ny+nOciMFeL7CfnoVCiWS4+yYQQoNUan0vzlNJCR9/1sdF"
+      );
+      audio.volume = 0.3;
+      audio.play().catch(() => {});
+    } catch (error) {}
+
+    if ("Notification" in window) {
+      if (Notification.permission === "granted") {
+        const notification = new Notification(`New message from ${roomName}`, {
+          body:
+            messageContent.length > 50
+              ? messageContent.substring(0, 50) + "..."
+              : messageContent,
+          icon: "/Logo.svg",
+          tag: "restaurant-chat",
+          requireInteraction: false,
+        });
+
+        setTimeout(() => {
+          notification.close();
+        }, 5000);
+      } else if (Notification.permission === "default") {
+        Notification.requestPermission().then((permission) => {
+          if (permission === "granted") {
+            setTimeout(
+              () => showNewMessageNotification(roomName, messageContent),
+              100
+            );
+          }
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (!firebaseAuth.currentUser) return;
+
+    const unsubscribe = subscribeToUnreadCounts(
+      firebaseAuth.currentUser.uid,
+      (unreadCounts) => {
+        setUnreadMessages(unreadCounts);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, [firebaseAuth.currentUser]);
+
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  useEffect(() => {
+    const totalUnread = Object.values(unreadMessages).reduce(
+      (total, count) => total + count,
+      0
+    );
+    if (totalUnread === 0) {
+      document.title = "Restaurant Chat - Eatly";
+    }
+  }, [unreadMessages]);
+
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -41,25 +141,16 @@ export default function RestaurantChat() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
-      console.log(
-        "Firebase auth state changed:",
-        user ? "authenticated" : "not authenticated"
-      );
-      if (user) {
-        console.log("Restaurant user ID:", user.uid);
-      }
       setIsFirebaseReady(!!user);
     });
 
     return () => unsubscribe();
   }, []);
 
-  // Subscribe to messages when a room is selected
   useEffect(() => {
     if (!selectedRoomId || !isFirebaseReady || !firebaseAuth.currentUser)
       return;
 
-    console.log("Setting up message subscription for room:", selectedRoomId);
     setMessageLoading(true);
     setMessages([]);
 
@@ -67,12 +158,6 @@ export default function RestaurantChat() {
 
     try {
       unsubscribe = subscribeToMessages(selectedRoomId, (updatedMessages) => {
-        console.log(
-          "Received messages for room:",
-          selectedRoomId,
-          "count:",
-          updatedMessages.length
-        );
         setMessages(updatedMessages);
         setMessageLoading(false);
       });
@@ -83,7 +168,6 @@ export default function RestaurantChat() {
     }
 
     return () => {
-      console.log("Cleaning up message subscription for room:", selectedRoomId);
       if (unsubscribe && typeof unsubscribe === "function") {
         unsubscribe();
       }
@@ -91,18 +175,39 @@ export default function RestaurantChat() {
     };
   }, [selectedRoomId, isFirebaseReady]);
 
-  // Subscribe to rooms
   useEffect(() => {
     if (!isFirebaseReady || !firebaseAuth.currentUser) return;
 
-    console.log("Setting up rooms subscription");
     setLoading(true);
 
     let unsubscribe;
+    let previousRooms = {};
 
     try {
       unsubscribe = subscribeToUserRooms((updatedRooms) => {
-        console.log("Received rooms update, count:", updatedRooms.length);
+        updatedRooms.forEach((room) => {
+          if (
+            room.lastMessage &&
+            room.id !== selectedRoomId &&
+            room.lastMessage.senderId !== firebaseAuth.currentUser?.uid
+          ) {
+            const previousRoom = previousRooms[room.id];
+            const isNewMessage =
+              !previousRoom ||
+              !previousRoom.lastMessage ||
+              previousRoom.lastMessage.timestamp < room.lastMessage.timestamp;
+
+            if (isNewMessage && Object.keys(previousRooms).length > 0) {
+              showNewMessageNotification(room.name, room.lastMessage.content);
+            }
+          }
+        });
+
+        previousRooms = updatedRooms.reduce((acc, room) => {
+          acc[room.id] = room;
+          return acc;
+        }, {});
+
         setRooms(updatedRooms);
         setLoading(false);
       });
@@ -113,18 +218,16 @@ export default function RestaurantChat() {
     }
 
     return () => {
-      console.log("Cleaning up rooms subscription");
       if (unsubscribe && typeof unsubscribe === "function") {
         unsubscribe();
       }
     };
-  }, [isFirebaseReady]);
+  }, [isFirebaseReady, selectedRoomId, firebaseAuth.currentUser]);
 
   const handleSendMessage = async (content) => {
     if (!selectedRoomId || !content.trim() || !firebaseAuth.currentUser) return;
 
     try {
-      console.log("Sending message to room:", selectedRoomId);
       await sendMessage(selectedRoomId, content);
     } catch (err) {
       console.error("Error sending message:", err);
@@ -155,8 +258,21 @@ export default function RestaurantChat() {
       <div className="flex bg-white">
         <div className="w-80 h-screen bg-white p-2 hidden md:block">
           <div className="h-full overflow-y-auto">
-            <div className="text-xl font-semibold text-text-dark p-3">
-              Messages
+            <div className="text-xl font-semibold text-text-dark p-3 flex items-center justify-between">
+              <span>Messages</span>
+              <div className="flex items-center gap-2">
+                {Object.values(unreadMessages).reduce(
+                  (total, count) => total + count,
+                  0
+                ) > 0 && (
+                  <div className="bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold">
+                    {Object.values(unreadMessages).reduce(
+                      (total, count) => total + count,
+                      0
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="search-chat flex p-3">
               <input
@@ -180,52 +296,85 @@ export default function RestaurantChat() {
                   No chats available
                 </div>
               ) : (
-                rooms.map((room) => (
-                  <div
-                    key={room.id}
-                    onClick={() => setSelectedRoomId(room.id)}
-                    className={`p-3 cursor-pointer rounded-lg transition-colors ${
-                      selectedRoomId === room.id
-                        ? "bg-purple text-white"
-                        : "hover:bg-gray-100"
-                    }`}
-                  >
-                    <div className="font-semibold">
-                      {room.name}
-                      {room.createdBy === firebaseAuth.currentUser?.uid
-                        ? " (You)"
-                        : ""}
+                rooms.map((room) => {
+                  const unreadCount = getUnreadCount(room.id);
+                  const hasUnread = unreadCount > 0;
+
+                  return (
+                    <div
+                      key={room.id}
+                      onClick={() => selectRoom(room.id)}
+                      className={`p-3 cursor-pointer rounded-lg transition-colors relative ${
+                        selectedRoomId === room.id
+                          ? "bg-purple text-white"
+                          : "hover:bg-gray-100"
+                      }`}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1 min-w-0">
+                          <div
+                            className={`font-semibold ${
+                              hasUnread && selectedRoomId !== room.id
+                                ? "font-bold"
+                                : ""
+                            }`}
+                          >
+                            {room.name}
+                            {room.createdBy === firebaseAuth.currentUser?.uid
+                              ? " (You)"
+                              : ""}
+                          </div>
+                          {room.lastMessage && (
+                            <div
+                              className={`text-sm ${
+                                selectedRoomId === room.id
+                                  ? "text-white opacity-75"
+                                  : hasUnread
+                                  ? "text-gray-800 font-medium"
+                                  : "text-gray-600"
+                              } truncate`}
+                            >
+                              {room.lastMessage.senderId ===
+                              firebaseAuth.currentUser?.uid
+                                ? "You: "
+                                : ""}
+                              {room.lastMessage.content}
+                            </div>
+                          )}
+                          {room.lastMessage && room.lastMessage.timestamp && (
+                            <div
+                              className={`text-xs ${
+                                selectedRoomId === room.id
+                                  ? "text-white opacity-60"
+                                  : "text-gray-500"
+                              }`}
+                            >
+                              {new Date(
+                                room.lastMessage.timestamp
+                              ).toLocaleTimeString()}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Unread message indicator */}
+                        {hasUnread && selectedRoomId !== room.id && (
+                          <div className="flex items-center ml-2">
+                            <div className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                              {unreadCount > 99 ? "99+" : unreadCount}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* New message dot indicator */}
+                        {hasUnread && selectedRoomId !== room.id && (
+                          <div className="absolute top-2 right-2">
+                            <div className="bg-red-500 rounded-full h-3 w-3 animate-pulse"></div>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    {room.lastMessage && (
-                      <div
-                        className={`text-sm ${
-                          selectedRoomId === room.id
-                            ? "text-white opacity-75"
-                            : "text-gray-600"
-                        } truncate`}
-                      >
-                        {room.lastMessage.senderId ===
-                        firebaseAuth.currentUser?.uid
-                          ? "You: "
-                          : ""}
-                        {room.lastMessage.content}
-                      </div>
-                    )}
-                    {room.lastMessage && room.lastMessage.timestamp && (
-                      <div
-                        className={`text-xs ${
-                          selectedRoomId === room.id
-                            ? "text-white opacity-60"
-                            : "text-gray-500"
-                        }`}
-                      >
-                        {new Date(
-                          room.lastMessage.timestamp
-                        ).toLocaleTimeString()}
-                      </div>
-                    )}
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           </div>

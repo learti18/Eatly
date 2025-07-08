@@ -12,7 +12,6 @@ export const useChat = (roomId = null) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Subscribe to messages in a specific room
   useEffect(() => {
     if (!roomId) return;
 
@@ -23,14 +22,17 @@ export const useChat = (roomId = null) => {
         setLoading(false);
       });
 
-      return () => unsubscribe();
+      return () => {
+        if (typeof unsubscribe === 'function') {
+          unsubscribe();
+        }
+      };
     } catch (err) {
       setError(err.message);
       setLoading(false);
     }
   }, [roomId]);
 
-  // Subscribe to user's chat rooms
   useEffect(() => {
     try {
       const unsubscribe = subscribeToUserRooms((newRooms) => {
@@ -41,7 +43,11 @@ export const useChat = (roomId = null) => {
         }));
       });
 
-      return () => unsubscribe();
+      return () => {
+        if (typeof unsubscribe === 'function') {
+          unsubscribe();
+        }
+      };
     } catch (err) {
       setError(err.message);
     }

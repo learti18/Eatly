@@ -12,7 +12,6 @@ const firebaseConfig = {
     databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL
   };
 
-// Validate required Firebase environment variables
 const requiredEnvVars = [
   'VITE_FIREBASE_API_KEY',
   'VITE_FIREBASE_AUTH_DOMAIN',
@@ -72,11 +71,9 @@ export const createChatRoom = async (participantIds, roomName = '') => {
     return null;
   }
 
-  // Create a new room
   const roomRef = ref(db, 'chats');
   const newRoomRef = push(roomRef);
   
-  // Create participants object with user IDs as keys
   const participants = {};
   participantIds.forEach(id => {
     participants[id] = true;
@@ -162,6 +159,8 @@ export const subscribeToMessages = (roomId, callback) => {
   }
   console.log('Subscribing to messages for room:', roomId, 'user:', user.uid);
   
+  let unsubscribeFunction = () => {};
+  
   // First verify the user has access to this room
   const roomRef = ref(db, `chats/${roomId}`);
   get(roomRef).then((roomSnapshot) => {
@@ -180,7 +179,7 @@ export const subscribeToMessages = (roomId, callback) => {
     
     // User has access, proceed with subscription
     const messagesRef = ref(db, `chats/${roomId}/messages`);
-    return onValue(messagesRef, (snapshot) => {
+    unsubscribeFunction = onValue(messagesRef, (snapshot) => {
       const messages = [];
       if (snapshot.exists()) {
         console.log('Processing messages for room:', roomId);
@@ -207,6 +206,13 @@ export const subscribeToMessages = (roomId, callback) => {
     console.error('Error checking room access:', error);
     callback([]);
   });
+  
+  // Return a function that will call the actual unsubscribe when it's available
+  return () => {
+    if (typeof unsubscribeFunction === 'function') {
+      unsubscribeFunction();
+    }
+  };
 };
 
 export const subscribeToUserRooms = (callback) => {
@@ -261,3 +267,129 @@ export const subscribeToUserRooms = (callback) => {
     callback([]);
   });
 }; 
+
+// Unread message tracking functions
+export const markRoomAsReadInFirebase = async (roomId, userId) => {
+  const user = checkAuth();
+  if (!user) {
+    throw new Error('User not authenticated');
+  }
+
+  try {
+    // Use current timestamp instead of serverTimestamp for immediate consistency
+    const currentTimestamp = Date.now();
+    const readTimestampRef = ref(db, `userReadTimestamps/${userId}/${roomId}`);
+    await set(readTimestampRef, currentTimestamp);
+    console.log('Marked room as read in Firebase:', roomId, 'timestamp:', currentTimestamp);
+  } catch (error) {
+    console.error('Error marking room as read:', error);
+    throw error;
+  }
+};
+
+export const subscribeToUnreadCounts = (userId, callback) => {
+  const user = checkAuth();
+  if (!user) {
+    console.log('Waiting for authentication...');
+    return () => {};
+  }
+
+  console.log('Subscribing to unread counts for user:', userId);
+  
+  // Subscribe to both user's read timestamps and all rooms
+  const readTimestampsRef = ref(db, `userReadTimestamps/${userId}`);
+  const roomsRef = ref(db, 'chats');
+  
+  let readTimestamps = {};
+  let rooms = {};
+  
+  const calculateUnreadCounts = () => {
+    const unreadCounts = {};
+    
+    console.log('Calculating unread counts...');
+    console.log('Current readTimestamps:', readTimestamps);
+    console.log('Current rooms count:', Object.keys(rooms).length);
+    
+    Object.entries(rooms).forEach(([roomId, room]) => {
+      if (room.participants && room.participants[userId]) {
+        const lastRead = readTimestamps[roomId] || 0;
+        const lastMessageTime = room.lastMessage?.timestamp || 0;
+        const lastMessageSender = room.lastMessage?.senderId;
+        
+        console.log(`Room ${roomId}:`, {
+          lastRead,
+          lastMessageTime,
+          lastMessageSender,
+          userId,
+          isFromOtherUser: lastMessageSender !== userId,
+          isNewer: lastMessageTime > lastRead
+        });
+        
+        // Count unread messages from other users
+        if (lastMessageTime > lastRead && lastMessageSender !== userId) {
+          unreadCounts[roomId] = 1; // For simplicity, we'll just mark as 1 unread
+          console.log(`Room ${roomId} has unread messages`);
+        } else {
+          unreadCounts[roomId] = 0;
+          console.log(`Room ${roomId} is read or no messages from others`);
+        }
+      } else {
+        console.log(`User ${userId} not a participant in room ${roomId}`);
+      }
+    });
+    
+    console.log('Final calculated unread counts:', unreadCounts);
+    callback(unreadCounts);
+  };
+  
+  const unsubscribeTimestamps = onValue(readTimestampsRef, (snapshot) => {
+    readTimestamps = snapshot.val() || {};
+    console.log('Read timestamps updated:', readTimestamps);
+    calculateUnreadCounts();
+  });
+  
+  const unsubscribeRooms = onValue(roomsRef, (snapshot) => {
+    if (snapshot.exists()) {
+      rooms = snapshot.val();
+      console.log('Rooms updated for unread calculation');
+      calculateUnreadCounts();
+    }
+  });
+  
+  return () => {
+    unsubscribeTimestamps();
+    unsubscribeRooms();
+  };
+};
+
+export const getUnreadCountForRoom = async (roomId, userId) => {
+  const user = checkAuth();
+  if (!user) {
+    return 0;
+  }
+
+  try {
+    const readTimestampRef = ref(db, `userReadTimestamps/${userId}/${roomId}`);
+    const readSnapshot = await get(readTimestampRef);
+    const lastRead = readSnapshot.val() || 0;
+    
+    const roomRef = ref(db, `chats/${roomId}`);
+    const roomSnapshot = await get(roomRef);
+    
+    if (!roomSnapshot.exists()) {
+      return 0;
+    }
+    
+    const room = roomSnapshot.val();
+    const lastMessageTime = room.lastMessage?.timestamp || 0;
+    
+    if (lastMessageTime > lastRead && room.lastMessage?.senderId !== userId) {
+      return 1;
+    }
+    
+    return 0;
+  } catch (error) {
+    console.error('Error getting unread count for room:', error);
+    return 0;
+  }
+};

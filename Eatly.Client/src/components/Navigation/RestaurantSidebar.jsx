@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   LayoutDashboard,
   UtensilsCrossed,
@@ -12,9 +12,11 @@ import {
   CircleDollarSign,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useFirebaseUnreadMessages } from "../../Hooks/useFirebaseUnreadMessages";
 
 export default function RestaurantSidebar({ onLogout }) {
   const [isToggledSidebar, setIsToggledSidebar] = useState(true);
+  const { totalUnreadCount, loading } = useFirebaseUnreadMessages();
   const location = useLocation();
 
   const handleLogout = () => {
@@ -58,6 +60,8 @@ export default function RestaurantSidebar({ onLogout }) {
       name: "Messages",
       to: "/restaurant-dashboard/chat",
       icon: <MessageSquareText size={20} />,
+      hasNotification: !loading && totalUnreadCount > 0,
+      notificationCount: totalUnreadCount,
     },
     {
       name: "Account",
@@ -118,7 +122,7 @@ export default function RestaurantSidebar({ onLogout }) {
             {links.slice(4).map((link) => (
               <Link
                 key={link.to}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg duration-100 transition-colors
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg duration-100 transition-colors relative
                                 ${
                                   isActive(link.to)
                                     ? "bg-purple-dark text-white font-medium"
@@ -130,6 +134,17 @@ export default function RestaurantSidebar({ onLogout }) {
                 <span className="flex-shrink-0">{link.icon}</span>
                 {isToggledSidebar && (
                   <span className="truncate">{link.name}</span>
+                )}
+
+                {/* Notification indicator for messages */}
+                {link.hasNotification && (
+                  <div className="absolute -top-1 -right-1">
+                    <div className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                      {link.notificationCount > 99
+                        ? "99+"
+                        : link.notificationCount}
+                    </div>
+                  </div>
                 )}
               </Link>
             ))}
