@@ -39,6 +39,7 @@ export default function FoodCard({ food, restaurantId }) {
 
     setIsFavorite(!isFavorite);
   };
+
   const handleAddToCart = (e) => {
     e.preventDefault();
     const foodId = food.id;
@@ -49,20 +50,22 @@ export default function FoodCard({ food, restaurantId }) {
     <Link
       to={`/menu/${restaurantId || food.restaurantId}/food/${food.id}`}
       style={{ boxShadow: "0px 60px 35px rgba(0, 0, 0, 0.08)" }}
-      className="relative bg-white rounded-4xl py-2 px-4 md:px-5 hover:drop-shadow-xl transition-all duration-300 ease-in-out cursor-pointer border border-gray-100"
+      className="relative bg-white rounded-4xl py-2 px-4 md:px-5 hover:drop-shadow-xl active:scale-95 transition-all duration-300 ease-in-out cursor-pointer border border-gray-100"
     >
       <div
         onClick={handleFavoriteClick}
-        className={`absolute top-6 right-6 p-2.5 -m-2.5 hover:scale-110 transition-transform duration-300 ease-in-out cursor-pointer group ${
-          isFavoriteLoading ? "opacity-50 pointer-events-none" : ""
+        className={`absolute top-6 right-6 p-2.5 -m-2.5 hover:scale-110 active:scale-95 transition-transform duration-200 ease-in-out cursor-pointer group ${
+          isFavoriteLoading
+            ? "opacity-50 pointer-events-none animate-pulse"
+            : ""
         }`}
       >
         <Heart
           size={30}
-          className={` ${
+          className={`transition-colors duration-200 ${
             isFavorite
               ? "text-purple fill-purple"
-              : "text-gray-700 group-hover:text-purple"
+              : "text-gray-700 group-hover:text-purple group-active:text-purple"
           }`}
           weight={isFavorite ? "fill" : "regular"}
         />
@@ -90,9 +93,18 @@ export default function FoodCard({ food, restaurantId }) {
         </p>
         <button
           onClick={handleAddToCart}
-          className="cursor-pointer bg-text-dark text-white text-2xl md:text-3xl px-2 rounded-lg hover:bg-gray-900 transition-colors duration-300 ease-in-out"
+          disabled={isPending}
+          className={`cursor-pointer bg-text-dark text-white text-2xl md:text-3xl px-2 rounded-lg hover:bg-gray-900 active:scale-90 transition-all duration-200 ease-in-out ${
+            isPending ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
-          +
+          {isPending ? (
+            <div className="flex items-center justify-center size-8">
+              <div className="size-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            "+"
+          )}
         </button>
       </div>
     </Link>
