@@ -92,34 +92,13 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
       );
     };
 
-    const handleViewportChange = () => {
-      const height = window.visualViewport?.height || window.innerHeight;
-      setViewportHeight(height);
-
-      if (isMobile) {
-        const heightDiff = window.screen.height - height;
-        setKeyboardHeight(heightDiff > 150 ? heightDiff : 0);
-      }
-    };
-
     checkMobile();
-    handleViewportChange();
-
     window.addEventListener("resize", checkMobile);
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", handleViewportChange);
-    }
 
     return () => {
       window.removeEventListener("resize", checkMobile);
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener(
-          "resize",
-          handleViewportChange
-        );
-      }
     };
-  }, [isMobile]);
+  }, []);
 
   useEffect(() => {
     if (isMobile && isOpen) {
@@ -180,9 +159,19 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!message.trim() || !roomId || !firebaseAuth.currentUser) return;
+
+    const inputElement = inputRef.current;
+
     try {
       await sendNewMessage(message);
       setMessage("");
+
+      // Keep keyboard open on mobile by maintaining focus
+      if (isMobile && inputElement) {
+        setTimeout(() => {
+          inputElement.focus();
+        }, 100);
+      }
     } catch (err) {
       console.error("Error sending message:", err);
     }
@@ -225,7 +214,7 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 sm:h-6 sm:w-6"
+            className="w-6 h-6"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -254,15 +243,6 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
               ? "h-full w-full"
               : "rounded-lg sm:w-80 w-full max-h-[60vh] sm:max-h-[400px]"
           }`}
-          style={
-            isMobile
-              ? {
-                  height: `${viewportHeight - keyboardHeight}px`,
-                  maxHeight: `${viewportHeight - keyboardHeight}px`,
-                  paddingTop: "env(safe-area-inset-top)",
-                }
-              : {}
-          }
         >
           {/* Header */}
           <div
@@ -297,16 +277,7 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
           </div>
 
           {/* Messages */}
-          <div
-            className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 scrollbar-hide min-h-0"
-            style={
-              isMobile && keyboardHeight > 0
-                ? {
-                    paddingBottom: "80px", // Extra padding to account for fixed input
-                  }
-                : {}
-            }
-          >
+          <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 scrollbar-hide min-h-0">
             {isLoadingRoom || messagesLoading ? (
               <div className="flex items-center justify-center h-full min-h-[200px]">
                 <span className="loading loading-spinner loading-lg"></span>
@@ -354,20 +325,7 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
           {/* Input */}
           <form
             onSubmit={handleSendMessage}
-            className={`p-3 sm:p-4 border-t border-gray-300 ${
-              isMobile ? "flex-shrink-0" : ""
-            }`}
-            style={
-              isMobile && keyboardHeight > 0
-                ? {
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    backgroundColor: "white",
-                  }
-                : {}
-            }
+            className="p-3 sm:p-4 border-t border-gray-300 bg-white flex-shrink-0"
           >
             <div className="flex space-x-2">
               <input
@@ -380,6 +338,8 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
                 className="flex-1 rounded-lg px-3 py-2 text-sm focus:outline-none border-2 focus:border-purple border-gray-300"
                 disabled={isLoadingRoom || messagesLoading}
                 autoComplete="off"
+                inputMode="text"
+                enterKeyHint="send"
               />
               <button
                 type="submit"
