@@ -42,10 +42,10 @@ const TypewriterText = ({
       <span>{displayText}</span>
       {showCursor && (
         <motion.span
-          className={`inline-block ml-1 ${cursorClassName}`}
+          className={` ml-1 ${cursorClassName}`}
           animate={{ opacity: isComplete ? 0 : [1, 0] }}
           transition={{
-            duration: 0.8,
+            duration: 0.6,
             repeat: isComplete ? 0 : Infinity,
             repeatType: "reverse",
           }}

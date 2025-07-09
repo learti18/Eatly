@@ -24,7 +24,13 @@ function Layout() {
     setMounted(true);
   }, [location]);
 
-  if (!mounted || status === STATUS.PENDING) return null;
+  if (!mounted || status === STATUS.PENDING) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="loader"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">

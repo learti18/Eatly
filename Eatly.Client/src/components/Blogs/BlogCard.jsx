@@ -1,14 +1,13 @@
-import React from "react";
+import React, { memo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-export default function BlogCard({
+const BlogCard = memo(function Blogcard({
   id,
   blogImage,
   blogTitle,
   user,
   date,
-  userImg,
   size = "default",
 }) {
   const isSm = size === "sm";
@@ -31,7 +30,7 @@ export default function BlogCard({
     <motion.div
       whileHover={{
         y: -2,
-        transition: { duration: 0.2, ease: "easeOut" },
+        transition: { duration: 0.4, ease: "easeOut" },
       }}
       whileTap={{ scale: 0.98 }}
     >
@@ -41,17 +40,19 @@ export default function BlogCard({
           isSm ? "max-w-[280px] px-4 py-5" : "max-w-xs px-4 py-5"
         }`}
       >
-        <motion.div className="overflow-hidden rounded-xl">
+        <div className="overflow-hidden rounded-xl">
           <img
             src={blogImage}
             className={`w-full ${
               isSm ? "h-54" : "h-64"
-            } object-cover rounded-lg`}
+            } object-cover rounded-lg transition-transform duration-200 ease-out hover:scale-[1.02]`}
             alt={blogTitle}
+            loading="lazy"
+            decoding="async"
           />
-        </motion.div>
+        </div>
 
-        <motion.h2
+        <h1
           className={`leading-tight font-semibold text-text-darker overflow-hidden text-ellipsis whitespace-nowrap ${
             isSm ? "pt-3 pb-2 text-base" : "pt-4 pb-2 text-lg"
           } font-semibold text-text-darker`}
@@ -61,14 +62,10 @@ export default function BlogCard({
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           {blogTitle}
-        </motion.h2>
+        </h1>
 
-        <motion.div
+        <div
           className={`flex flex-col justify-center ${isSm ? "pt-2" : "pt-4"}`}
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
         >
           <div className="flex items-center gap-3">
             <div className="bg-[#F29DB0] rounded-full w-10 h-10 flex items-center justify-center font-medium text-lg text-white">
@@ -90,8 +87,9 @@ export default function BlogCard({
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </Link>
     </motion.div>
   );
-}
+});
+export default BlogCard;

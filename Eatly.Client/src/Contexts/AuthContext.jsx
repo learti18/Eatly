@@ -96,8 +96,8 @@ export const AuthProvider = ({ children }) => {
 
       setAuthenticationStatus(STATUS.PENDING);
 
-      // Add a small delay to ensure cookies are available
-      await new Promise((resolve) => setTimeout(resolve, 50));
+      // // Add a small delay to ensure cookies are available
+      // await new Promise((resolve) => setTimeout(resolve, 50));
 
       try {
         const response = await authenticateWithStoredCredentials(storedEmail);

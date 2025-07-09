@@ -19,14 +19,14 @@ const AboutMission = () => {
           Our Mission
         </motion.h2>
         <motion.div
-          className="bg-purple rounded-3xl p-12 md:p-16 text-white"
+          className="bg-purple rounded-3xl p-8 md:p-16 text-white"
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <div className="text-2xl md:text-3xl font-medium leading-relaxed max-w-4xl mx-auto">
-            <span className="text-purple-light text-5xl md:text-6xl leading-none">
+          <div className="text-xl md:text-3xl font-medium leading-relaxed max-w-4xl mx-auto">
+            <span className="text-purple-light text-2xl md:text-3xl leading-none">
               "
             </span>
             <TypewriterText
@@ -36,7 +36,7 @@ const AboutMission = () => {
               className="inline"
               cursorClassName="text-purple-light"
             />
-            <span className="text-purple-light text-5xl md:text-6xl leading-none">
+            <span className="text-purple-light  text-2xl md:text-3xl leading-none">
               "
             </span>
           </div>

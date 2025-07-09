@@ -1,9 +1,9 @@
-import React from "react";
+import React, { memo } from "react";
 import Badge from "../Badges/Badge";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-export default function RestaurantCard({ restaurant, index = 0 }) {
+const RestaurantCard = memo(function RestaurantCard({ restaurant, index = 0 }) {
   const cardVariants = {
     hidden: {
       opacity: 0,
@@ -77,4 +77,6 @@ export default function RestaurantCard({ restaurant, index = 0 }) {
       </Link>
     </motion.div>
   );
-}
+});
+
+export default RestaurantCard;

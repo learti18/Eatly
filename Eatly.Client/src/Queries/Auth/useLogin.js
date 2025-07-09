@@ -6,6 +6,7 @@ import { STATUS } from '../../Utils/AuthStatus';
 import { getOrGenerateDeviceId } from '../../Utils/GenerateDeviceId';
 import { setCurrentEmail } from '../../Utils/UserStore';
 import { initializeFirebaseAuth } from '../../Services/FirebaseService';
+import { toast } from 'sonner';
 
 const useLogin = () => {
    const { login, setAuthenticationStatus } = useAuth()
@@ -50,6 +51,10 @@ const useLogin = () => {
             }else {
                 navigate("/", { replace: true })
             }
+            toast.success("Login successful", {
+                description: "Welcome back!",
+                duration: 3000
+            });
         },
         onError: (error) => {
             console.error("Login failed: ",error)

@@ -81,6 +81,14 @@ export default function BlogdetailsHero({ blogTitle, user, blogImage }) {
               src={blogImage}
               alt={blogTitle}
               className="w-full h-[300px] md:h-[400px] object-cover"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 80vw"
+              style={{
+                contentVisibility: "auto",
+                containIntrinsicSize: "1200px 400px",
+              }}
             />
           ) : (
             <div className="w-full h-[300px] md:h-[400px] bg-gray-200 flex items-center justify-center text-gray-400">
