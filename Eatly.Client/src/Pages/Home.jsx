@@ -6,10 +6,11 @@ import TopRestaurantsSection from "../components/Home/TopRestaurantsSection";
 import TopDishesSection from "../components/Home/TopDishesSection";
 import TestimonialSection from "../components/Home/TestimonialsSection";
 import PromoBannerSection from "../components/Shared/PromoBannerSection";
+import PageTransition from "../components/Shared/PageTransition";
 
 export default function Home() {
   return (
-    <div className="">
+    <PageTransition>
       <HeroSection />
       <StatsSection />
       <FeatureDownloadSection />
@@ -17,6 +18,6 @@ export default function Home() {
       <TopDishesSection />
       <TestimonialSection />
       <PromoBannerSection />
-    </div>
+    </PageTransition>
   );
 }

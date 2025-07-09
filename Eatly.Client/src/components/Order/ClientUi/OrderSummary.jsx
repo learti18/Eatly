@@ -4,7 +4,7 @@ export default function OrderSummary({ cart, subtotal, deliveryFee, total }) {
   const tax = (subtotal * 0.07).toFixed(2);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
+    <div className="bg-white rounded-xl shadow-sm p-6 mb-8 mt-6">
       <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
 
       <div className="space-y-3 mb-4">

@@ -3,8 +3,7 @@ import StarRating from "../Rating/StarRating";
 export default function TestimonialSecondaryCard({ testimonial, onClick }) {
   return (
     <div
-      className="bg-white rounded-xl p-5 flex flex-col flex-1 cursor-pointer hover:drop-shadow-xl transition-shadow min-w-[330px]"
-      style={{ boxShadow: "0px 50px 40px rgba(0, 0, 0, 0.08)" }}
+      className="bg-white rounded-xl shadow-xl p-5 flex flex-col flex-1 cursor-pointer hover:drop-shadow-xl transition-shadow min-w-[330px]"
       onClick={onClick}
     >
       <div className="relative mb-4">

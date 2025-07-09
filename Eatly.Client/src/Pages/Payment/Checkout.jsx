@@ -160,9 +160,19 @@ export default function Checkout() {
   return (
     <div className="bg-background-main min-h-screen py-12 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">
-          Complete Your Order
-        </h1>
+        <div className="flex items-center justify-between mb-8">
+          <button
+            onClick={() => navigate("/cart")}
+            className="flex items-center text-gray-600 hover:text-purple group"
+          >
+            <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1.5 transition-all duration-200" />
+            Back to Cart
+          </button>
+
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8">
+            Complete Your Order
+          </h1>
+        </div>
 
         {/* Delivery Options Component */}
         <DeliveryOptions
@@ -198,33 +208,23 @@ export default function Checkout() {
         />
 
         {/* Action Buttons */}
-        <div className="flex justify-between items-center">
-          <button
-            onClick={() => navigate("/cart")}
-            className="flex items-center text-gray-600 hover:text-purple group"
-          >
-            <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1.5 transition-all duration-200" />
-            Back to Cart
-          </button>
-
-          <button
-            onClick={createCheckoutSession}
-            disabled={isCreatingCheckout}
-            className="bg-purple hover:bg-purple-dark group transition-colors duration-200 text-white px-8 py-3 rounded-xl font-semibold flex items-center"
-          >
-            {isCreatingCheckout ? (
-              <>
-                <span className="loading loading-spinner loading-sm mr-2"></span>
-                Processing...
-              </>
-            ) : (
-              <>
-                Proceed to Payment
-                <ArrowRight className="h-5 w-5 ml-2 transition-transform duration-200 group-hover:translate-x-1.5" />
-              </>
-            )}
-          </button>
-        </div>
+        <button
+          onClick={createCheckoutSession}
+          disabled={isCreatingCheckout}
+          className="bg-purple hover:bg-purple-dark group w-full transition-colors duration-200 text-white px-8 py-4 rounded-xl font-semibold text-lg flex items-center justify-center"
+        >
+          {isCreatingCheckout ? (
+            <>
+              <span className="loading loading-spinner loading-sm mr-2"></span>
+              Processing...
+            </>
+          ) : (
+            <>
+              Proceed to Payment
+              <ArrowRight className="h-5 w-5 ml-2 transition-transform duration-200 group-hover:translate-x-1.5" />
+            </>
+          )}
+        </button>
       </div>
     </div>
   );

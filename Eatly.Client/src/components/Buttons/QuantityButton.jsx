@@ -12,7 +12,7 @@ export default function QuantityButton({ text, onClick }) {
         ${
           isNumber
             ? "bg-gray-100 text-gray-400 shadow-none cursor-default"
-            : "bg-background-link text-white hover:bg-[#6453d0] cursor-pointer  hover:-translate-y-0.5 transition-all"
+            : "bg-background-link text-white hover:bg-[#6453d0] cursor-pointer active:bg-purple-dark hover:-translate-y-0.5 transition-all duration-200"
         }`}
     >
       {text}

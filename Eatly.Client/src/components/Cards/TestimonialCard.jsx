@@ -2,10 +2,7 @@ import StarRating from "../Rating/StarRating";
 
 export default function TestimonialCard({ testimonial }) {
   return (
-    <div
-      className="bg-white rounded-2xl p-6 mx-auto md:mx-0 max-w-xl flex flex-col"
-      style={{ boxShadow: "0px 50px 65px rgba(0, 0, 0, 0.15)" }}
-    >
+    <div className="bg-white rounded-2xl shadow-xl p-6 mx-auto md:mx-0 max-w-xl flex flex-col">
       <div className="flex items-center mb-7">
         <img
           src={testimonial.profileImg}

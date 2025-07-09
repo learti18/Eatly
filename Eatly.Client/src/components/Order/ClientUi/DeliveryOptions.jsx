@@ -17,7 +17,7 @@ export default function DeliveryOptions({
       <div className="flex flex-wrap gap-4 mb-6">
         {/* Delivery option button */}
         <button
-          className={`flex-1 py-3 px-4 rounded-lg border ${
+          className={`flex-1 py-3 px-4 rounded-lg border min-w-52 ${
             deliveryType === "delivery"
               ? "border-purple bg-purple/5"
               : "border-gray-200"

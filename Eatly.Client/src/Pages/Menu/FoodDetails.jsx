@@ -134,7 +134,7 @@ export default function FoodDetails() {
                 className="bg-primary hover:bg-purple cursor-pointer transition-all duration-200 rounded-xl text-white px-14 py-3.5 md:px-20  shadow-md hover:shadow-lg hover:-translate-y-0.5"
               >
                 {isPending ? (
-                  <span className="loading loading-spinner loading-sm px-5 py-1"></span>
+                  <span className="loading loading-spinner loading-xs"></span>
                 ) : (
                   "Add to Cart"
                 )}
@@ -167,7 +167,7 @@ export default function FoodDetails() {
                         <img
                           src={food.imageUrl}
                           alt={food.name}
-                          className="w-14 h-14 rounded-full object-cover border border-gray-100"
+                          className="w-14 h-14 rounded-full object-contain"
                         />
                         <div className="flex flex-col">
                           <h3 className="text-base font-semibold text-text-dark truncate">
