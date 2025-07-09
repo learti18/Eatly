@@ -78,13 +78,14 @@ export default function FeatureDownloadSection() {
           variants={imageVariants}
         >
           <motion.img
-            src="Mobile.svg"
+            src="/Mobile.svg"
             alt="mobile version of app"
             whileHover={{
               scale: 1.05,
               y: -10,
               transition: { duration: 0.3 },
             }}
+            className="w-full max-w-[400px] h-auto object-contain"
           />
         </motion.div>
 

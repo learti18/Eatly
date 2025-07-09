@@ -168,7 +168,6 @@ export default function Pagination({
 
           {/* Page selector dropdown */}
           <div className="flex items-center space-x-2">
-            <span className="text-sm text-gray-600">Go to:</span>
             <select
               className="rounded-md border-gray-300 text-sm bg-white"
               value={currentPage}

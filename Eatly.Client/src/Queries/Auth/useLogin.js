@@ -58,6 +58,10 @@ const useLogin = () => {
         },
         onError: (error) => {
             console.error("Login failed: ",error)
+            toast.error("Login failed", {
+                description: error.response?.data?.message || "An error occurred during login",
+                duration: 5000
+            });
             setAuthenticationStatus(STATUS.FAILED)
         }
    })

@@ -70,7 +70,7 @@ export default function BlogdetailsHero({ blogTitle, user, blogImage }) {
         </motion.div>
 
         <motion.div
-          className="mt-6 rounded-xl overflow-hidden"
+          className="mt-6 rounded-md overflow-hidden"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.7 }}

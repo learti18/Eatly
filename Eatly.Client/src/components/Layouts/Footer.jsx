@@ -102,7 +102,7 @@ export default function Footer() {
         {/* Bottom section with copyright and social icons for desktop */}
         <div className="hidden md:flex justify-between pt-8">
           <p className="text-neutral-content">
-            © 2023 EATLY All Rights Reserved.
+            © 2025 EATLY All Rights Reserved.
           </p>
           <div className="flex gap-10">
             {/* Social media icons */}
@@ -144,7 +144,7 @@ export default function Footer() {
         {/* Copyright text for mobile */}
         <div className="md:hidden text-center">
           <p className="text-slate-600 text-sm">
-            © 2023 EATLY All Rights Reserved.
+            © 2025 EATLY All Rights Reserved.
           </p>
         </div>
       </div>

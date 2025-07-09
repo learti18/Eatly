@@ -48,7 +48,7 @@ export default function Category({ onFiltersChange, initialFilters = {} }) {
 
   const sortOptions = [
     { value: "name", label: "Recommended" },
-    { value: "category", label: "Most Popular" },
+    { value: "averageTime", label: "Fastest Delivery" },
   ];
 
   const handleCategoryChange = (categoryId) => {

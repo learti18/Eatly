@@ -5,6 +5,7 @@ import api from "../../Services/Api"
 import { getOrGenerateDeviceId } from "../../Utils/GenerateDeviceId"
 import { setCurrentEmail } from "../../Utils/UserStore"
 import { STATUS } from "../../Utils/AuthStatus"
+import { toast } from "sonner"
 
 const useRegister = () => {
     const { login, setAuthenticationStatus } = useAuth()
@@ -39,9 +40,17 @@ const useRegister = () => {
             } else {
                 navigate("/", { replace: true })
             }
+            toast.success("Registration successful", {
+                description: "Welcome aboard!",
+                duration: 3000
+            });
         },
         onError: (error) => {
             setAuthenticationStatus(STATUS.FAILED)
+            toast.error("Registration failed", {
+                description: error.response?.data?.message || "An error occurred during registration",
+                duration: 5000
+            });
             console.error("Registration failed: ", error.response?.data || error)
         }
     })
