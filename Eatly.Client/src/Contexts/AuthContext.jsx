@@ -41,7 +41,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = useCallback(async (user, token, expiresAt, firebaseToken) => {
     setAccessToken(token);
-
+    // Set auth_status to true in localStorage
+    localStorage.setItem("auth_status", "true");
     if (firebaseToken) {
       try {
         await initializeFirebaseAuth(firebaseToken);
@@ -49,14 +50,21 @@ export const AuthProvider = ({ children }) => {
         console.error("Failed to initialize Firebase auth:", error);
       }
     }
-
     dispatch({ type: "login", payload: { user, token, expiresAt } });
   }, []);
 
-  const logout = useCallback(() => {
+  // Helper to clear all auth-related state (context + localStorage)
+  const clearAllAuthState = useCallback(() => {
     setAccessToken(null);
-    dispatch({ type: "logout" });
+    clearCurrentEmail();
+    clearCurrentUser();
+    localStorage.setItem("auth_status", "false");
   }, []);
+
+  const logout = useCallback(() => {
+    clearAllAuthState();
+    dispatch({ type: "logout" });
+  }, [clearAllAuthState]);
 
   const updateUser = useCallback((user) => {
     dispatch({ type: "updateUser", payload: user });
@@ -91,13 +99,11 @@ export const AuthProvider = ({ children }) => {
       // If no stored session indicators, don't attempt auth
       if (!storedEmail && !hasSession) {
         setAuthenticationStatus(STATUS.IDLE);
+        clearAllAuthState();
         return;
       }
 
       setAuthenticationStatus(STATUS.PENDING);
-
-      // // Add a small delay to ensure cookies are available
-      // await new Promise((resolve) => setTimeout(resolve, 50));
 
       try {
         const response = await authenticateWithStoredCredentials(storedEmail);
@@ -118,23 +124,14 @@ export const AuthProvider = ({ children }) => {
         );
       } catch (error) {
         console.error("Initial authentication failed", error);
-
-        // If it's a refresh token issue, clean up and set to idle
-        if (
-          error.message === "REFRESH_TOKEN_MISSING" ||
-          error.message === "REFRESH_TOKEN_INVALID"
-        ) {
-          clearCurrentEmail();
-          clearCurrentUser();
-          setAuthenticationStatus(STATUS.IDLE);
-        } else {
-          setAuthenticationStatus(STATUS.FAILED);
-        }
+        // Always clear all state and set auth_status to false
+        clearAllAuthState();
+        setAuthenticationStatus(STATUS.IDLE);
       }
     };
 
     checkStoredAuth();
-  }, [login, logout, setAuthenticationStatus]);
+  }, [login, logout, setAuthenticationStatus, clearAllAuthState]);
 
   useEffect(() => {
     if (!state.isAuthenticated || !state.expiresAt) return;
@@ -152,12 +149,14 @@ export const AuthProvider = ({ children }) => {
         );
       } catch (error) {
         console.error("Token refresh failed", error);
+        // Always clear all state and set auth_status to false
+        clearAllAuthState();
         logout();
       }
     }, refreshTime);
 
     return () => clearTimeout(tokenRefreshTimer);
-  }, [state.isAuthenticated, state.expiresAt, state.token, login, logout]);
+  }, [state.isAuthenticated, state.expiresAt, state.token, login, logout, clearAllAuthState]);
 
   const value = useMemo(
     () => ({
