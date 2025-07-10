@@ -39,6 +39,9 @@ export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, initialState);
   const isInitialAuthCheckComplete = useRef(false);
 
+  // Generate a unique tab ID for this browser tab
+  const tabIdRef = useRef(window.crypto?.randomUUID?.() || Math.random().toString(36).slice(2));
+
   const login = useCallback(async (user, token, expiresAt, firebaseToken) => {
     setAccessToken(token);
     if (firebaseToken) {
@@ -49,7 +52,8 @@ export const AuthProvider = ({ children }) => {
       }
     }
     dispatch({ type: "login", payload: { user, token, expiresAt } });
-    // Do NOT broadcast login event to other tabs to avoid infinite reload loop
+    // Broadcast login event to other tabs with this tab's ID
+    if (authChannel.current) authChannel.current.postMessage({ type: 'login', tabId: tabIdRef.current });
   }, []);
 
   // Helper to clear all auth-related state (context + localStorage)
@@ -80,10 +84,15 @@ export const AuthProvider = ({ children }) => {
     authChannel.current = new window.BroadcastChannel('auth');
     // Listen for auth events from other tabs
     authChannel.current.onmessage = (event) => {
-      if (event.data === 'logout') {
+      const data = event.data;
+      if (data?.type === 'logout') {
         logout();
+      } else if (data?.type === 'login') {
+        // Only reload if the login event is from another tab
+        if (data.tabId !== tabIdRef.current) {
+          window.location.reload();
+        }
       }
-      // Do not handle 'login' event to avoid reload loops
     };
     return () => {
       if (authChannel.current) authChannel.current.close();
