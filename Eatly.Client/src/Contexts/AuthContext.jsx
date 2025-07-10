@@ -41,8 +41,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = useCallback(async (user, token, expiresAt, firebaseToken) => {
     setAccessToken(token);
-    // Set auth_status to true in localStorage
-    localStorage.setItem("auth_status", "true");
     if (firebaseToken) {
       try {
         await initializeFirebaseAuth(firebaseToken);
@@ -51,6 +49,8 @@ export const AuthProvider = ({ children }) => {
       }
     }
     dispatch({ type: "login", payload: { user, token, expiresAt } });
+    // Broadcast login event to other tabs
+    if (authChannel.current) authChannel.current.postMessage('login');
   }, []);
 
   // Helper to clear all auth-related state (context + localStorage)
@@ -58,12 +58,13 @@ export const AuthProvider = ({ children }) => {
     setAccessToken(null);
     clearCurrentEmail();
     clearCurrentUser();
-    localStorage.setItem("auth_status", "false");
   }, []);
 
   const logout = useCallback(() => {
     clearAllAuthState();
     dispatch({ type: "logout" });
+    // Broadcast logout event to other tabs
+    if (authChannel.current) authChannel.current.postMessage('logout');
   }, [clearAllAuthState]);
 
   const updateUser = useCallback((user) => {
@@ -73,6 +74,23 @@ export const AuthProvider = ({ children }) => {
   const setAuthenticationStatus = useCallback((status) => {
     dispatch({ type: "status", payload: status });
   }, []);
+
+  // Setup BroadcastChannel for cross-tab auth sync (after logout is defined)
+  const authChannel = useRef(null);
+  useEffect(() => {
+    authChannel.current = new window.BroadcastChannel('auth');
+    // Listen for auth events from other tabs
+    authChannel.current.onmessage = (event) => {
+      if (event.data === 'logout') {
+        logout();
+      } else if (event.data === 'login') {
+        window.location.reload(); // reload to trigger auth check
+      }
+    };
+    return () => {
+      if (authChannel.current) authChannel.current.close();
+    };
+  }, [logout]);
 
   useEffect(() => {
     const handleStorageChange = (event) => {
