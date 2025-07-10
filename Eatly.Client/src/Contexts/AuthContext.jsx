@@ -49,8 +49,7 @@ export const AuthProvider = ({ children }) => {
       }
     }
     dispatch({ type: "login", payload: { user, token, expiresAt } });
-    // Broadcast login event to other tabs
-    if (authChannel.current) authChannel.current.postMessage('login');
+    // Do NOT broadcast login event to other tabs to avoid infinite reload loop
   }, []);
 
   // Helper to clear all auth-related state (context + localStorage)
@@ -83,9 +82,8 @@ export const AuthProvider = ({ children }) => {
     authChannel.current.onmessage = (event) => {
       if (event.data === 'logout') {
         logout();
-      } else if (event.data === 'login') {
-        window.location.reload(); // reload to trigger auth check
       }
+      // Do not handle 'login' event to avoid reload loops
     };
     return () => {
       if (authChannel.current) authChannel.current.close();
