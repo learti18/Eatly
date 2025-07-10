@@ -111,20 +111,11 @@ export const AuthProvider = ({ children }) => {
 
       setupAuthInterceptors({ token: null, login, logout });
 
-      const storedEmail = getCurrentEmail();
-      const hasSession = hasAuthenticatedSession();
-
-      // If no stored session indicators, don't attempt auth
-      if (!storedEmail && !hasSession) {
-        setAuthenticationStatus(STATUS.IDLE);
-        clearAllAuthState();
-        return;
-      }
-
       setAuthenticationStatus(STATUS.PENDING);
 
       try {
-        const response = await authenticateWithStoredCredentials(storedEmail);
+        // Always attempt to refresh token on mount
+        const response = await authenticateWithStoredCredentials();
         const { data } = response;
 
         if (data.email) {
@@ -142,7 +133,7 @@ export const AuthProvider = ({ children }) => {
         );
       } catch (error) {
         console.error("Initial authentication failed", error);
-        // Always clear all state and set auth_status to false
+        // Always clear all state and set to idle
         clearAllAuthState();
         setAuthenticationStatus(STATUS.IDLE);
       }
