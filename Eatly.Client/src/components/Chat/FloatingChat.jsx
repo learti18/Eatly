@@ -199,7 +199,7 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
 
   return (
     <div
-      className={`${
+      className={` ${
         isMobile && isOpen
           ? "fixed inset-0 z-50 bg-white"
           : "fixed z-50 bottom-4 right-4 sm:max-w-sm max-w-[calc(100vw-2rem)]"
@@ -240,7 +240,7 @@ export default function FloatingChat({ restaurantId, restaurantName }) {
         <div
           className={`bg-white shadow-xl flex flex-col ${
             isMobile
-              ? "h-full w-full"
+              ? "h-full w-full pb-10"
               : "rounded-lg sm:w-80 w-full max-h-[60vh] sm:max-h-[400px]"
           }`}
         >

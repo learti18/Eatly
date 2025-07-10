@@ -5,14 +5,11 @@ import React, {
   useMemo,
   useReducer,
   useRef,
-  useState,
 } from "react";
 import { AuthReducer, initialState } from "./../Utils/AuthReducer";
 import { setAccessToken } from "./../Utils/TokenManager";
 import { setupAuthInterceptors } from "./../Services/Api";
 import {
-  getCurrentEmail,
-  hasAuthenticatedSession,
   setCurrentUser,
   setCurrentEmail,
   clearCurrentEmail,
@@ -39,9 +36,6 @@ export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, initialState);
   const isInitialAuthCheckComplete = useRef(false);
 
-  // Generate a unique tab ID for this browser tab
-  const tabIdRef = useRef(window.crypto?.randomUUID?.() || Math.random().toString(36).slice(2));
-
   const login = useCallback(async (user, token, expiresAt, firebaseToken) => {
     setAccessToken(token);
     if (firebaseToken) {
@@ -52,11 +46,8 @@ export const AuthProvider = ({ children }) => {
       }
     }
     dispatch({ type: "login", payload: { user, token, expiresAt } });
-    // Broadcast login event to other tabs with this tab's ID
-    if (authChannel.current) authChannel.current.postMessage({ type: 'login', tabId: tabIdRef.current });
   }, []);
 
-  // Helper to clear all auth-related state (context + localStorage)
   const clearAllAuthState = useCallback(() => {
     setAccessToken(null);
     clearCurrentEmail();
@@ -67,7 +58,7 @@ export const AuthProvider = ({ children }) => {
     clearAllAuthState();
     dispatch({ type: "logout" });
     // Broadcast logout event to other tabs
-    if (authChannel.current) authChannel.current.postMessage('logout');
+    if (authChannel.current) authChannel.current.postMessage("logout");
   }, [clearAllAuthState]);
 
   const updateUser = useCallback((user) => {
@@ -81,17 +72,10 @@ export const AuthProvider = ({ children }) => {
   // Setup BroadcastChannel for cross-tab auth sync (after logout is defined)
   const authChannel = useRef(null);
   useEffect(() => {
-    authChannel.current = new window.BroadcastChannel('auth');
-    // Listen for auth events from other tabs
+    authChannel.current = new window.BroadcastChannel("auth");
     authChannel.current.onmessage = (event) => {
-      const data = event.data;
-      if (data?.type === 'logout') {
+      if (event.data === "logout") {
         logout();
-      } else if (data?.type === 'login') {
-        // Only reload if the login event is from another tab
-        if (data.tabId !== tabIdRef.current) {
-          window.location.reload();
-        }
       }
     };
     return () => {
@@ -165,14 +149,20 @@ export const AuthProvider = ({ children }) => {
         );
       } catch (error) {
         console.error("Token refresh failed", error);
-        // Always clear all state and set auth_status to false
         clearAllAuthState();
         logout();
       }
     }, refreshTime);
 
     return () => clearTimeout(tokenRefreshTimer);
-  }, [state.isAuthenticated, state.expiresAt, state.token, login, logout, clearAllAuthState]);
+  }, [
+    state.isAuthenticated,
+    state.expiresAt,
+    state.token,
+    login,
+    logout,
+    clearAllAuthState,
+  ]);
 
   const value = useMemo(
     () => ({

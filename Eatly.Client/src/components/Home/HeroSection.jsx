@@ -170,12 +170,12 @@ function HeroSection() {
           </motion.div>
           <motion.div
             className="w-6/12 max-md:w-full mx-auto max-md:mt-5 flex justify-center items-center"
-            variants={imageVariants}
-            initial="hidden"
-            animate="visible"
+            // variants={imageVariants}
+            // initial="hidden"
+            // animate="visible"
           >
             <motion.img
-              src="Hero.png"
+              src="Hero.webp"
               alt="Hero illustration"
               className="object-contain grow w-full drop-shadow-2xl rounded-none aspect-[1.11] max-w-[350px] md:max-w-lg lg:max-w-xl"
               whileHover={{

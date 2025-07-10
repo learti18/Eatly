@@ -80,6 +80,7 @@ export default function FeatureDownloadSection() {
           <motion.img
             src="/Mobile.svg"
             alt="mobile version of app"
+            loading="lazy"
             whileHover={{
               scale: 1.05,
               y: -10,
