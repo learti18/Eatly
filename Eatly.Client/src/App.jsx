@@ -56,6 +56,7 @@ import Layout from "./components/Layouts/Layout";
 import AdminDashboardLayout from "./components/Layouts/AdminDashboardLayout";
 import RestaurantDashboardLayout from "./components/Layouts/RestaurantDashboardLayout";
 import DriverDashboardLayout from "./components/Layouts/DriverDashboardLayout";
+import { Analytics } from "@vercel/analytics/next";
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,9 @@ function App() {
         <AuthProvider>
           <MobileChatProvider>
             <Toaster richColors />
+            <Analytics />
+
+            {/* Main Router */}
             <BrowserRouter>
               <ScrollToTop />
               <Routes>
