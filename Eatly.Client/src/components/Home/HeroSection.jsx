@@ -22,7 +22,7 @@ function HeroSection() {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.6,
+        duration: 0.5,
         ease: "easeOut",
       },
     },
@@ -35,7 +35,7 @@ function HeroSection() {
       scale: 1,
       x: 0,
       transition: {
-        duration: 0.8,
+        duration: 0.5,
         ease: "easeOut",
         delay: 0.3,
       },
@@ -83,7 +83,7 @@ function HeroSection() {
                   className="shrink-0 my-auto h-px border border-solid border-text-dark md:border-gray-300 w-[54px]"
                   initial={{ width: 0 }}
                   animate={{ width: 54 }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
                 />
                 <p>OVER 1000 USERS</p>
               </motion.div>
@@ -170,9 +170,9 @@ function HeroSection() {
           </motion.div>
           <motion.div
             className="w-6/12 max-md:w-full mx-auto max-md:mt-5 flex justify-center items-center"
-            // variants={imageVariants}
-            // initial="hidden"
-            // animate="visible"
+            variants={imageVariants}
+            initial="hidden"
+            animate="visible"
           >
             <motion.img
               src="Hero.webp"

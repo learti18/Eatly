@@ -67,7 +67,9 @@ export default function UserOrders() {
     <div className="bg-background-main min-h-screen py-12 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">Your Orders</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+            Your Orders
+          </h1>
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${

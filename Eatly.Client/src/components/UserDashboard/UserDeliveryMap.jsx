@@ -279,47 +279,102 @@ export default function UserDeliveryMap({ orderData, mapboxToken }) {
           </p>
         </div>
         {driverPosition ? (
-          <div className="flex items-center justify-start w-full gap-6 px-4 py-8 bg-opacity-10">
-            <div className="flex flex-col ">
-              <img
-                src="/icons/Locatin.svg"
-                alt="Location Icon"
-                className="size-10"
-              />
-              <div className="h-16 flex flex-col items-center justify-center">
-                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
-                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
-                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
-                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
-                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
-                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
-                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+          <div>
+            <div className="flex items-center justify-start w-full gap-6 px-4 py-8 bg-opacity-10">
+              <div className="flex flex-col ">
+                <img
+                  src="/icons/Locatin.svg"
+                  alt="Location Icon"
+                  className="size-10"
+                />
+                <div className="h-16 flex flex-col items-center justify-center">
+                  <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                  <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                  <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                  <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                  <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                  <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                  <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                </div>
+                <img
+                  src="/icons/Time.svg"
+                  alt="Location Icon"
+                  className="size-10"
+                />
               </div>
-              <img
-                src="/icons/Time.svg"
-                alt="Location Icon"
-                className="size-10"
-              />
+              <div className="flex flex-col gap-7 text-xs md:text-sm">
+                <div>
+                  <p className="text-gray-400">Your Address</p>
+                  <p>{orderData.streetAddress}</p>
+                  <p>{orderData.deliveryAddress?.street}</p>
+                  <p>
+                    {orderData.city}, {orderData.state} {orderData.zipCode}
+                  </p>
+                  <p>{orderData.deliveryAddress?.phoneNumber}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400">Your Driver</p>
+                  <p className="text-gray-800">
+                    {formatDuration(routeDuration)}
+                  </p>
+                  <p className="text-gray-800">
+                    {formatDistance(routeDistance)}
+                  </p>
+                </div>
+              </div>
+              <p className="bg-purple text-white text-sm px-5 py-3 rounded-md self-end ml-auto">
+                {orderData.orderStatus}
+              </p>
             </div>
-            <div className="flex flex-col gap-7 text-xs md:text-sm">
-              <div>
-                <p className="text-gray-400">Your Address</p>
-                <p>{orderData.streetAddress}</p>
-                <p>{orderData.deliveryAddress?.street}</p>
-                <p>
-                  {orderData.city}, {orderData.state} {orderData.zipCode}
-                </p>
-                <p>{orderData.deliveryAddress?.phoneNumber}</p>
-              </div>
-              <div>
-                <p className="text-gray-400">Your Driver</p>
-                <p className="text-gray-800">{formatDuration(routeDuration)}</p>
-                <p className="text-gray-800">{formatDistance(routeDistance)}</p>
+            <div className="border-t border-gray-200 pt-8">
+              {orderData.items.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex flex-row items-center justify-between bg-white p-4"
+                >
+                  <div className="flex space-x-4">
+                    <img
+                      src={item.foodImageUrl}
+                      alt={item.foodName}
+                      className="w-20 h-20 rounded-full object-contain"
+                    />
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-800">
+                        {item.foodName}
+                      </h3>
+                      <p className="text-sm text-gray-600">{item.price}$</p>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-start">
+                    <div className="text-right">
+                      <p className="text-gray-800 font-semibold">
+                        ${item.price.toFixed(2) * item.quantity}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Quantity: {item.quantity}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <div className="p-5 border-t border-gray-200">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-800">
+                      Total Amount
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {orderData.items.length} items
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-semibold text-gray-800">
+                      ${orderData.totalPrice.toFixed(2)}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
-            <p className="bg-purple text-white text-sm px-5 py-3 rounded-md self-end ml-auto">
-              {orderData.orderStatus}
-            </p>
           </div>
         ) : orderData?.orderStatus === "OutForDelivery" ? (
           <div className="mb-4 px-4 py-3 bg-yellow-50 rounded-lg text-sm text-yellow-700">

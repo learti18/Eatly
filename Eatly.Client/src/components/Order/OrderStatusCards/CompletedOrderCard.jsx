@@ -1,56 +1,138 @@
 import React from "react";
-import { Package, Check, MapPin, Clock } from "lucide-react";
+import { Check, Clock } from "lucide-react";
 import { formatDate } from "../../../Utils/dateFormatter";
 
 export default function CompletedOrderCard({ order }) {
   return (
-    <div className="mb-8 max-w-md mx-auto">
-      <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
-        <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-4 flex items-center justify-between">
-          <h2 className="flex items-center gap-2 font-semibold text-white">
-            <Package size={18} />
-            Order {order.orderStatus}
-          </h2>
-          <span className="bg-white text-green-600 px-3 py-1 rounded-full text-sm font-semibold shadow-sm">
-            {order.orderStatus}
-          </span>
+    <div className="mb-20">
+      {/* Status Section */}
+      <div className="relative h-[450px] w-full rounded-2xl overflow-hidden shadow-2xl border border-gray-200 bg-gradient-to-br from-purple-50 to-purple-100 mb-5">
+        <img
+          src="/Map.png"
+          alt="a map background"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Overlay for better text readability */}
+        <div
+          className="absolute inset-0"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        ></div>
+        <div className="relative h-full flex flex-col items-center justify-center p-8 text-center z-10">
+          <div className="bg-white bg-opacity-90 backdrop-blur-sm p-4 rounded-full mb-8 shadow-lg">
+            <Check size={36} className="text-purple" />
+          </div>
+          <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 drop-shadow-lg">
+            {order.orderStatus === "Completed"
+              ? "Order completed!"
+              : "Order delivered!"}
+          </h3>
+          <p className="text-white mb-8 leading-relaxed max-w-lg text-base md:text-lg drop-shadow-md">
+            Thank you for choosing us! We hope you enjoyed your meal. Don't
+            forget to rate your experience.
+          </p>
         </div>
-        <div className="p-6">
-          <div className="flex flex-col items-center text-center">
-            <div className="bg-green-50 border-2 border-green-200 p-4 rounded-full mb-4">
-              <Check className="text-green-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">
-              {order.orderStatus === "Completed"
-                ? "Your order has been completed!"
-                : "Your order has been delivered!"}
-            </h3>
-            <p className="text-gray-600 mb-6 leading-relaxed">
-              Thank you for choosing us! We hope you enjoyed your meal. Don't
-              forget to rate your experience.
-            </p>
-            <div className="bg-gray-50 rounded-lg p-4 w-full">
-              <div className="flex items-center gap-2 text-sm text-gray-700 mb-1">
-                <MapPin size={16} className="text-green-600" />
-                <span className="font-medium">Delivered to:</span>
+      </div>
+
+      {/* Order Details Card */}
+      <div className="drop-shadow-2xl bg-white mx-auto w-full rounded-3xl max-w-md">
+        <div className="bg-text-dark w-full text-white font-light px-8 py-4 rounded-t-3xl">
+          <h2 className="flex items-center gap-2">
+            <Clock size={18} />
+            Order Details
+          </h2>
+        </div>
+        <div className="px-4 py-8">
+          <div className="flex items-center justify-start w-full gap-6">
+            <div className="flex flex-col">
+              <img
+                src="/icons/Locatin.svg"
+                alt="Location Icon"
+                className="size-10"
+              />
+              <div className="h-16 flex flex-col items-center justify-center">
+                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
+                <div className="w-1 h-1.5 bg-purple rounded-full my-0.5"></div>
               </div>
-              <div className="text-sm text-gray-800 ml-6">
+              <img src="/icons/Time.svg" alt="Time Icon" className="size-10" />
+            </div>
+            <div className="flex flex-col gap-7 text-xs md:text-sm">
+              <div>
+                <p className="text-gray-400">Your Address</p>
                 <p>{order.streetAddress}</p>
-                {order.city && order.state && (
-                  <p>
-                    {order.city}, {order.state} {order.zipCode}
+                <p>
+                  {order.city}, {order.state} {order.zipCode}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-400">Order Status</p>
+                <p className="text-gray-800">
+                  {order.orderStatus === "Completed"
+                    ? "Completed"
+                    : "Delivered"}
+                </p>
+                {order.deliveredAt && (
+                  <p className="text-gray-800">
+                    {formatDate(order.deliveredAt)}
                   </p>
                 )}
               </div>
-              {order.deliveredAt && (
-                <div className="mt-3 pt-3 border-t border-gray-200">
-                  <div className="flex items-center gap-2 text-sm text-gray-700">
-                    <Clock size={16} className="text-green-600" />
-                    <span className="font-medium">Delivered on:</span>
-                    <span>{formatDate(order.deliveredAt)}</span>
-                  </div>
+            </div>
+            <p className="bg-purple text-white text-sm px-5 py-3 rounded-md self-end ml-auto">
+              {order.orderStatus}
+            </p>
+          </div>
+        </div>
+        <div className="border-t border-gray-200 pt-8">
+          {order.items.map((item) => (
+            <div
+              key={item.id}
+              className="flex flex-row items-center justify-between bg-white p-4"
+            >
+              <div className="flex space-x-4">
+                <img
+                  src={item.foodImageUrl}
+                  alt={item.foodName}
+                  className="w-20 h-20 rounded-full object-contain"
+                />
+                <div>
+                  <h3 className="text-lg font-medium text-gray-800">
+                    {item.foodName}
+                  </h3>
+                  <p className="text-sm text-gray-600">${item.price}</p>
                 </div>
-              )}
+              </div>
+              <div className="flex justify-between items-start">
+                <div className="text-right">
+                  <p className="text-gray-800 font-semibold">
+                    ${(item.price * item.quantity).toFixed(2)}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Quantity: {item.quantity}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+          <div className="p-5 border-t border-gray-200">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-lg font-medium text-gray-800">
+                  Total Amount
+                </h3>
+                <p className="text-sm text-gray-600">
+                  {order.items.length} items
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-2xl font-semibold text-gray-800">
+                  ${order.totalPrice.toFixed(2)}
+                </p>
+              </div>
             </div>
           </div>
         </div>
