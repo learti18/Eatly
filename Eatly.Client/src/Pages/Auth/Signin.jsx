@@ -42,7 +42,7 @@ export default function Signin() {
 
   return (
     <PageTransition>
-      <div className="flex relative min-h-screen bg-background-main">
+      <div className="flex relative min-h-screen bg-background-main overflow-hidden">
         <motion.div initial="hidden" animate="visible" variants={logoVariants}>
           <Link to={"/"}>
             <motion.img

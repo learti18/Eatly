@@ -4,7 +4,7 @@ import { Heart } from "lucide-react";
 
 const AboutStory = () => {
   return (
-    <section className="py-20 px-5">
+    <section className="py-20 px-5 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <motion.div
@@ -57,20 +57,10 @@ const AboutStory = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <img
-              src="/restaurant3.jpg"
+              src="/Dining.jpg"
               alt="Restaurant interior"
               className="w-full h-full object-cover rounded-2xl shadow-xl"
             />
-            <motion.div
-              className="absolute bottom-4 left-4 px-3.5 py-3 bg-purple rounded-2xl flex items-center justify-center shadow-xl"
-              initial={{ opacity: 0, scale: 0 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-              whileHover={{ scale: 1.1 }}
-            >
-              <Heart className="size-9 text-white" />
-            </motion.div>
           </motion.div>
         </div>
       </div>

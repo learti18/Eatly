@@ -6,8 +6,8 @@ import { useAddToFavorites } from "../../Queries/Favorites/useAddToFavorites";
 import { useRemoveFromFavorites } from "../../Queries/Favorites/useRemoveFromFavorites";
 import { useAuth } from "../../Hooks/useAuth";
 import { toast } from "sonner";
-import { Heart } from "phosphor-react";
 import { motion } from "framer-motion";
+import { Heart } from "lucide-react";
 
 const FoodCard = memo(function FoodCard({ food, restaurantId }) {
   const [dollars, cents] = food.price.toFixed(2).split(".");
@@ -82,13 +82,12 @@ const FoodCard = memo(function FoodCard({ food, restaurantId }) {
             }`}
           >
             <Heart
-              size={30}
+              size={26}
               className={`transition-colors duration-200 ${
                 isFavorite
                   ? "text-purple fill-purple"
                   : "text-gray-700 group-hover:text-purple group-active:text-purple"
               }`}
-              weight={isFavorite ? "fill" : "regular"}
             />
           </div>
           <div className="mt-8 max-w-[300px] flex justify-center items-center mx-auto">

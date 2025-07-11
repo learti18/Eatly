@@ -177,6 +177,7 @@ function HeroSection() {
             <motion.img
               src="Hero.webp"
               alt="Hero illustration"
+              fetchpriority="high"
               className="object-contain grow w-full drop-shadow-2xl rounded-none aspect-[1.11] max-w-[350px] md:max-w-lg lg:max-w-xl"
               whileHover={{
                 scale: 1.05,

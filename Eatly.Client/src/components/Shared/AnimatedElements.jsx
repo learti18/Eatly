@@ -1,29 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
 
 const FloatingElement = ({
   children,
-  duration = 2,
-  intensity = 10,
+  duration = 4, // Increased duration to reduce frequency
+  intensity = 5, // Reduced intensity
   className = "",
+  disabled = false, // Add ability to disable animations
   ...props
 }) => {
-  const floatingVariants = {
-    animate: {
-      y: [-intensity, intensity, -intensity],
-      transition: {
-        duration,
-        repeat: Infinity,
-        ease: "easeInOut",
-      },
-    },
-  };
+  const floatingVariants = useMemo(
+    () => ({
+      animate: disabled
+        ? {}
+        : {
+            y: [-intensity, intensity, -intensity],
+            transition: {
+              duration,
+              repeat: Infinity,
+              ease: "easeInOut",
+              repeatType: "reverse",
+            },
+          },
+    }),
+    [duration, intensity, disabled]
+  );
 
   return (
     <motion.div
       className={className}
       variants={floatingVariants}
-      animate="animate"
+      animate={disabled ? "initial" : "animate"}
+      style={{ transform: "translate3d(0, 0, 0)" }} // Force hardware acceleration
       {...props}
     >
       {children}
@@ -33,27 +41,34 @@ const FloatingElement = ({
 
 const PulseElement = ({
   children,
-  duration = 1.5,
-  intensity = 1.1,
+  duration = 3, // Increased duration
+  intensity = 1.05, // Reduced intensity
   className = "",
+  disabled = false,
   ...props
 }) => {
-  const pulseVariants = {
-    animate: {
-      scale: [1, intensity, 1],
-      transition: {
-        duration,
-        repeat: Infinity,
-        ease: "easeInOut",
-      },
-    },
-  };
+  const pulseVariants = useMemo(
+    () => ({
+      animate: disabled
+        ? {}
+        : {
+            scale: [1, intensity, 1],
+            transition: {
+              duration,
+              repeat: Infinity,
+              ease: "easeInOut",
+            },
+          },
+    }),
+    [duration, intensity, disabled]
+  );
 
   return (
     <motion.div
       className={className}
       variants={pulseVariants}
-      animate="animate"
+      animate={disabled ? "initial" : "animate"}
+      style={{ transform: "translate3d(0, 0, 0)" }}
       {...props}
     >
       {children}
@@ -63,21 +78,27 @@ const PulseElement = ({
 
 const RotateElement = ({
   children,
-  duration = 3,
+  duration = 6, // Increased duration to reduce frequency
   className = "",
   clockwise = true,
+  disabled = false,
   ...props
 }) => {
-  const rotateVariants = {
-    animate: {
-      rotate: clockwise ? 360 : -360,
-      transition: {
-        duration,
-        repeat: Infinity,
-        ease: "linear",
-      },
-    },
-  };
+  const rotateVariants = useMemo(
+    () => ({
+      animate: disabled
+        ? {}
+        : {
+            rotate: clockwise ? 360 : -360,
+            transition: {
+              duration,
+              repeat: Infinity,
+              ease: "linear",
+            },
+          },
+    }),
+    [duration, clockwise, disabled]
+  );
 
   return (
     <motion.div
@@ -143,14 +164,12 @@ const AnimatedCounter = ({
       let startTime;
       let animationFrame;
 
-      // Parse the end value to handle numbers with suffixes
       let numericEnd = parseFloat(end.toString().replace(/[^\d.-]/g, ""));
 
       const animate = (timestamp) => {
         if (!startTime) startTime = timestamp;
         const progress = Math.min((timestamp - startTime) / duration, 1);
 
-        // Use easing function for smooth animation
         const easeOut = 1 - Math.pow(1 - progress, 3);
         const currentCount = numericEnd * easeOut;
 
