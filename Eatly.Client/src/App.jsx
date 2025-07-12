@@ -56,7 +56,7 @@ import Layout from "./components/Layouts/Layout";
 import AdminDashboardLayout from "./components/Layouts/AdminDashboardLayout";
 import RestaurantDashboardLayout from "./components/Layouts/RestaurantDashboardLayout";
 import DriverDashboardLayout from "./components/Layouts/DriverDashboardLayout";
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/react";
 
 const queryClient = new QueryClient();
 
