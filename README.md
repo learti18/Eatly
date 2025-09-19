@@ -2,7 +2,7 @@
 
 A modern food delivery platform built with React, Vite, and Firebase. Features include real-time order tracking, chat support, payment processing with Stripe, and comprehensive restaurant management.
 
-## 🚀 Features
+##Features
 
 - **User Features:**
 
@@ -34,7 +34,7 @@ A modern food delivery platform built with React, Vite, and Firebase. Features i
   - GPS tracking
   - Delivery management
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend:** React 18, Vite, TailwindCSS, DaisyUI
 - **State Management:** TanStack React Query
@@ -45,7 +45,7 @@ A modern food delivery platform built with React, Vite, and Firebase. Features i
 - **Authentication:** JWT with Firebase Custom Auth
 - **Routing:** React Router DOM
 
-## 📦 Installation
+## Installation
 
 1. Clone the repository
 2. Install dependencies:
@@ -67,7 +67,7 @@ A modern food delivery platform built with React, Vite, and Firebase. Features i
    npm run dev
    ```
 
-## 🔧 Environment Variables
+## Environment Variables
 
 Create a `.env` file with the following variables:
 
@@ -91,42 +91,7 @@ VITE_FIREBASE_DATABASE_URL=your_firebase_database_url
 VITE_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
 ```
 
-## 🚀 Deployment
-
-### Production Build
-
-```bash
-npm run build:prod
-```
-
-### Preview Production Build
-
-```bash
-npm run preview
-```
-
-### Deploy to Various Platforms
-
-#### Netlify
-
-1. Build the project: `npm run build:prod`
-2. Deploy the `dist` folder to Netlify
-3. Set up environment variables in Netlify dashboard
-
-#### Vercel
-
-1. Connect your repository to Vercel
-2. Set build command: `npm run build:prod`
-3. Set output directory: `dist`
-4. Configure environment variables
-
-#### Traditional Hosting
-
-1. Build the project: `npm run build:prod`
-2. Upload the `dist` folder to your web server
-3. Configure web server for SPA routing
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
@@ -142,7 +107,7 @@ src/
 └── utils/              # Utility functions
 ```
 
-## 🔒 Security Considerations
+## Security Considerations
 
 - All API calls are authenticated with JWT tokens
 - Environment variables are used for sensitive data
@@ -150,32 +115,6 @@ src/
 - Input validation on all forms
 - Route protection based on user roles
 
-## 📱 Responsive Design
-
-The application is fully responsive and works on:
-
-- Desktop (1024px+)
-- Tablet (768px - 1023px)
-- Mobile (320px - 767px)
-
-## 🧪 Testing
-
-```bash
-# Run linting
-npm run lint
-
-# Fix linting issues
-npm run lint:fix
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
-
-## 📄 License
+## License
 
 This project is licensed under the MIT License.
